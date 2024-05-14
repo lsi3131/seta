@@ -15,6 +15,7 @@ class Post(models.Model):
     category = models.ForeignKey(PostCategory, on_delete=models.CASCADE, related_name='cate_posts')
     likes = models.ManyToManyField(AUTH_USER_MODEL, related_name='like_posts', blank=True)
     mbti = models.ManyToManyField(Mbti, related_name='mbti_posts', blank=True)
+    hits = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
