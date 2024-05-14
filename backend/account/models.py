@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Mbti(models.Model):
     mbti_type = models.CharField(max_length=4, unique=True)
+    description = models.TextField()
 
 class User(AbstractUser):
     # login email 로 ~ 
