@@ -21,3 +21,5 @@ yarn-error.log*
 
 **/secrets.json
 **/*.pyc
+
+.prettierrc
