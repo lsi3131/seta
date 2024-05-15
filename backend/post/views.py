@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import *
 from .validate import *
+from rest_framework.decorators import api_view, permission_classes
 
 
 def serialize_comment(comment):
@@ -110,6 +111,16 @@ class PostCommentDetailAPIView(APIView):
             status=status.HTTP_204_NO_CONTENT
         )
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def LikeyPost(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    user = request.user.id 
 
-class likeyPostAPIView(APIView):
-    pass
+    if request.data: #frontend에서 데이터를 보내면 '좋아요'
+        post.likes.add(user)
+        return Response({'message': '좋아요'})
+    else:
+        post.likes.remove(user)
+        return Response({'message': '좋아요 취소'})
+
