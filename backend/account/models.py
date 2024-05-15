@@ -6,6 +6,9 @@ class Mbti(models.Model):
     mbti_type = models.CharField(max_length=4, unique=True)
     description = models.TextField()
 
+    def __str__(self):
+        return self.mbti_type
+
 class User(AbstractUser):
     # login email 로 ~ 
     email = models.EmailField(unique=True)
@@ -15,7 +18,7 @@ class User(AbstractUser):
     percentNS = models.FloatField(default=0)
     percentFT = models.FloatField(default=0)
     percentPJ = models.FloatField(default=0)
-    mbti = models.ForeignKey(Mbti, on_delete=models.CASCADE, null=True, blank=True)
+    mbti = models.ForeignKey(Mbti, on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.username
