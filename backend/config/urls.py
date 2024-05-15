@@ -17,10 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from . import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/account/", include("account.urls")),
-    path("api/post/", include("post.urls")),
+    path("api/posts/", include("post.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# 로그인 임시 작업 - 작업 끝나면 삭제해주셔도 되요 ~~~
+urlpatterns += [
+    path('api/login/', TokenObtainPairView.as_view(), name='login'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view()),
+]
