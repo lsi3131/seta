@@ -109,3 +109,7 @@ class PostCommentDetailAPIView(APIView):
             {"message": "댓글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+class likeyPostAPIView(APIView):
+    pass
