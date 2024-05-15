@@ -2,8 +2,13 @@ from django.db import models
 from config.settings import AUTH_USER_MODEL
 from account.models import Mbti
 
+
 class PostCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 # Create your models here.
 class Post(models.Model):
@@ -19,11 +24,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+
 class Comment(models.Model):
     author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     content = models.TextField()
     recommend = models.ManyToManyField(AUTH_USER_MODEL, related_name='recommend_comments', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,5 +37,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
-    
-    
