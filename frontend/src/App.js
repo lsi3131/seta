@@ -1,27 +1,24 @@
 import logo from './logo.svg'
 import './App.css'
 import {useState, useEffect} from 'react'
+import {BrowserRouter as Router, Routes, Route, useNavigate} from 'react-router-dom'
 import Cursor from './Components/Cursor/Cursor'
 import CommentBox from "./Components/Comment/Comment";
 import NavBar from "./Components/NavBar/NavBar";
+import CardList from "./Components/Card/Card"
+import Board from "./Components/Board/Board";
 
-const mbti_list = [
-    'INFP', 'ISFP', 'ENFP', 'ESFP'
-]
 
 function App() {
     return (
         <>
-            <Cursor/>
+            {/*<Cursor/>*/}
             <NavBar/>
             <CommentBox/>
-            {mbti_list.map((mbti) => (
-                <>
-                    <div>
-                        <h1>helloworld-{mbti}</h1>
-                    </div>
-                </>
-            ))}
+            <Routes>
+                <Route path="/" element={<CardList/>}/>
+                <Route path="/board/:mbti" element={<Board/>}/>
+            </Routes>
         </>
     )
 }
