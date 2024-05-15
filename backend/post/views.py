@@ -7,51 +7,44 @@ from .models import *
 from .validate import *
 
 
-class PostCommentsAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+def serialize_comment(comment):
+    if not comment:
+        return None
 
-    def get_children_data(self, comment):
-        children_data = []
-        children = comment.get_children()
-        for child in children:
-            recommend = [r.id for r in child.recommend.all()]
-            children_data.append({
-                "id": child.id,
-                "article": child.article.id,
-                "author": child.author.username,
-                "parent_comment_id": child.parent_comment_id,
-                "content": child.content,
-                "recommend": recommend,
-                "created_at": child.created_at,
-                "updated_at": child.updated_at,
-                "children": self.get_children_data(child),  # 재귀적으로 자식 댓글의 자식 댓글들의 데이터도 포함합니다.
-            })
-        return children_data
+    recommend = [r.id for r in comment.recommend.all()]
+    parent_comment_id = comment.parent.id if comment.parent else None
+
+    return {
+        "id": comment.id,
+        "post": comment.post.id,
+        "author": comment.author.username,
+        "parent_id": parent_comment_id,
+        "content": comment.content,
+        "recommend": recommend,
+        "created_at": comment.created_at,
+        "updated_at": comment.updated_at,
+        "children": get_children_data(comment),  # 재귀적으로 자식 댓글의 자식 댓글들의 데이터도 포함된다.
+    }
+
+
+def get_children_data(comment):
+    children_data = []
+    children = comment.children.all()
+    for child in children:
+        children_data.append(serialize_comment(child))
+    return children_data
+
+
+class PostCommentsAPIView(APIView):
+    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, post_pk):
-        print('hello')
-        return Response({'hello': 'message'}, status=status.HTTP_200_OK)
-        article = get_object_or_404(Post, id=post_pk)
-        comments = article.comments.all()
+        post = get_object_or_404(Post, id=post_pk)
+        comments = post.comments.all()
 
         response_data = []
         for comment in comments:
-            recommend = [r.id for r in comment.recommend.all()]
-            children_data = self.get_children_data(comment)
-
-            response_data.append(
-                {
-                    "id": comment.id,
-                    "article": comment.article.id,
-                    "author": comment.author.username,
-                    "parent_comment_id": comment.parent_comment_id,
-                    "children": children_data,
-                    "content": comment.content,
-                    "recommend": recommend,
-                    "created_at": comment.created_at,
-                    "updated_at": comment.updated_at,
-                }
-            )
+            response_data.append(serialize_comment(comment))
 
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -66,31 +59,23 @@ class PostCommentsAPIView(APIView):
         parent_comment = None
         if parent_comment_id:
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
-        article = get_object_or_404(Post, id=post_pk)
-        Comment.objects.create(content=content, article=article, author=request.user, parent=parent_comment)
+        post = get_object_or_404(Post, id=post_pk)
+        Comment.objects.create(content=content, post=post, author=request.user, parent=parent_comment)
         return Response(
             {"message": "댓글이 작성되었습니다."},
             status=status.HTTP_201_CREATED
         )
 
 
-class PostDetailAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+class PostCommentDetailAPIView(APIView):
+    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, post_pk, comment_pk):
         comment = get_object_or_404(Comment, id=comment_pk)
 
-        parent_comment_id = comment.parent.id if comment.parent else None
-        recommend = [r.id for r in comment.recommend.all()]
-        return Response({
-            "id": comment.id,
-            "article": comment.post.id,
-            "parent_id": parent_comment_id,
-            "content": comment.content,
-            "recommend": recommend,
-            "created_at": comment.created_at,
-            "updated_at": comment.updated_at,
-        }, status=status.HTTP_200_OK)
+        comment_data = serialize_comment(comment)
+
+        return Response(comment_data, status=status.HTTP_200_OK)
 
     def put(self, request, post_pk, comment_pk):
         comment = get_object_or_404(Comment, id=comment_pk)
