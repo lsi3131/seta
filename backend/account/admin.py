@@ -1,8 +1,6 @@
 from django.contrib import admin
-from .models import *
-
+from .models import User, Mbti
 # Register your models here.
 
-admin.site.register(Mbti)
 admin.site.register(User)
-admin.site.register(Follow)
+admin.site.register(Mbti)
