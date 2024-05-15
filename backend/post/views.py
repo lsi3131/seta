@@ -6,6 +6,19 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import *
 from .validate import *
 
+def serialize_post(post):
+    return {
+        "id" : post.id,
+        "author" : post.author.username,
+        "category" : post.category.name,
+        "title" : post.title,
+        #"content" : post.content,
+        "hits" : post.hits,
+        "likes" : post.likes.count(),
+        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at" : post.created_at,
+        "updated_at" : post.updated_at,
+    }
 
 def serialize_comment(comment):
     if not comment:
@@ -33,6 +46,20 @@ def get_children_data(comment):
     for child in children:
         children_data.append(serialize_comment(child))
     return children_data
+
+
+class PostAPIView(APIView) :
+    #permission_classes = [IsAuthenticatedOrReadOnly]
+    def get(self, request, mbti):
+        mbti = get_object_or_404(Mbti, mbti_type= mbti)
+        posts = Post.objects.filter(mbti = mbti)
+
+        response_data = []
+        for post in posts:
+            response_data.append(serialize_post(post))
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
 
 
 class PostCommentsAPIView(APIView):
