@@ -4,7 +4,10 @@ from django.contrib.auth.models import AbstractUser
 
 class Mbti(models.Model):
     mbti_type = models.CharField(max_length=4, unique=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
+    
+    def __str__(self):
+        return f"{self.mbti_type} - {self.description}"
 
     def __str__(self):
         return self.mbti_type
