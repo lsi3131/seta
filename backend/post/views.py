@@ -117,10 +117,23 @@ def LikeyPost(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
     user = request.user.id 
 
-    if request.data: #frontend에서 데이터를 보내면 '좋아요'
+    if request.data:    #frontend에서 데이터를 보내면 '좋아요'
         post.likes.add(user)
         return Response({'message': '좋아요'})
     else:
         post.likes.remove(user)
         return Response({'message': '좋아요 취소'})
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Recommend(request, post_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    user = request.user.id
+
+    if request.data:    #frontend에서 데이터를 보내면 "추천"
+        comment.recommend.add(user)
+        return Response({ "message":"추천"})
+    else:
+        comment.recommend.remove(user)
+        return Response({ "message":"추천 취소"})
