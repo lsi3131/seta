@@ -29,6 +29,17 @@ class AccountAPIView(APIView):
         email = data.get('email', None)
         introduce = data.get('introduce', '')
 
+        validate_type_values = {
+            'username': username,
+            'password': password,
+            'email': email,
+        }
+
+        for v_type, value in validate_type_values.items():
+            request_data = {'data': value}
+            if not validator.validate(v_type, request_data):
+                return validator.get_response_data()
+
         get_user_model().objects.create_user(
             username=username, password=password, email=email, introduce=introduce)
 
@@ -43,22 +54,18 @@ class AccountAPIView(APIView):
         # 기존 데이터에서 부분적으로 업데이트 될 수 있도록 짤거고 mbti 가 추가
         user = request.user
         data = request.data
-        username = data.get('username', user.username)
         email = data.get('email', user.email)
         introduce = data.get('introduce', user.introduce)
-        mbti = data.get('mbti', user.mbti)
 
-        user.username = username
+        if data.get('email') and not validator.validate('email', {'data': email}):
+            return validator.get_response_data()
+        
         user.email = email
         user.introduce = introduce
-        user.mbti = Mbti.objects.get(mbti_type=mbti)
         user.save()
 
         return Response({
-            "username": username,
-            "email": email,
-            "introduce": introduce,
-            "mbti": mbti,
+            "message":"회원 정보가 수정되었습니다"
         }, status=status.HTTP_200_OK)
 
     def delete(self, request):
@@ -168,3 +175,19 @@ def follow(request, username):
         return Response(
             {"message": f"{from_user} Un following {to_user}"}, status=status.HTTP_200_OK)
 
+
+class MbtiAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        data = request.data
+        user = request.user
+        mbti_type = data.get('mbti_type', None)
+
+        if not mbti_type:
+            return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.mbti = Mbti.objects.get(mbti_type=mbti_type)
+        user.save()
+        return Response({"message": "MBTI가 설정되었습니다."}, status=status.HTTP_200_OK)
