@@ -56,8 +56,14 @@ class AccountAPIView(APIView):
             "introduce": introduce,
             "mbti": mbti,
         }, status=status.HTTP_200_OK)   
+    
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
+    
 
-      
+
 @api_view(['POST'])
 def validate_password(request):
     validator.validate('password', request.data)
