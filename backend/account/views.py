@@ -4,15 +4,19 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from django.contrib.auth import get_user_model
+from .permissions import AccountVIEWPermission
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .permissions import AccountVIEWPermission
+from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
 
+
 validator = AccountValidator()
 User = get_user_model()
-
 
 class AccountAPIView(APIView):
 
@@ -105,6 +109,25 @@ class AccountPasswordAPIView(APIView):
 
         return Response({"message": "인증에 성공했습니다."}, status=status.HTTP_200_OK)
 
+class ProfileAPIView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        user_mbti = user.mbti
+        return Response({
+            "username": user.username,
+            "email": user.email,
+            "introduce": user.introduce,
+            "mbti": user_mbti.mbti_type if user_mbti else None,
+            "mbti_description": user_mbti.description if user_mbti else "",
+            "percentIE": user.percentIE,
+            "percentNS": user.percentNS,
+            "percentFT": user.percentFT,
+            "percentPJ": user.percentPJ,
+            "following_count": user.following.count(),
+            "followers_count": user.followers.count(),
+            "posts": [ serialize_post(post) for post in user.post_set.all() ],
+            "like_posts": [ serialize_post(post) for post in user.like_posts.all() ]
+        }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def validate_password(request):
