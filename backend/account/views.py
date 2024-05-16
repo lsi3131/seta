@@ -1,17 +1,17 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Mbti
 from rest_framework import status
-from django.contrib.auth import get_user_model
-from .permissions import AccountVIEWPermission
-# Create your views here.
 from rest_framework.decorators import api_view, permission_classes
-from .util import AccountValidator
-from .models import Follow, User
 from rest_framework.permissions import IsAuthenticated
+from .permissions import AccountVIEWPermission
+from .util import AccountValidator
+from .models import Follow, User, Mbti
 
 validator = AccountValidator()
+User = get_user_model()
 
 
 class AccountAPIView(APIView):
@@ -55,13 +55,55 @@ class AccountAPIView(APIView):
             "email": email,
             "introduce": introduce,
             "mbti": mbti,
-        }, status=status.HTTP_200_OK)   
-    
+        }, status=status.HTTP_200_OK)
+
     def delete(self, request):
         user = request.user
         user.delete()
         return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
-    
+
+
+
+class AccountPasswordAPIView(APIView):
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def put(self, request):
+        data = request.data
+        user = request.user
+
+        old_password = data.get('old_password', None)
+        new_password = data.get('new_password', None)
+
+        if not old_password or not new_password:
+            return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 이전 비밀번호 일치 체크
+        if not check_password(old_password, user.password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 신규 비밀번호 유효성 체크
+        if not validator.validate('password', {'data': new_password}):
+            return validator.get_response_data()
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({"message": "비밀번호가 수정되었습니다."}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+        user = request.user
+
+        password = data.get('password', None)
+
+        if not password:
+            return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 비밀번호 일치 체크
+        if not check_password(password, user.password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "인증에 성공했습니다."}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -91,7 +133,7 @@ def follow(request, username):
     #frontend에 'follow'값을 보내주면 'follow'기능 요청
     following = request.data.get('follow',0)
 
-    if following:    
+    if following:
         Follow.objects.get_or_create(
             from_user=from_user,
             to_user=to_user)
