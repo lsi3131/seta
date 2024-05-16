@@ -3,3 +3,4 @@ djangorestframework==3.15.1
 djangorestframework-simplejwt==5.3.1
 django-cors-headers==4.3.1
 django-seed==0.3.1
+psycopg2==2.9.9
