@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 # Create your views here.
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .util import AccountValidator
 from .models import Follow, User
+from rest_framework.permissions import IsAuthenticated
 
 validator = AccountValidator()
 
@@ -50,11 +51,15 @@ def validate_email(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def follow(request, username):
     to_user= get_object_or_404(User, username=username)
     from_user = request.user
 
-    if request.data:
+    #frontend에 'follow'값을 보내주면 'follow'기능 요청
+    following = request.data.get('follow',0)
+
+    if following:    
         Follow.objects.get_or_create(
             from_user=from_user,
             to_user=to_user)
