@@ -40,10 +40,9 @@ const Board = () => {
                 <div className={style.vertical}>
                     {posts.map(post => (
                         <>
-                            <Link to={`/board_detail/${post.id}`}>{post.title}</Link>
+                            <Link to={`/board/${post.id}`}>{post.title}</Link>
                         </>
-                    ))
-                    }
+                    ))}
                 </div>
 
                 <hr/>
