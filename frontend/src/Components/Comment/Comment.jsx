@@ -3,9 +3,11 @@ import style from './Comment.module.css'
 
 const CommentBox = () => {
     return (
-        <div>
-            <h1>helloworld</h1>
-            <button className={style.button}>helloworld</button>
+        <div className={style.vertical}>
+            <h1>댓글</h1>
+            <input type="text"/>
+
+            <p>인팁인데 개추 누름</p>
         </div>
     )
 }

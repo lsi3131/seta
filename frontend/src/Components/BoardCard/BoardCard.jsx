@@ -1,5 +1,5 @@
 import React from 'react';
-import style from './Card.module.css'
+import style from './BoardCard.module.css'
 import {Link} from "react-router-dom";
 
 
@@ -9,7 +9,7 @@ const mbti_list = [
     'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ',
     'ISTP', 'ISFP', 'ESTP', 'ESFP',
 ]
-const Card = ({mbti}) => {
+const BoardCard = ({mbti}) => {
     return (
         <>
             <div className={style.div}>
@@ -19,16 +19,16 @@ const Card = ({mbti}) => {
     )
 }
 
-const CardList = () => {
+const BoardCardList = () => {
     return (
         <>
             {mbti_list.map((mbti) => (
                 <>
-                    <Card mbti={mbti}/>
+                    <BoardCard mbti={mbti}/>
                 </>
             ))}
         </>
     )
 }
 
-export default CardList;
+export default BoardCardList;
