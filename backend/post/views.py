@@ -110,22 +110,26 @@ class PostAPIView(APIView):
 
         title = data['title']
         content = data['content']
-        category = data['category']
-        mbti = data['mbti']
-        Post.objects.create(title=title, category=category,
-                            mbti=mbti, content=content, author=request.user)
+        category = PostCategory.objects.get(name = data['category'])
+        post = Post.objects.create(title=title, category=category,
+                            content=content,author=request.user)
+        mbti_types = data['mbti']
+        for mbti in mbti_types:
+            mbti = get_object_or_404(Mbti, mbti_type=mbti)
+            post.mbti.add(mbti)
+            
         return Response(
             {"message": "게시글이 작성되었습니다."},
             status=status.HTTP_201_CREATED
         )
     
     #post만 authenticated
-    def dispatch(self, request):
+    def dispatch(self, request, mbti):
         if request.method == 'POST':
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = []
-        return super().dispatch(request)
+        return super().dispatch(request, mbti)
 
 
 class PostCommentsAPIView(APIView):
