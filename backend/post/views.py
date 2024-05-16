@@ -8,20 +8,22 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import *
 from .validate import *
 
+
 def serialize_post(post):
     return {
-        "id" : post.id,
-        "author" : post.author.username,
-        "category" : post.category.name,
-        "title" : post.title,
-        #"content" : post.content,
-        "hits" : post.hits,
-        "likes" : post.likes.count(),
-        "comments" : post.comments.count(),
-        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
-        "created_at" : post.created_at,
-        "updated_at" : post.updated_at,
+        "id": post.id,
+        "author": post.author.username,
+        "category": post.category.name,
+        "title": post.title,
+        # "content" : post.content,
+        "hits": post.hits,
+        "likes": post.likes.count(),
+        "comments": post.comments.count(),
+        "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at": post.created_at,
+        "updated_at": post.updated_at,
     }
+
 
 def serialize_comment(comment):
     if not comment:
@@ -39,7 +41,8 @@ def serialize_comment(comment):
         "recommend": recommend,
         "created_at": comment.created_at,
         "updated_at": comment.updated_at,
-        "children": get_children_data(comment),  # 재귀적으로 자식 댓글의 자식 댓글들의 데이터도 포함된다.
+        # 재귀적으로 자식 댓글의 자식 댓글들의 데이터도 포함된다.
+        "children": get_children_data(comment),
     }
 
 
@@ -51,39 +54,46 @@ def get_children_data(comment):
     return children_data
 
 
-class PostAPIView(APIView) :
-    #permission_classes = [IsAuthenticatedOrReadOnly]
-    def get(self, request, mbti):
-        mbti = get_object_or_404(Mbti, mbti_type= mbti)
-        posts = Post.objects.filter(mbti = mbti)
+class PostAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-        #필터링 [제목 / 내용 / 작성자]
+    # mbti게시판과 일치하는 게시글만
+    def mbti_board_filter(self, mbti):
+        mbti = get_object_or_404(Mbti, mbti_type=mbti)
+        posts = Post.objects.filter(mbti=mbti)
+        return posts
+
+    def get(self, request, mbti):
+        posts = self.mbti_board_filter(mbti)
+
+        # 필터링 [제목 / 내용 / 작성자]
         category = request.GET.get('category')
-        if category == 'title' :
+        if category == 'title':
             search = request.GET.get("search")
             posts = posts.filter(title__contains=search)
-        elif category == 'content' :
+        elif category == 'content':
             search = request.GET.get("search")
             posts = posts.filter(content__contains=search)
-        elif category == 'author' :
+        elif category == 'author':
             search = request.GET.get("search")
             posts = posts.filter(author__username__contains=search)
 
-        #정렬 [좋아요순 / 최근순 / 댓글순]
+        # 정렬 [좋아요순 / 최근순 / 댓글순]
         order = request.GET.get("order")
-        if order == 'like' :
-            posts = posts.annotate(like_count=Count(F('likes'))).order_by('-like_count')
-        elif order == 'recent' :
+        if order == 'like':
+            posts = posts.annotate(like_count=Count(
+                F('likes'))).order_by('-like_count')
+        elif order == 'recent':
             posts = posts.order_by('-created_at')
-        elif order == 'comment' :
-            posts = posts.annotate(comment_count=Count(F('comments'))).order_by('-comment_count')
+        elif order == 'comment':
+            posts = posts.annotate(comment_count=Count(
+                F('comments'))).order_by('-comment_count')
 
-        #페이지네이션 30개씩
-        paginator = Paginator(posts, 30) 
+        # 페이지네이션 30개씩
+        paginator = Paginator(posts, 30)
         page_number = request.GET.get("page")
-        if page_number :
+        if page_number:
             posts = paginator.get_page(page_number)
-
 
         response_data = []
         for post in posts:
@@ -91,6 +101,30 @@ class PostAPIView(APIView) :
 
         return Response(response_data, status=status.HTTP_200_OK)
 
+    def post(self, request, mbti):
+        data = request.data.copy()
+        message = validate_post_data(data)
+        if message:
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        title = data['title']
+        content = data['content']
+        category = data['category']
+        mbti = data['mbti']
+        Post.objects.create(title=title, category=category,
+                            mbti=mbti, content=content, author=request.user)
+        return Response(
+            {"message": "게시글이 작성되었습니다."},
+            status=status.HTTP_201_CREATED
+        )
+    
+    #post만 authenticated
+    def dispatch(self, request):
+        if request.method == 'POST':
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = []
+        return super().dispatch(request)
 
 
 class PostCommentsAPIView(APIView):
@@ -118,7 +152,8 @@ class PostCommentsAPIView(APIView):
         if parent_comment_id:
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
         post = get_object_or_404(Post, id=post_pk)
-        Comment.objects.create(content=content, post=post, author=request.user, parent=parent_comment)
+        Comment.objects.create(content=content, post=post,
+                               author=request.user, parent=parent_comment)
         return Response(
             {"message": "댓글이 작성되었습니다."},
             status=status.HTTP_201_CREATED
