@@ -5,13 +5,10 @@ import style from './NavBar.module.css'
 const AuthenticatedNavbar = ({ username }) => {
     return (
         <nav className={style.navbar}>
-            <div className="left">
+            <div className={style.left}>
                 <Link to="/">HOME</Link>
-                <Link to="/ask">ASK</Link>
-                <Link to="/show">SHOW</Link>
-                <Link to="/write">WRITE</Link>
             </div>
-            <div className="right">
+            <div className={style.right}>
                 <Link to={`/profile/${username}/`}>{username}</Link>
             </div>
         </nav>
@@ -22,14 +19,13 @@ const AuthenticatedNavbar = ({ username }) => {
 const UnauthenticatedNavbar = () => {
     return (
         <nav className={style.navbar}>
-            <div className="left">
+            <div className={style.left}>
                 <Link to="/">HOME</Link>
-                <Link to="/ask">ASK</Link>
-                <Link to="/show">SHOW</Link>
-                <Link to="/write">WRITE</Link>
             </div>
-            <div className="right">
-                <Link to="/login">LOGIN</Link>
+            <div className={style.right}>
+                <Link to="/login" style={{marginRight : "10px"}}>LOGIN</Link>
+                {/* 테스트용. 추후 삭제*/}
+                <Link to={`/profile/test_istj`}>test_istj</Link>
             </div>
         </nav>
     )

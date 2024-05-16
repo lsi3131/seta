@@ -10,3 +10,8 @@
 .button:hover {
   background-color: #0056b3;
 }
+.vertical {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
