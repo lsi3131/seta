@@ -1,10 +1,42 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.db.models import Count, F
+from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import *
 from .validate import *
+from rest_framework.decorators import api_view, permission_classes
+
+def serialize_post(post):
+    return {
+        "id" : post.id,
+        "author" : post.author.username,
+        "category" : post.category.name,
+        "title" : post.title,
+        #"content" : post.content,
+        "hits" : post.hits,
+        "likes" : post.likes.count(),
+        "comments" : post.comments.count(),
+        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at" : post.created_at,
+        "updated_at" : post.updated_at,
+    }
+
+def serialize_post(post):
+    return {
+        "id": post.id,
+        "author": post.author.username,
+        "category": post.category.name,
+        "title": post.title,
+        "hits": post.hits,
+        "likes": post.likes.count(),
+        "comments": post.comments.count(),
+        "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at": post.created_at,
+        "updated_at": post.updated_at,
+    }
 
 
 def serialize_comment(comment):
@@ -23,7 +55,8 @@ def serialize_comment(comment):
         "recommend": recommend,
         "created_at": comment.created_at,
         "updated_at": comment.updated_at,
-        "children": get_children_data(comment),  # 재귀적으로 자식 댓글의 자식 댓글들의 데이터도 포함된다.
+        # 재귀적으로 자식 댓글의 자식 댓글들의 데이터도 포함된다.
+        "children": get_children_data(comment),
     }
 
 
@@ -34,6 +67,127 @@ def get_children_data(comment):
         children_data.append(serialize_comment(child))
     return children_data
 
+
+class PostAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # mbti게시판과 일치하는 게시글만
+    def mbti_board_filter(self, mbti):
+        mbti = get_object_or_404(Mbti, mbti_type=mbti)
+        posts = Post.objects.filter(mbti=mbti)
+        return posts
+
+    def get(self, request, mbti):
+        posts = self.mbti_board_filter(mbti)
+
+        # 필터링 [제목 / 내용 / 작성자]
+        category = request.GET.get('category')
+        if category == 'title':
+            search = request.GET.get("search")
+            posts = posts.filter(title__contains=search)
+        elif category == 'content':
+            search = request.GET.get("search")
+            posts = posts.filter(content__contains=search)
+        elif category == 'author':
+            search = request.GET.get("search")
+            posts = posts.filter(author__username__contains=search)
+
+        # 정렬 [좋아요순 / 최근순 / 댓글순]
+        order = request.GET.get("order")
+        if order == 'like':
+            posts = posts.annotate(like_count=Count(
+                F('likes'))).order_by('-like_count')
+        elif order == 'recent':
+            posts = posts.order_by('-created_at')
+        elif order == 'comment':
+            posts = posts.annotate(comment_count=Count(
+                F('comments'))).order_by('-comment_count')
+
+        # 페이지네이션 30개씩
+        paginator = Paginator(posts, 30)
+        page_number = request.GET.get("page")
+        if page_number:
+            posts = paginator.get_page(page_number)
+        response_data = []
+        for post in posts:
+            response_data.append(serialize_post(post))
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    def post(self, request, mbti):
+        data = request.data.copy()
+        message = validate_post_data(data)
+        if message:
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        title = data['title']
+        content = data['content']
+        category = PostCategory.objects.get(name = data['category'])
+        post = Post.objects.create(title=title, category=category,
+                            content=content,author=request.user)
+        mbti_types = data['mbti']
+        for mbti in mbti_types:
+            mbti = get_object_or_404(Mbti, mbti_type=mbti)
+            post.mbti.add(mbti)
+
+        return Response(
+            {"message": "게시글이 작성되었습니다."},
+            status=status.HTTP_201_CREATED
+        )
+
+class PostDetailAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, post_pk):
+        post = get_object_or_404(Post, id=post_pk)
+        post.hits += 1
+        post.save()
+
+        #게시글에는 내용 추가
+        serialize = serialize_post(post)
+        serialize['content'] = post.content
+        return Response(serialize, status=status.HTTP_200_OK)
+    
+    def put(self, request, post_pk):
+        post = get_object_or_404(Post, id=post_pk)
+        if post.author!= request.user:
+            return Response(
+                {"error": "작성자만 수정할 수 있습니다."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        data = request.data.copy()
+        data["content"] = data.get("content", post.content)
+        data["title"] = data.get("title", post.title)
+        data["category"] = PostCategory.objects.get(name = data.get("category", post.category))
+        data["mbti"] = data.get("mbti", post.mbti)
+        if data["mbti"]:
+            mbti_set = []
+            for mbti in data["mbti"]:
+                mbti = get_object_or_404(Mbti, mbti_type=mbti)
+                mbti_set.append(mbti)
+            post.mbti.set(mbti_set)
+        message = validate_post_data(data)
+        if message:
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        post.__dict__.update(**data)
+        post = post.save()
+        return Response(
+            {"message": "게시글이 수정되었습니다."},
+            status=status.HTTP_200_OK
+        )
+    
+    def delete(self, request, post_pk):
+        post = get_object_or_404(Post, id=post_pk)
+        if post.author!= request.user:
+            return Response(
+                {"error": "작성자만 삭제할 수 있습니다."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        post.delete()
+        return Response(
+            {"message": "게시글이 삭제되었습니다."},
+            status=status.HTTP_204_NO_CONTENT
+        )
 
 class PostCommentsAPIView(APIView):
     # permission_classes = [IsAuthenticatedOrReadOnly]
@@ -60,7 +214,8 @@ class PostCommentsAPIView(APIView):
         if parent_comment_id:
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
         post = get_object_or_404(Post, id=post_pk)
-        Comment.objects.create(content=content, post=post, author=request.user, parent=parent_comment)
+        Comment.objects.create(content=content, post=post,
+                               author=request.user, parent=parent_comment)
         return Response(
             {"message": "댓글이 작성되었습니다."},
             status=status.HTTP_201_CREATED
@@ -109,3 +264,36 @@ class PostCommentDetailAPIView(APIView):
             {"message": "댓글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def LikeyPost(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    user = request.user.id 
+
+    #frontend에서 'like'요청을 보내면 '좋아요'기능 실행
+    like = request.data.get('like', 0)
+    
+    if like:    
+        post.likes.add(user)
+        return Response({'message': '좋아요'},status=status.HTTP_200_OK)
+    else:
+        post.likes.remove(user)
+        return Response({'message': '좋아요 취소'},status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Recommend(request, post_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    user = request.user.id
+
+    #frontend에서 'recommend' 보내면 '추천'기능 실행
+    Reco = request.data.get('recommend',0)
+
+    if Reco:    
+        comment.recommend.add(user)
+        return Response({ "message":"추천"},status=status.HTTP_200_OK)
+    else:
+        comment.recommend.remove(user)
+        return Response({ "message":"추천 취소"},status=status.HTTP_200_OK)

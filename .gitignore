@@ -23,3 +23,5 @@ yarn-error.log*
 **/*.pyc
 
 .prettierrc
+
+venv/
