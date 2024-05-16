@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .models import Mbti
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from .permissions import AccountVIEWPermission
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes
 from .util import AccountValidator
@@ -13,6 +15,8 @@ validator = AccountValidator()
 
 
 class AccountAPIView(APIView):
+
+    permission_classes = [AccountVIEWPermission]
 
     def post(self, request):
         data = request.data
@@ -31,7 +35,29 @@ class AccountAPIView(APIView):
             "introduce": introduce,
         }, status=status.HTTP_201_CREATED)
 
+    def put(self, request):
+        # 기존 데이터에서 부분적으로 업데이트 될 수 있도록 짤거고 mbti 가 추가
+        user = request.user
+        data = request.data
+        username = data.get('username', user.username)
+        email = data.get('email', user.email)
+        introduce = data.get('introduce', user.introduce)
+        mbti = data.get('mbti', user.mbti)
 
+        user.username = username
+        user.email = email
+        user.introduce = introduce
+        user.mbti = Mbti.objects.get(mbti_type=mbti)
+        user.save()
+
+        return Response({
+            "username": username,
+            "email": email,
+            "introduce": introduce,
+            "mbti": mbti,
+        }, status=status.HTTP_200_OK)   
+
+      
 @api_view(['POST'])
 def validate_password(request):
     validator.validate('password', request.data)
@@ -70,3 +96,4 @@ def follow(request, username):
         follower.delete()
         return Response(
             {"message": f"{from_user} Un following {to_user}"}, status=status.HTTP_200_OK)
+
