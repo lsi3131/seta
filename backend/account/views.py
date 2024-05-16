@@ -5,14 +5,13 @@ from .models import Mbti
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
-# Create your views here.
 from rest_framework.decorators import api_view, permission_classes
 from .util import AccountValidator
 from .models import Follow, User
 from rest_framework.permissions import IsAuthenticated
+from post.views import serialize_post
 
 validator = AccountValidator()
-
 
 class AccountAPIView(APIView):
 
@@ -63,6 +62,25 @@ class AccountAPIView(APIView):
         return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
     
 
+class ProfileAPIView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        user_mbti = user.mbti
+        return Response({
+            "username": user.username,
+            "email": user.email,
+            "introduce": user.introduce,
+            "mbti": user_mbti.mbti_type if user_mbti else None,
+            "mbti_description": user_mbti.description if user_mbti else "",
+            "percentIE": user.percentIE,
+            "percentNS": user.percentNS,
+            "percentFT": user.percentFT,
+            "percentPJ": user.percentPJ,
+            "following_count": user.following.count(),
+            "followers_count": user.followers.count(),
+            "posts": [ serialize_post(post) for post in user.post_set.all() ],
+            "like_posts": [ serialize_post(post) for post in user.like_posts.all() ]
+        }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def validate_password(request):
