@@ -1,9 +1,28 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import style from './Board.module.css'
 import {Link, useParams} from "react-router-dom";
+import axios from "axios";
+
+function getUrl(subUrl) {
+    const urlRoot = 'http://127.0.0.1:8000'
+    return `${urlRoot}${subUrl}`
+}
 
 const Board = () => {
     const {mbti} = useParams()
+    const [posts, setPosts] = useState([])
+
+    useEffect(() => {
+        const url = getUrl('/api/posts/mbti/intp/')
+        console.log(url)
+        axios.get(url)
+            .then(response => {
+                setPosts(response.data)
+            }).catch(error => {
+            console.error('Error during get posts:', error)
+        })
+    }, []);
+
 
     return (
         <>
@@ -19,8 +38,12 @@ const Board = () => {
 
                 <hr/>
                 <div className={style.vertical}>
-                    <Link to={`/board_detail/1`}>ISTP는 이쁜사람이 많은 가요?</Link>
-                    <Link to={`/board_detail/2`}>--TP 특징</Link>
+                    {posts.map(post => (
+                        <>
+                            <Link to={`/board_detail/${post.id}`}>{post.title}</Link>
+                        </>
+                    ))
+                    }
                 </div>
 
                 <hr/>

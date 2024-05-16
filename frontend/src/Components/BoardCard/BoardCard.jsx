@@ -13,7 +13,7 @@ const BoardCard = ({mbti}) => {
     return (
         <>
             <div className={style.div}>
-                <Link to={`/board/${mbti}/`}><h3>Board-{mbti}</h3></Link>
+                <Link to={`/board/${mbti}/`}><h3>{mbti}</h3></Link>
             </div>
         </>
     )
