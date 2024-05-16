@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "rest_framework",
+    'django_seed',
 
     "account.apps.AccountConfig",
     "post.apps.PostConfig",
