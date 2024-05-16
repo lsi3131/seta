@@ -1,4 +1,6 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.db.models import Count, F
+from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,6 +9,20 @@ from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
 
+def serialize_post(post):
+    return {
+        "id" : post.id,
+        "author" : post.author.username,
+        "category" : post.category.name,
+        "title" : post.title,
+        #"content" : post.content,
+        "hits" : post.hits,
+        "likes" : post.likes.count(),
+        "comments" : post.comments.count(),
+        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at" : post.created_at,
+        "updated_at" : post.updated_at,
+    }
 
 def serialize_comment(comment):
     if not comment:
@@ -34,6 +50,48 @@ def get_children_data(comment):
     for child in children:
         children_data.append(serialize_comment(child))
     return children_data
+
+
+class PostAPIView(APIView) :
+    #permission_classes = [IsAuthenticatedOrReadOnly]
+    def get(self, request, mbti):
+        mbti = get_object_or_404(Mbti, mbti_type= mbti)
+        posts = Post.objects.filter(mbti = mbti)
+
+        #필터링 [제목 / 내용 / 작성자]
+        category = request.GET.get('category')
+        if category == 'title' :
+            search = request.GET.get("search")
+            posts = posts.filter(title__contains=search)
+        elif category == 'content' :
+            search = request.GET.get("search")
+            posts = posts.filter(content__contains=search)
+        elif category == 'author' :
+            search = request.GET.get("search")
+            posts = posts.filter(author__username__contains=search)
+
+        #정렬 [좋아요순 / 최근순 / 댓글순]
+        order = request.GET.get("order")
+        if order == 'like' :
+            posts = posts.annotate(like_count=Count(F('likes'))).order_by('-like_count')
+        elif order == 'recent' :
+            posts = posts.order_by('-created_at')
+        elif order == 'comment' :
+            posts = posts.annotate(comment_count=Count(F('comments'))).order_by('-comment_count')
+
+        #페이지네이션 30개씩
+        paginator = Paginator(posts, 30) 
+        page_number = request.GET.get("page")
+        if page_number :
+            posts = paginator.get_page(page_number)
+
+
+        response_data = []
+        for post in posts:
+            response_data.append(serialize_post(post))
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
 
 
 class PostCommentsAPIView(APIView):
