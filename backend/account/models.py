@@ -16,7 +16,7 @@ class User(AbstractUser):
     # login email 로 ~ 
     email = models.EmailField(unique=True)
     introduce = models.TextField(blank=True)
-    following = models.ManyToManyField("self", symmetrical=False, through="Follow", related_name="followers")
+    following = models.ManyToManyField("self", blank=True, symmetrical=False, through="Follow", related_name="followers")
     percentIE = models.FloatField(default=0)
     percentNS = models.FloatField(default=0)
     percentFT = models.FloatField(default=0)
