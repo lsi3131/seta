@@ -1,11 +1,28 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.db.models import Count, F
+from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import *
 from .validate import *
+from rest_framework.decorators import api_view, permission_classes
 
+def serialize_post(post):
+    return {
+        "id" : post.id,
+        "author" : post.author.username,
+        "category" : post.category.name,
+        "title" : post.title,
+        #"content" : post.content,
+        "hits" : post.hits,
+        "likes" : post.likes.count(),
+        "comments" : post.comments.count(),
+        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at" : post.created_at,
+        "updated_at" : post.updated_at,
+    }
 
 def serialize_comment(comment):
     if not comment:
@@ -33,6 +50,48 @@ def get_children_data(comment):
     for child in children:
         children_data.append(serialize_comment(child))
     return children_data
+
+
+class PostAPIView(APIView) :
+    #permission_classes = [IsAuthenticatedOrReadOnly]
+    def get(self, request, mbti):
+        mbti = get_object_or_404(Mbti, mbti_type= mbti)
+        posts = Post.objects.filter(mbti = mbti)
+
+        #필터링 [제목 / 내용 / 작성자]
+        category = request.GET.get('category')
+        if category == 'title' :
+            search = request.GET.get("search")
+            posts = posts.filter(title__contains=search)
+        elif category == 'content' :
+            search = request.GET.get("search")
+            posts = posts.filter(content__contains=search)
+        elif category == 'author' :
+            search = request.GET.get("search")
+            posts = posts.filter(author__username__contains=search)
+
+        #정렬 [좋아요순 / 최근순 / 댓글순]
+        order = request.GET.get("order")
+        if order == 'like' :
+            posts = posts.annotate(like_count=Count(F('likes'))).order_by('-like_count')
+        elif order == 'recent' :
+            posts = posts.order_by('-created_at')
+        elif order == 'comment' :
+            posts = posts.annotate(comment_count=Count(F('comments'))).order_by('-comment_count')
+
+        #페이지네이션 30개씩
+        paginator = Paginator(posts, 30) 
+        page_number = request.GET.get("page")
+        if page_number :
+            posts = paginator.get_page(page_number)
+
+
+        response_data = []
+        for post in posts:
+            response_data.append(serialize_post(post))
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
 
 
 class PostCommentsAPIView(APIView):
@@ -109,3 +168,36 @@ class PostCommentDetailAPIView(APIView):
             {"message": "댓글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def LikeyPost(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+    user = request.user.id 
+
+    #frontend에서 'like'요청을 보내면 '좋아요'기능 실행
+    like = request.data.get('like', 0)
+    
+    if like:    
+        post.likes.add(user)
+        return Response({'message': '좋아요'},status=status.HTTP_200_OK)
+    else:
+        post.likes.remove(user)
+        return Response({'message': '좋아요 취소'},status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Recommend(request, post_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    user = request.user.id
+
+    #frontend에서 'recommend' 보내면 '추천'기능 실행
+    Reco = request.data.get('recommend',0)
+
+    if Reco:    
+        comment.recommend.add(user)
+        return Response({ "message":"추천"},status=status.HTTP_200_OK)
+    else:
+        comment.recommend.remove(user)
+        return Response({ "message":"추천 취소"},status=status.HTTP_200_OK)
