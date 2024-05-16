@@ -1,17 +1,26 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
 from django.contrib.auth import get_user_model
-# Create your views here.
-from rest_framework.decorators import api_view
+from .permissions import AccountVIEWPermission
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from post.views import serialize_post
 from .util import AccountValidator
-from .models import Follow, User
+from .models import Follow, User, Mbti
+
 
 validator = AccountValidator()
-
+User = get_user_model()
 
 class AccountAPIView(APIView):
+
+    permission_classes = [AccountVIEWPermission]
 
     def post(self, request):
         data = request.data
@@ -19,6 +28,17 @@ class AccountAPIView(APIView):
         password = data.get('password', None)
         email = data.get('email', None)
         introduce = data.get('introduce', '')
+
+        validate_type_values = {
+            'username': username,
+            'password': password,
+            'email': email,
+        }
+
+        for v_type, value in validate_type_values.items():
+            request_data = {'data': value}
+            if not validator.validate(v_type, request_data):
+                return validator.get_response_data()
 
         get_user_model().objects.create_user(
             username=username, password=password, email=email, introduce=introduce)
@@ -30,6 +50,91 @@ class AccountAPIView(APIView):
             "introduce": introduce,
         }, status=status.HTTP_201_CREATED)
 
+    def put(self, request):
+        # 기존 데이터에서 부분적으로 업데이트 될 수 있도록 짤거고 mbti 가 추가
+        user = request.user
+        data = request.data
+        email = data.get('email', user.email)
+        introduce = data.get('introduce', user.introduce)
+
+        if data.get('email') and not validator.validate('email', {'data': email}):
+            return validator.get_response_data()
+        
+        user.email = email
+        user.introduce = introduce
+        user.save()
+
+        return Response({
+            "message":"회원 정보가 수정되었습니다"
+        }, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+class AccountPasswordAPIView(APIView):
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def put(self, request):
+        data = request.data
+        user = request.user
+
+        old_password = data.get('old_password', None)
+        new_password = data.get('new_password', None)
+
+        if not old_password or not new_password:
+            return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 이전 비밀번호 일치 체크
+        if not check_password(old_password, user.password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 신규 비밀번호 유효성 체크
+        if not validator.validate('password', {'data': new_password}):
+            return validator.get_response_data()
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({"message": "비밀번호가 수정되었습니다."}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+        user = request.user
+
+        password = data.get('password', None)
+
+        if not password:
+            return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 비밀번호 일치 체크
+        if not check_password(password, user.password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "인증에 성공했습니다."}, status=status.HTTP_200_OK)
+
+class ProfileAPIView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+        user_mbti = user.mbti
+        return Response({
+            "username": user.username,
+            "email": user.email,
+            "introduce": user.introduce,
+            "mbti": user_mbti.mbti_type if user_mbti else None,
+            "mbti_description": user_mbti.description if user_mbti else "",
+            "percentIE": user.percentIE,
+            "percentNS": user.percentNS,
+            "percentFT": user.percentFT,
+            "percentPJ": user.percentPJ,
+            "following_count": user.following.count(),
+            "followers_count": user.followers.count(),
+            "posts": [ serialize_post(post) for post in user.post_set.all() ],
+            "like_posts": [ serialize_post(post) for post in user.like_posts.all() ]
+        }, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def validate_password(request):
@@ -50,11 +155,15 @@ def validate_email(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def follow(request, username):
     to_user= get_object_or_404(User, username=username)
     from_user = request.user
 
-    if request.data:
+    #frontend에 'follow'값을 보내주면 'follow'기능 요청
+    following = request.data.get('follow',0)
+
+    if following:
         Follow.objects.get_or_create(
             from_user=from_user,
             to_user=to_user)
@@ -65,3 +174,20 @@ def follow(request, username):
         follower.delete()
         return Response(
             {"message": f"{from_user} Un following {to_user}"}, status=status.HTTP_200_OK)
+
+
+class MbtiAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        data = request.data
+        user = request.user
+        mbti_type = data.get('mbti_type', None)
+
+        if not mbti_type:
+            return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.mbti = Mbti.objects.get(mbti_type=mbti_type)
+        user.save()
+        return Response({"message": "MBTI가 설정되었습니다."}, status=status.HTTP_200_OK)
