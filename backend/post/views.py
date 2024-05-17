@@ -11,21 +11,6 @@ from rest_framework.decorators import api_view, permission_classes
 
 def serialize_post(post):
     return {
-        "id" : post.id,
-        "author" : post.author.username,
-        "category" : post.category.name,
-        "title" : post.title,
-        #"content" : post.content,
-        "hits" : post.hits,
-        "likes" : post.likes.count(),
-        "comments" : post.comments.count(),
-        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
-        "created_at" : post.created_at,
-        "updated_at" : post.updated_at,
-    }
-
-def serialize_post(post):
-    return {
         "id": post.id,
         "author": post.author.username,
         "category": post.category.name,
@@ -80,15 +65,20 @@ class PostAPIView(APIView):
     def get(self, request, mbti):
         posts = self.mbti_board_filter(mbti)
 
-        # 필터링 [제목 / 내용 / 작성자]
+        # 카테고리 필터링
         category = request.GET.get('category')
-        if category == 'title':
+        if category:
+            posts = posts.filter(category__name=category)
+
+        # 검색 조건 필터링 [제목 / 내용 / 작성자]
+        search_type = request.GET.get('searchType')
+        if search_type == 'title':
             search = request.GET.get("search")
             posts = posts.filter(title__contains=search)
-        elif category == 'content':
+        elif search_type == 'content':
             search = request.GET.get("search")
             posts = posts.filter(content__contains=search)
-        elif category == 'author':
+        elif search_type == 'author':
             search = request.GET.get("search")
             posts = posts.filter(author__username__contains=search)
 
@@ -103,8 +93,9 @@ class PostAPIView(APIView):
             posts = posts.annotate(comment_count=Count(
                 F('comments'))).order_by('-comment_count')
 
-        # 페이지네이션 30개씩
-        paginator = Paginator(posts, 30)
+        # 페이지네이션 15개씩
+        per_page = 15
+        paginator = Paginator(posts, per_page)
         page_number = request.GET.get("page")
         if page_number:
             posts = paginator.get_page(page_number)
@@ -112,7 +103,13 @@ class PostAPIView(APIView):
         for post in posts:
             response_data.append(serialize_post(post))
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        paginated_response_data = {
+            'total_page': paginator.num_pages,
+            "per_page": per_page,
+            'results': response_data,
+        }
+
+        return Response(paginated_response_data, status=status.HTTP_200_OK)
 
 class CreatePostAPIView(APIView):
     permission_classes=[IsAuthenticated]
