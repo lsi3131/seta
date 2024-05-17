@@ -44,20 +44,20 @@ const mbtiParams = {
         fontColor: "#FFA800", buttonColor: "#FFA800"
     },
     "esfj": {
-        image: require("../../Assets/images/esfj.jpg"), mainColor: "#72C9CB",
-        fontColor: "#72C9CB", buttonColor: "#72C9CB"
+        image: require("../../Assets/images/esfj.jpg"), mainColor: "#72C9CB77",
+        fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
     },
     "isfj": {
-        image: require("../../Assets/images/isfj.jpg"), mainColor: "#72C9CB",
-        fontColor: "#72C9CB", buttonColor: "#72C9CB"
+        image: require("../../Assets/images/isfj.jpg"), mainColor: "#72C9CB77",
+        fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
     },
     "istj": {
-        image: require("../../Assets/images/istj.jpg"), mainColor: "#72C9CB",
-        fontColor: "#72C9CB", buttonColor: "#72C9CB"
+        image: require("../../Assets/images/istj.jpg"), mainColor: "#72C9CB77",
+        fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
     },
     "estj": {
-        image: require("../../Assets/images/estj.jpg"), mainColor: "#72C9CB",
-        fontColor: "#72C9CB", buttonColor: "#72C9CB"
+        image: require("../../Assets/images/estj.jpg"), mainColor: "#72C9CB77",
+        fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
     },
     "infj": {
         image: require("../../Assets/images/infj.jpg"), mainColor: "#E1FFDC",
@@ -92,12 +92,12 @@ const getButtonColor = (mbti) => {
     return mbtiParams[mbti.toLowerCase()].buttonColor
 }
 
-const BoardTop = ({mbti}) => {
+const BoardTop = ({mbti, description}) => {
     return (
         <div className={style.board_top} style={{background: getMainColor(mbti)}}>
             <div className={style.board_top_text_container}>
                 <h3>{mbti}</h3>
-                <p>뜨거운 논쟁을 즐기는 사색가</p>
+                <p>{description}</p>
             </div>
             <div className={style.board_top_image}>
                 <img className={style.board_top_image_size} src={getImage(mbti)} alt=""/>
@@ -111,7 +111,7 @@ const BoardPost = ({post, mbti}) => {
         <>
             <div className={style.board_post}>
                 <div className={style.board_post_left}>
-                    <div className={style.board_category}>
+                    <div className={style.board_post_category}>
                         <p style={{color: getFontColor(mbti)}}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
@@ -160,20 +160,50 @@ const BoardPostList = ({mbti, posts}) => {
     );
 }
 
-const BoardCategory = () => {
+const BoardCategory = ({filter, order, onCategoryChanged}) => {
+    useEffect(() => {
+        //post 변경에 다른 값 갱신
+    }, [filter, order]);
+
+
+    const handleFilter = (data) => {
+        onCategoryChanged('filter', data)
+    }
+
+    const handleOrder = (data) => {
+        onCategoryChanged('order', data)
+    }
+
+    const categoryButtonFontStyle = (buttonFilter) => {
+        if (filter === buttonFilter) {
+            return {
+                fontWeight: "bold"
+            }
+        }
+    }
+
+    const orderButtonFontStyle = (buttonOrder) => {
+        if (order === buttonOrder) {
+            return {
+                fontWeight: "bold"
+            }
+        }
+    }
+
+
     return (
         <div>
             <div className={style.board_category}>
                 <div className={style.board_category_sub}>
-                    <p>전체글</p>
-                    <p>질문있어요</p>
-                    <p>유머</p>
-                    <p>창작</p>
+                    <button style={ categoryButtonFontStyle('')} onClick={() => handleFilter('')}>전체글</button>
+                    <button style={ categoryButtonFontStyle('질문')} onClick={() => handleFilter('질문')}>질문있어요</button>
+                    <button style={ categoryButtonFontStyle('유머')} onClick={() => handleFilter('유머')}>유머</button>
+                    <button style={ categoryButtonFontStyle('창작')} onClick={() => handleFilter('창작')}>창작</button>
                 </div>
                 <div className={style.board_category_sub}>
-                    <p>최신순</p>
-                    <p>추천순</p>
-                    <p>댓글순</p>
+                    <button style={ orderButtonFontStyle('recent')} onClick={() => handleOrder('recent')}>최신순</button>
+                    <button style={ orderButtonFontStyle('like')} onClick={() => handleOrder('like')}>추천순</button>
+                    <button style={ orderButtonFontStyle('comment')} onClick={() => handleOrder('comment')}>댓글순</button>
                 </div>
             </div>
             <hr className={style.thick_line}/>
@@ -185,7 +215,6 @@ const BoardCategory = () => {
 const BoardPostBox = ({mbti, posts}) => {
     return (
         <>
-            <BoardCategory/>
             <BoardPostList mbti={mbti} posts={posts}/>
         </>
     );
@@ -197,14 +226,37 @@ const Board = () => {
     const [posts, setPosts] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
+    const [filter, setFilter] = useState('')    //title, content, category
+    const [order, setOrder] = useState('')    //recent, like, comment
+    const [description, setDescription] = useState('대담한 통솔가')    //recent, like, comment
 
     useEffect(() => {
+        console.log('use effect-1')
         handlePageChange(currentPage)
-    }, []);
+    }, [currentPage, order, filter]);
+
+
+    const handleCategoryChanged = (type, data) => {
+        console.log('handle cate', type, data)
+        if (type === 'filter') {
+            setFilter(data);
+            setCurrentPage(1)
+        } else if (type === 'order') {
+            setOrder(data);
+            setCurrentPage(1)
+        }
+    }
 
     const handlePageChange = (page) => {
         const mbtiLower = mbti.toLowerCase()
-        const url = getUrl(`/api/posts/mbti/${mbtiLower}/?page=${page}`)
+        let url = getUrl(`/api/posts/mbti/${mbtiLower}/?page=${page}`)
+        if (filter !== '') {
+            url += `&category=${filter}`
+        }
+        if (order !== '') {
+            url += `&order=${order}`
+        }
+
         console.log(url)
         axios.get(url)
             .then(response => {
@@ -220,8 +272,9 @@ const Board = () => {
     return (
         <>
             <div>
-                <BoardTop mbti={mbti}/>
+                <BoardTop mbti={mbti} description={description}/>
 
+                <BoardCategory filter={filter} order={order} onCategoryChanged={handleCategoryChanged}/>
                 <BoardPostBox mbti={mbti} posts={posts}/>
 
                 <div className={style.board_button_container}>

@@ -65,15 +65,20 @@ class PostAPIView(APIView):
     def get(self, request, mbti):
         posts = self.mbti_board_filter(mbti)
 
-        # 필터링 [제목 / 내용 / 작성자]
+        # 카테고리 필터링
         category = request.GET.get('category')
-        if category == 'title':
+        if category:
+            posts = posts.filter(category__name=category)
+
+        # 검색 조건 필터링 [제목 / 내용 / 작성자]
+        search_type = request.GET.get('searchType')
+        if search_type == 'title':
             search = request.GET.get("search")
             posts = posts.filter(title__contains=search)
-        elif category == 'content':
+        elif search_type == 'content':
             search = request.GET.get("search")
             posts = posts.filter(content__contains=search)
-        elif category == 'author':
+        elif search_type == 'author':
             search = request.GET.get("search")
             posts = posts.filter(author__username__contains=search)
 

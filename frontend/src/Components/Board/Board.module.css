@@ -53,6 +53,7 @@
 .board_category {
     display: flex;
     justify-content: space-between;
+    margin-top: 50px;
 }
 
 .board_category > p {
@@ -82,6 +83,10 @@
     margin: 5px;
     padding: 15px 25px;
     border-radius: 10px;
+}
+
+.board_post_category {
+    display: flex;
 }
 
 .board_post_title {
@@ -118,6 +123,18 @@
 .board_category_sub > p {
     margin-right: 20px;
     margin-bottom: 10px;
+}
+
+.board_category_sub > button {
+    padding-right: 20px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    background-color: #FFFFFF;
+    border: 0;
+}
+
+.board_category_sub > button:hover {
+    font-weight: bold;
 }
 
 .board_like {
