@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import style from './Board.module.css'
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
-import enfj from "../../Assets/images/enfj.jpg"
+import formatDate from "../../Utils/helpers"
+import Pagination from "../Pagenation/Pagination";
 
 function getUrl(subUrl) {
     const urlRoot = 'http://127.0.0.1:8000'
@@ -93,13 +94,13 @@ const getButtonColor = (mbti) => {
 
 const BoardTop = ({mbti}) => {
     return (
-        <div className={style.boardTop} style={{background: getMainColor(mbti)}}>
-            <div>
+        <div className={style.board_top} style={{background: getMainColor(mbti)}}>
+            <div className={style.board_top_text_container}>
                 <h3>{mbti}</h3>
                 <p>뜨거운 논쟁을 즐기는 사색가</p>
             </div>
-            <div>
-                <img className={style.img_size} src={getImage(mbti)} alt=""/>
+            <div className={style.board_top_image}>
+                <img className={style.board_top_image_size} src={getImage(mbti)} alt=""/>
             </div>
         </div>
     )
@@ -110,11 +111,11 @@ const BoardPost = ({post, mbti}) => {
         <>
             <div className={style.board_post}>
                 <div className={style.board_post_left}>
-                    <div className={style.board_post_category}>
+                    <div className={style.board_category}>
                         <p style={{color: getFontColor(mbti)}}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
-                    <Link to={`/detail/${post.id}`}>{post.title}</Link>
+                        <Link to={`/detail/${post.id}`}>{post.title}</Link>
                         <p style={{color: getFontColor(mbti)}}>[{post.hits}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
@@ -122,18 +123,18 @@ const BoardPost = ({post, mbti}) => {
                             <p>{post.author}</p>
                         </div>
                         <div>
-                            <p>{post.created_at}</p>
+                            <p>{formatDate(post.created_at)}</p>
                         </div>
-                        <div className={style.horizontal}>
+                        <div className={style.board_like}>
                             <p>좋아요</p>
                             <p>{post.likes}</p>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div className={style.horizontal}>
+                    <div className={style.board_post_right}>
                         {post.mbti.map(m => (
-                            <p>{m}</p>
+                            <p style={{backgroundColor: getButtonColor(m)}}>{m}</p>
                         ))}
                     </div>
                 </div>
@@ -159,7 +160,7 @@ const BoardPostList = ({mbti}) => {
     }, [mbti]);
 
     return (
-        <div className={style.vertical}>
+        <div>
             {posts.map(post => (
                 <>
                     <BoardPost post={post} mbti={mbti}/>
@@ -173,13 +174,13 @@ const BoardCategory = () => {
     return (
         <div>
             <div className={style.board_category}>
-                <div className={style.horizontal}>
+                <div className={style.board_category_sub}>
                     <p>전체글</p>
                     <p>질문있어요</p>
                     <p>유머</p>
                     <p>창작</p>
                 </div>
-                <div className={style.horizontal}>
+                <div className={style.board_category_sub}>
                     <p>최신순</p>
                     <p>추천순</p>
                     <p>댓글순</p>
@@ -217,6 +218,11 @@ const BoardPostBox = ({mbti}) => {
 
 const Board = () => {
     const {mbti} = useParams()
+    const [posts, setPosts] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const handlePageChange = () => {
+    }
 
     return (
         <>
@@ -225,13 +231,16 @@ const Board = () => {
 
                 <BoardPostBox mbti={mbti}/>
 
-                <hr/>
-
-                <div style={{margin: "20px"}}>
-                    <Link to={`/write`}>글쓰기</Link>
+                <div className={style.board_button_container}>
+                    <Link to={`/write`}>
+                        <button
+                            style={{backgroundColor: getButtonColor(mbti)}}>
+                            글쓰기
+                        </button>
+                    </Link>
                 </div>
 
-                <Link to="/">뒤로</Link>
+                <Pagination currentPage={0} totalPages={3} onPageChange={handlePageChange}/>
             </div>
         </>
     )
