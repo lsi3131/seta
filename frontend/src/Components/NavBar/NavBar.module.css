@@ -7,6 +7,9 @@
     padding: 20px 80px; /* Navbar의 내부 여백을 지정합니다. */
     z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
 }
 
 .left a {
