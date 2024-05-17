@@ -66,7 +66,7 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.post(getUrl('/api/login'), {
+            const response = await axios.post(getUrl('/api/login/'), {
                 username: usernameIn,
                 password: passwordIn,
             })
@@ -88,12 +88,13 @@ function Login() {
             await checkPasswordCheck()
             await checkEmail()
         } catch (error) {}
+        console.log(formValidateChecker)
 
         if (
-            formValidateChecker.username === 'false' ||
-            formValidateChecker.password === 'false' ||
-            formValidateChecker.passwordCheck === 'false' ||
-            formValidateChecker.email === 'false'
+            formValidateChecker.username === false ||
+            formValidateChecker.password === false ||
+            formValidateChecker.passwordCheck === false ||
+            formValidateChecker.email === false
         ) {
             return
         }
@@ -113,9 +114,14 @@ function Login() {
             })
             .catch((error) => {})
     }
+
     async function checkUserName() {
         if (usernameUp === '') {
             setUsernameCheckMessage('')
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
+                username: false,
+            }))
             return
         }
         const data = {
@@ -126,26 +132,26 @@ function Login() {
         try {
             const response = await axios.post(url, data)
             setUsernameCheckMessage(response.data.message)
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 username: true,
-            })
+            }))
         } catch (error) {
             setUsernameCheckMessage(error.response.data.error)
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 username: false,
-            })
+            }))
         }
     }
 
     async function checkPassword() {
         if (passwordUp === '') {
             setPasswordCheckMessage('')
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 password: false,
-            })
+            }))
             return
         }
 
@@ -156,55 +162,65 @@ function Login() {
         const url = getUrl('/api/accounts/validate/password/')
         try {
             const response = await axios.post(url, data)
-            setFormValidateChecker({
-                ...formValidateChecker,
-                password: true,
-            })
+            console.log(response.data.message)
             setPasswordCheckMessage(response.data.message)
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
+                password: true,
+            }))
         } catch (error) {
             setPasswordCheckMessage(error.response.data.error)
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 password: false,
-            })
+            }))
         }
 
+        // 상태 업데이트가 완료된 후에 checkPasswordCheck를 호출합니다.
         checkPasswordCheck()
     }
 
     function checkPasswordCheck() {
         if (passwordConfirmUp === '') {
             setPasswordConfirmCheckMessage('')
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
+                passwordCheck: false,
+            }))
             return
         }
 
         if (formValidateChecker.password === false) {
             setPasswordConfirmCheckMessage('비밀번호를 먼저 확인해주세요.')
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 passwordCheck: false,
-            })
+            }))
             return
         }
 
         if (passwordConfirmUp === passwordUp) {
             setPasswordConfirmCheckMessage('비밀번호가 일치합니다.')
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 passwordCheck: true,
-            })
+            }))
         } else {
             setPasswordConfirmCheckMessage('비밀번호가 일치하지 않습니다.')
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 passwordCheck: false,
-            })
+            }))
         }
     }
 
     async function checkEmail() {
         if (emailUp === '') {
             setEmailCheckMessage('')
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
+                email: false,
+            }))
             return
         }
 
@@ -216,16 +232,16 @@ function Login() {
         try {
             const response = await axios.post(url, data)
             setEmailCheckMessage(response.data.message)
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 email: true,
-            })
+            }))
         } catch (error) {
             setEmailCheckMessage(error.response.data.error)
-            setFormValidateChecker({
-                ...formValidateChecker,
+            setFormValidateChecker((prevState) => ({
+                ...prevState,
                 email: false,
-            })
+            }))
         }
     }
 
