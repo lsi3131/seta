@@ -4,30 +4,32 @@ import style from './NavBar.module.css'
 
 const AuthenticatedNavbar = ({ username }) => {
     return (
-        <nav className={style.navbar}>
-            <div className={style.left}>
-                <Link to="/">HOME</Link>
+        <header className={style.header}>
+            <div className={style.logo}>
+                <Link to="/" style={{ textDecoration: 'none'}}>Logo</Link>
             </div>
-            <div className={style.right}>
+            <nav className={style.navbar}>
+                <Link to="/logout" style={{ textDecoration: 'none'}}>로그아웃</Link>
                 <Link to={`/profile/${username}/`}>{username}</Link>
-            </div>
-        </nav>
+            </nav>
+        </header>
+        
     )
 }
 
 // 인증되지 않은 사용자를 위한 네비게이션
 const UnauthenticatedNavbar = () => {
     return (
-        <nav className={style.navbar}>
-            <div className={style.left}>
-                <Link to="/">HOME</Link>
+        <header className={style.header}>
+            <div className={style.logo}>
+                <Link to="/" style={{ textDecoration: 'none'}}>Logo</Link>
             </div>
-            <div className={style.right}>
-                <Link to="/login" style={{marginRight : "10px"}}>LOGIN</Link>
+            <nav className={style.navbar}>
+                <Link to="/login" style={{ textDecoration: 'none'}}>로그인</Link>
                 {/* 테스트용. 추후 삭제*/}
-                <Link to={`/profile/test_istj`}>test_istj</Link>
-            </div>
-        </nav>
+                <Link to={`/profile/test_istj`} style={{ textDecoration: 'none'}}>프로필</Link>
+            </nav>
+        </header>
     )
 }
 const Navbar = ({ username }) => {
