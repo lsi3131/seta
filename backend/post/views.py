@@ -11,21 +11,6 @@ from rest_framework.decorators import api_view, permission_classes
 
 def serialize_post(post):
     return {
-        "id" : post.id,
-        "author" : post.author.username,
-        "category" : post.category.name,
-        "title" : post.title,
-        #"content" : post.content,
-        "hits" : post.hits,
-        "likes" : post.likes.count(),
-        "comments" : post.comments.count(),
-        "mbti" : [mbti.mbti_type for mbti in post.mbti.all()],
-        "created_at" : post.created_at,
-        "updated_at" : post.updated_at,
-    }
-
-def serialize_post(post):
-    return {
         "id": post.id,
         "author": post.author.username,
         "category": post.category.name,
