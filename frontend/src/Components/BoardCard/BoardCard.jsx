@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 
 const mbti_list = [
-    'INTJ', 'ENTP', 'ENTJ', 'ENTP',
+    'INTJ', 'ENTP', 'ENTJ', 'INTP',
     'INFJ', 'INFP', 'ENFJ', 'ENFP',
     'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ',
     'ISTP', 'ISFP', 'ESTP', 'ESFP',

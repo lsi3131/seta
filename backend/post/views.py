@@ -69,7 +69,7 @@ def get_children_data(comment):
 
 
 class PostAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     # mbti게시판과 일치하는 게시글만
     def mbti_board_filter(self, mbti):
