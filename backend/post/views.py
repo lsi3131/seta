@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated,AllowAny
 from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
@@ -69,7 +69,7 @@ def get_children_data(comment):
 
 
 class PostAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     # mbti게시판과 일치하는 게시글만
     def mbti_board_filter(self, mbti):
@@ -114,7 +114,10 @@ class PostAPIView(APIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
 
-    def post(self, request, mbti):
+class CreatePostAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
         if message:
