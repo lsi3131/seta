@@ -144,20 +144,10 @@ const BoardPost = ({post, mbti}) => {
     )
 }
 
-const BoardPostList = ({mbti}) => {
-    const [posts, setPosts] = useState([])
-
+const BoardPostList = ({mbti, posts}) => {
     useEffect(() => {
-        const mbtiLower = mbti.toLowerCase()
-        const url = getUrl(`/api/posts/mbti/${mbtiLower}/`)
-        console.log(url)
-        axios.get(url)
-            .then(response => {
-                setPosts(response.data)
-            }).catch(error => {
-            console.error('Error during get posts:', error)
-        })
-    }, [mbti]);
+        //post 변경에 다른 값 갱신
+    }, [posts]);
 
     return (
         <div>
@@ -192,25 +182,11 @@ const BoardCategory = () => {
 }
 
 
-const BoardPostBox = ({mbti}) => {
-    const [posts, setPosts] = useState([])
-
-    useEffect(() => {
-        const mbtiLower = mbti.toLowerCase()
-        const url = getUrl(`/api/posts/mbti/${mbtiLower}/`)
-        console.log(url)
-        axios.get(url)
-            .then(response => {
-                setPosts(response.data)
-            }).catch(error => {
-            console.error('Error during get posts:', error)
-        })
-    }, [mbti]);
-
+const BoardPostBox = ({mbti, posts}) => {
     return (
         <>
             <BoardCategory/>
-            <BoardPostList mbti={mbti}/>
+            <BoardPostList mbti={mbti} posts={posts}/>
         </>
     );
 }
@@ -219,9 +195,26 @@ const BoardPostBox = ({mbti}) => {
 const Board = () => {
     const {mbti} = useParams()
     const [posts, setPosts] = useState([])
+    const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
 
-    const handlePageChange = () => {
+    useEffect(() => {
+        handlePageChange(currentPage)
+    }, []);
+
+    const handlePageChange = (page) => {
+        const mbtiLower = mbti.toLowerCase()
+        const url = getUrl(`/api/posts/mbti/${mbtiLower}/?page=${page}`)
+        console.log(url)
+        axios.get(url)
+            .then(response => {
+                setPosts(response.data['results'])
+                setTotalPage(response.data['total_page'])
+                setCurrentPage(page)
+                console.log(posts)
+            }).catch(error => {
+            console.error('Error during get posts:', error)
+        })
     }
 
     return (
@@ -229,7 +222,7 @@ const Board = () => {
             <div>
                 <BoardTop mbti={mbti}/>
 
-                <BoardPostBox mbti={mbti}/>
+                <BoardPostBox mbti={mbti} posts={posts}/>
 
                 <div className={style.board_button_container}>
                     <Link to={`/write`}>
@@ -240,7 +233,7 @@ const Board = () => {
                     </Link>
                 </div>
 
-                <Pagination currentPage={0} totalPages={3} onPageChange={handlePageChange}/>
+                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
             </div>
         </>
     )

@@ -88,8 +88,9 @@ class PostAPIView(APIView):
             posts = posts.annotate(comment_count=Count(
                 F('comments'))).order_by('-comment_count')
 
-        # 페이지네이션 30개씩
-        paginator = Paginator(posts, 30)
+        # 페이지네이션 15개씩
+        per_page = 15
+        paginator = Paginator(posts, per_page)
         page_number = request.GET.get("page")
         if page_number:
             posts = paginator.get_page(page_number)
@@ -97,7 +98,13 @@ class PostAPIView(APIView):
         for post in posts:
             response_data.append(serialize_post(post))
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        paginated_response_data = {
+            'total_page': paginator.num_pages,
+            "per_page": per_page,
+            'results': response_data,
+        }
+
+        return Response(paginated_response_data, status=status.HTTP_200_OK)
 
     def post(self, request, mbti):
         data = request.data.copy()
