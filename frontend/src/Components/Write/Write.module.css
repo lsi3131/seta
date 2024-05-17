@@ -8,13 +8,25 @@
 }
 
 .vertical {
-  display: flex;
-  flex-direction: column;
   margin-top: 10px;
 }
 
-.divImage {
-  margin-left: 20px;
+.form{
   display: flex;
+  flex-direction: column;
+  width: 800px;
+  margin: 0 auto;    
 }
 
+
+.mbti{
+  display: flex;
+  margin: 0 auto;
+  height: 30px;
+}
+
+.radio{
+  display: flex;
+  margin: 0 auto;
+  height: 30px;
+}
