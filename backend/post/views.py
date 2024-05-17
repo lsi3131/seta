@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated,AllowAny
 from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
@@ -54,7 +54,7 @@ def get_children_data(comment):
 
 
 class PostAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     # mbti게시판과 일치하는 게시글만
     def mbti_board_filter(self, mbti):
@@ -65,15 +65,20 @@ class PostAPIView(APIView):
     def get(self, request, mbti):
         posts = self.mbti_board_filter(mbti)
 
-        # 필터링 [제목 / 내용 / 작성자]
+        # 카테고리 필터링
         category = request.GET.get('category')
-        if category == 'title':
+        if category:
+            posts = posts.filter(category__name=category)
+
+        # 검색 조건 필터링 [제목 / 내용 / 작성자]
+        search_type = request.GET.get('searchType')
+        if search_type == 'title':
             search = request.GET.get("search")
             posts = posts.filter(title__contains=search)
-        elif category == 'content':
+        elif search_type == 'content':
             search = request.GET.get("search")
             posts = posts.filter(content__contains=search)
-        elif category == 'author':
+        elif search_type == 'author':
             search = request.GET.get("search")
             posts = posts.filter(author__username__contains=search)
 
@@ -88,8 +93,9 @@ class PostAPIView(APIView):
             posts = posts.annotate(comment_count=Count(
                 F('comments'))).order_by('-comment_count')
 
-        # 페이지네이션 30개씩
-        paginator = Paginator(posts, 30)
+        # 페이지네이션 15개씩
+        per_page = 15
+        paginator = Paginator(posts, per_page)
         page_number = request.GET.get("page")
         if page_number:
             posts = paginator.get_page(page_number)
@@ -97,9 +103,18 @@ class PostAPIView(APIView):
         for post in posts:
             response_data.append(serialize_post(post))
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        paginated_response_data = {
+            'total_page': paginator.num_pages,
+            "per_page": per_page,
+            'results': response_data,
+        }
 
-    def post(self, request, mbti):
+        return Response(paginated_response_data, status=status.HTTP_200_OK)
+
+class CreatePostAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
         if message:
@@ -111,9 +126,9 @@ class PostAPIView(APIView):
         post = Post.objects.create(title=title, category=category,
                             content=content,author=request.user)
         mbti_types = data['mbti']
-        for mbti in mbti_types:
-            mbti = get_object_or_404(Mbti, mbti_type=mbti)
-            post.mbti.add(mbti)
+        for mbti_type in mbti_types:
+            mbti_s = get_object_or_404(Mbti, mbti_type=mbti_type)
+            post.mbti.add(mbti_s)
 
         return Response(
             {"message": "게시글이 작성되었습니다."},
