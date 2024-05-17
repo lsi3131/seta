@@ -226,8 +226,8 @@ const Board = () => {
     const [posts, setPosts] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
-    const [filter, setFilter] = useState('')    //title, content, category
-    const [order, setOrder] = useState('')    //recent, like, comment
+    const [filter, setFilter] = useState('')    //질문, 유머, 창작 등
+    const [order, setOrder] = useState('recent')    //recent, like, comment
     const [description, setDescription] = useState('대담한 통솔가')    //recent, like, comment
 
     useEffect(() => {
