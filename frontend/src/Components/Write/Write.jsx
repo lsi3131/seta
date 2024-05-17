@@ -1,4 +1,5 @@
 import style from "./Write.module.css";
+import { Link,useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -9,7 +10,8 @@ function getUrl(subUrl) {
 }
 
 const Write = () => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken')
+    const [radios, setRadios] = useState()
 
     const [inputs, setInputs] = useState({
         title: "",
@@ -19,6 +21,7 @@ const Write = () => {
     });
 
     const { title, content, category, mbti } = inputs;
+
 
     const [mbti_checks, setMbtiChecks] = useState([
         { id: 1, label: 'ISTJ', checked: false },
@@ -54,15 +57,7 @@ const Write = () => {
 
     const onChange = (e) => {
         const { value, id, type, name } = e.target;
-        if (type === 'checkbox') {
-            const updatedMbti = mbti.includes(value)
-                ? mbti.filter(item => item !== value)
-                : [...mbti, value];
-            setInputs({
-                ...inputs,
-                mbti: updatedMbti
-            });
-        } else if (type === 'radio' && name === 'radios') {
+        if (type === 'radio' && name === 'radios') {
             setInputs({
                 ...inputs,
                 category: value
@@ -77,7 +72,7 @@ const Write = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const url = getUrl(`/api/posts/mbti/${inputs.mbti}/`);
+        const url = getUrl(`/api/posts/create/`);
 
         console.log(inputs)
         console.log(url)
@@ -97,21 +92,28 @@ const Write = () => {
 
     return (
         <div className={style.vertical}>
-            <h1>글작성</h1>
+            <div className={style.board_top}>
+                <h1>글작성</h1>
+            </div>
             <form className={style.form }onSubmit={onSubmit}>
                 <div className={style.radio}>
-                    <label htmlFor="category1">질문있어요</label>
-                    <input type="radio" id='category1' name="radios" value="질문있어요" checked={category === "질문있어요"} onChange={onChange} />
-                    <label htmlFor="category2">유머</label>
-                    <input type="radio" id='category2' name="radios" value="유머" checked={category === "유머"} onChange={onChange} />
-                    <label htmlFor="category3">창작</label>
-                    <input type="radio" id='category3' name="radios" value="창작" checked={category === "창작"} onChange={onChange} />
+                    <div>
+                        <input type="radio" id='category1' name="radios" value="질문있어요" checked={category === "질문있어요"} onChange={onChange} />
+                        <label htmlFor="category1">질문있어요</label>
+                    </div>
+                    <div>
+                        <input type="radio" id='category2' name="radios" value="유머" checked={category === "유머"} onChange={onChange} />
+                        <label htmlFor="category2">유머</label>
+                    </div>
+                    <div>
+                        <input type="radio" id='category3' name="radios" value="창작" checked={category === "창작"} onChange={onChange} />
+                        <label htmlFor="category3">창작</label>
+                    </div>
                 </div>
             <hr />
                 <div className={style.mbti}>
                     {mbti_checks.map(check => (
-                        <div key={check.id}>
-                            <label htmlFor={`check-${check.id}`}>{check.label}</label>
+                        <div key={check.id} >
                             <input
                                 type="checkbox"
                                 id={`check-${check.id}`}
@@ -119,16 +121,29 @@ const Write = () => {
                                 checked={check.checked}
                                 onChange={() => handleCheckboxChange(check.id)}
                             />
+                            <label htmlFor={`check-${check.id}`}>{check.label}</label>
                         </div>
                     ))}
                 </div>
-                <label htmlFor="title">제목 :</label>
-                <input type="text" id="title"
-                placeholder="제목을 입력해 주세요"
-                value={title} onChange={onChange} />
-                <label htmlFor="content">내용 : </label>
-                <textarea rows={4} id="content" placeholder="내용을 입력해 주세요" value={content} onChange={onChange} />
-                <button type="submit">등록</button>
+                <hr />
+                <div className={style.title}>
+                    <div>
+                        <label htmlFor="title">제목</label>
+                        <input type="text" id="title"
+                        placeholder="제목을 입력해 주세요"
+                        value={title} onChange={onChange} />
+                    </div>
+                </div>
+                <div className={style.content}>
+                    <div>
+                        <label htmlFor="content">내용</label>
+                        <textarea 
+                        id="content" 
+                        placeholder="뭐 욕설안돼 어쩌구 비방이 저쩌구 신고될수있으니 주의해 주세요" 
+                        value={content} onChange={onChange} />
+                    </div>
+                </div>
+                <button className={style.button} type="submit">등록</button>
             </form>
         </div>
     );

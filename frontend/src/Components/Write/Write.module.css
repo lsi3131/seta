@@ -1,32 +1,146 @@
-.div {
-  margin-top: 10px;
-}
 
-.horizontal {
+.board_top {
   display: flex;
   align-items: center;
+  margin: 10px 0;
+  height: 200px;
+  padding: 25px 40px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  background: rgb(225, 255, 220);
+    background: linear-gradient(
+        90deg,
+        rgba(225, 255, 220, 1) 14%,
+        rgba(255, 243, 220, 1) 37%,
+        rgba(240, 220, 255, 1) 64%,
+        rgba(225, 253, 254, 1) 90%
+    );
+} 
+
+.board_top h1{
+  width: 1200px;
+  margin: 0 auto;
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .vertical {
   margin-top: 10px;
 }
 
-.form{
+.form {
   display: flex;
   flex-direction: column;
   width: 800px;
-  margin: 0 auto;    
+  margin: 5rem auto;
+
+}
+
+/* input_Radio */
+.radio {
+  display: flex;
+  font-size: 1.4rem;
+  font-weight: 200;
+}
+
+.radio input[type='radio'] {
+  display: none;
+}
+
+.radio input[type='radio']+label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.radio input[type='radio']:checked+label {
+  font-weight: 700;
+}
+
+/* MBTI 선택  */
+.mbti {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+}
+.mbti div{
+  flex: 0 0 12.5%;
+  box-sizing: border-box;
+  text-align: center;
+  
 }
 
 
-.mbti{
-  display: flex;
-  margin: 0 auto;
-  height: 30px;
+.mbti input[type='checkbox']+label {
+  cursor: pointer;
+  user-select: none;
+  margin-left: 4px;
+  transition: font-weight 0.2s;
 }
 
-.radio{
+.mbti input[type='checkbox']:checked +label{
+  font-weight: 700;
+  text-decoration: underline ;
+}
+
+
+/* 제목 */
+.title, 
+.content {
+  margin-top: 2rem;
+  width: 100%;
   display: flex;
-  margin: 0 auto;
-  height: 30px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title div,
+.content div {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.title input {
+  font-size: 1rem;
+  height: 2rem;
+  padding-left: 10px;
+}
+
+.title label,
+.content label {
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding-left: 10px;
+}
+
+/* 내용 */
+
+.content textarea{
+  font-size: 1rem;
+  height: 20rem;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+/* 버튼 */
+.button {
+  height: 50px;
+  width: 500px;
+  margin: 10px auto;
+  background: rgb(225, 255, 220);
+    background: linear-gradient(
+        90deg,
+        rgba(225, 255, 220, 1) 14%,
+        rgba(255, 243, 220, 1) 37%,
+        rgba(240, 220, 255, 1) 64%,
+        rgba(225, 253, 254, 1) 90%
+    );
 }
