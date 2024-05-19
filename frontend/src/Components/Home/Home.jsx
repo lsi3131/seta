@@ -16,13 +16,19 @@ const Home = () => {
         height: "500px",
         margin: "0 auto"
     }
+
+    const textStyles = {
+        fontSize: "25px",
+        fontWeight: "bold",
+        margin: "50px 40px"
+    }
     return (
         <div>
             <div style={containerStyles}>
                 <ImageSlider slides={slides} />
             </div>
 
-            <h1>MBTI 게시판</h1>
+            <h2 style={textStyles}>MBTI 게시판</h2>
             <BoardCardList/>
         </div>
     )
