@@ -4,22 +4,22 @@ import {Link} from "react-router-dom";
 
 
 const mbti_list = [
-    { url: "http://via.placeholder.com/250x250", mbti: "INTJ"},
-    { url: "http://via.placeholder.com/250x250", mbti: "ENTP"},
-    { url: "http://via.placeholder.com/250x250", mbti: "ENTJ"},
-    { url: "http://via.placeholder.com/250x250", mbti: "ENTP"},
-    { url: "http://via.placeholder.com/250x250", mbti: "INFJ"},
-    { url: "http://via.placeholder.com/250x250", mbti: "INFP"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ENFJ"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ENFP"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ISTJ"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ISFJ"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ESTJ"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ESFJ"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ISTP"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ISFP"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ESTP"}, 
-    { url: "http://via.placeholder.com/250x250", mbti: "ESFP"}, 
+    { url: require("../../Assets/images/card_INTJ.png"), mbti: "INTJ"},
+    { url: require("../../Assets/images/card_INTP.png"), mbti: "INTP"},
+    { url: require("../../Assets/images/card_ENTP.png"), mbti: "ENTP"},
+    { url: require("../../Assets/images/card_ENTJ.png"), mbti: "ENTJ"},
+    { url: require("../../Assets/images/card_INFJ.png"), mbti: "INFJ"},
+    { url: require("../../Assets/images/card_INFP.png"), mbti: "INFP"}, 
+    { url: require("../../Assets/images/card_ENFJ.png"), mbti: "ENFJ"}, 
+    { url: require("../../Assets/images/card_ENFP.png"), mbti: "ENFP"}, 
+    { url: require("../../Assets/images/card_ISTJ.png"), mbti: "ISTJ"}, 
+    { url: require("../../Assets/images/card_ISFJ.png"), mbti: "ISFJ"}, 
+    { url: require("../../Assets/images/card_ESTJ.png"), mbti: "ESTJ"}, 
+    { url: require("../../Assets/images/card_ESFJ.png"), mbti: "ESFJ"}, 
+    { url: require("../../Assets/images/card_ISTP.png"), mbti: "ISTP"}, 
+    { url: require("../../Assets/images/card_ISFP.png"), mbti: "ISFP"}, 
+    { url: require("../../Assets/images/card_ESTP.png"), mbti: "ESTP"}, 
+    { url: require("../../Assets/images/card_ESFP.png"), mbti: "ESFP"}, 
 ]
 
 const BoardCard = ({mbti}) => {
@@ -27,7 +27,7 @@ const BoardCard = ({mbti}) => {
         <>
             <div className={style.div}>
                 <Link to={`/board/${mbti.mbti}/`}>
-                    <img src={mbti.url} alt={mbti.mbti} className={style.image}/>
+                    <img src={mbti.url} alt="http://via.placeholder.com/250x250" className={style.image}/>
                 </Link>
             </div>
         </>
