@@ -12,22 +12,163 @@
 /*}*/
 
 .div {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
-.horizontal {
-  display: flex;
-  align-items: center;
+.board_top {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    /*height: 200px;*/
+    padding: 25px 40px;
+    width: 1200px;
+    /*background-color: #E1FFDC;*/
 }
 
-.vertical {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
+.board_top_text_container {
+    display: flex;
+    flex-direction: column;
 }
 
-.divImage {
-  margin-left: 20px;
-  display: flex;
+.board_top_text_container > h3 {
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
+.board_top_text_container > p {
+    font-size: 30px;
+    color: #969696;
+}
+
+.board_top_image {
+    margin-left: 30px;
+}
+
+.board_top_image_size {
+    width: 150px;
+    height: 150px;
+}
+
+.board_category {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.board_category > p {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.board_post {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 10px;
+}
+
+.board_post_left {
+    display: flex;
+    flex-direction: column;
+}
+
+.board_post_right {
+    display: flex;
+}
+
+.board_post_right > p {
+    color: #FFFFFF;
+    /*background-color: #0056b3;*/
+    margin: 5px;
+    padding: 15px 25px;
+    border-radius: 10px;
+}
+
+.board_post_category {
+    display: flex;
+}
+
+.board_post_title {
+    display: flex;
+    margin: 7px 0;
+    align-items: center;
+}
+
+.board_post_title > a {
+    color: #000000;
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: 25px;
+}
+
+.board_post_title > a:hover {
+    color: red;
+}
+
+.board_post_bottom {
+    display: flex;
+}
+
+.board_post_bottom > div {
+    color: #8F8F8F;
+    margin-right: 10px;
+    /*font-size: 10px;*/
+}
+
+.board_category_sub {
+    display: flex;
+}
+
+.board_category_sub > p {
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.board_category_sub > button {
+    padding-right: 20px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    background-color: #FFFFFF;
+    border: 0;
+}
+
+.board_category_sub > button:hover {
+    font-weight: bold;
+}
+
+.board_like {
+    display: flex;
+}
+
+.board_like > p {
+    margin-right: 5px;
+}
+
+.board_button_container {
+    display: flex;
+    justify-content: right;
+    margin: 15px 5px;
+}
+
+.board_button_container > a {
+    color: #FFFFFF;
+    border: 0;
+    text-decoration: none;
+}
+
+.board_button_container > a > button {
+    color: #FFFFFF;
+    padding: 15px 30px;
+    border-radius: 10px;
+    border: 0
+}
+
+.div-image {
+    margin-left: 20px;
+    display: flex;
+}
+
+.thick_line {
+    border: 2px solid black;
+}
