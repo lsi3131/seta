@@ -11,7 +11,7 @@ const AuthenticatedNavbar = ({ username }) => {
     return (
         <header className={style.header}>
             <div className={style.logo}>
-                <Link to="/" style={{ textDecoration: 'none'}}>Logo</Link>
+                <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
             </div>
             <nav className={style.navbar}>
                 <Link to="/logout" style={{ textDecoration: 'none'}}>로그아웃</Link>
@@ -28,7 +28,7 @@ const UnauthenticatedNavbar = () => {
         <header className={style.header}>
             <div className={style.container}>
                 <div className={style.logo}>
-                    <Link to="/" style={{ textDecoration: 'none'}}>Logo</Link>
+                    <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
                 </div>
                 <nav className={style.navbar}>
                     <Link to="/login" style={{ textDecoration: 'none'}}>로그인</Link>
