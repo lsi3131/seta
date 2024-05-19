@@ -8,8 +8,6 @@
     justify-content: space-between;
     align-items: center;
     z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
-
-    text-decoration: none;
 }
 
 .logo {
