@@ -1,161 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import style from './Board.module.css'
-import { Link, useParams } from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 import axios from 'axios'
-import formatDate from '../../Utils/helpers'
+import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
+import BoardTop from "../BoardTop/BoardTop";
 
 function getUrl(subUrl) {
     const urlRoot = 'http://127.0.0.1:8000'
     return `${urlRoot}${subUrl}`
 }
 
-const mbtiParams = {
-    intj: {
-        image: require('../../Assets/images/intj.jpg'),
-        mainColor: '#F0DCFF',
-        fontColor: '#DDB0FF',
-        buttonColor: '#DDB0FF',
-    },
-    intp: {
-        image: require('../../Assets/images/intp.jpg'),
-        mainColor: '#F0DCFF',
-        fontColor: '#DDB0FF',
-        buttonColor: '#DDB0FF',
-    },
-    entj: {
-        image: require('../../Assets/images/entj.jpg'),
-        mainColor: '#F0DCFF',
-        fontColor: '#DDB0FF',
-        buttonColor: '#DDB0FF',
-    },
-    entp: {
-        image: require('../../Assets/images/entp.jpg'),
-        mainColor: '#F0DCFF',
-        fontColor: '#DDB0FF',
-        buttonColor: '#DDB0FF',
-    },
-    esfp: {
-        image: require('../../Assets/images/esfp.jpg'),
-        mainColor: '#FFF3DC',
-        fontColor: '#FFA800',
-        buttonColor: '#FFA800',
-    },
-    estp: {
-        image: require('../../Assets/images/estp.jpg'),
-        mainColor: '#FFF3DC',
-        fontColor: '#FFA800',
-        buttonColor: '#FFA800',
-    },
-    isfp: {
-        image: require('../../Assets/images/isfp.jpg'),
-        mainColor: '#FFF3DC',
-        fontColor: '#FFA800',
-        buttonColor: '#FFA800',
-    },
-    istp: {
-        image: require('../../Assets/images/istp.jpg'),
-        mainColor: '#FFF3DC',
-        fontColor: '#FFA800',
-        buttonColor: '#FFA800',
-    },
-    esfj: {
-        image: require('../../Assets/images/esfj.jpg'),
-        mainColor: '#72C9CB77',
-        fontColor: '#72C9CB',
-        buttonColor: '#72C9CB8F',
-    },
-    isfj: {
-        image: require('../../Assets/images/isfj.jpg'),
-        mainColor: '#72C9CB77',
-        fontColor: '#72C9CB',
-        buttonColor: '#72C9CB8F',
-    },
-    istj: {
-        image: require('../../Assets/images/istj.jpg'),
-        mainColor: '#72C9CB77',
-        fontColor: '#72C9CB',
-        buttonColor: '#72C9CB8F',
-    },
-    estj: {
-        image: require('../../Assets/images/estj.jpg'),
-        mainColor: '#72C9CB77',
-        fontColor: '#72C9CB',
-        buttonColor: '#72C9CB8F',
-    },
-    infj: {
-        image: require('../../Assets/images/infj.jpg'),
-        mainColor: '#E1FFDC',
-        fontColor: '#73C964',
-        buttonColor: '#73C964',
-    },
-    infp: {
-        image: require('../../Assets/images/infp.jpg'),
-        mainColor: '#E1FFDC',
-        fontColor: '#73C964',
-        buttonColor: '#73C964',
-    },
-    enfj: {
-        image: require('../../Assets/images/enfj.jpg'),
-        mainColor: '#E1FFDC',
-        fontColor: '#73C964',
-        buttonColor: '#73C964',
-    },
-    enfp: {
-        image: require('../../Assets/images/enfp.jpg'),
-        mainColor: '#E1FFDC',
-        fontColor: '#73C964',
-        buttonColor: '#73C964',
-    },
-}
-
-const getImage = (mbti) => {
-    return mbtiParams[mbti.toLowerCase()].image
-}
-
-const getMainColor = (mbti) => {
-    return mbtiParams[mbti.toLowerCase()].mainColor
-}
-const getFontColor = (mbti) => {
-    return mbtiParams[mbti.toLowerCase()].fontColor
-}
-
-const getButtonColor = (mbti) => {
-    return mbtiParams[mbti.toLowerCase()].buttonColor
-}
-
-const BoardTop = ({ mbti, description }) => {
-    return (
-        <div className={style.board_top} style={{ background: getMainColor(mbti) }}>
-            <div className={style.board_top_text_container}>
-                <h3>{mbti}</h3>
-                <p>{description}</p>
-            </div>
-            <div className={style.board_top_image}>
-                <img className={style.board_top_image_size} src={getImage(mbti)} alt="" />
-            </div>
-        </div>
-    )
-}
-
-const BoardPost = ({ post, mbti }) => {
+const BoardPost = ({post, mbti}) => {
     return (
         <>
             <div className={style.board_post}>
                 <div className={style.board_post_left}>
                     <div className={style.board_post_category}>
-                        <p style={{ color: getFontColor(mbti) }}>{post.category}</p>
+                        <p style={{color: getFontColor(mbti)}}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
-                        <Link to={`/detail/${post.id}`}>{post.title}</Link>
-                        <p style={{ color: getFontColor(mbti) }}>[{post.hits}]</p>
+                        <Link to={`/detail/${post.id}`} state={{ mbti: mbti}}>{post.title}</Link>
+                        <p style={{color: getFontColor(mbti)}}>[{post.hits}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
                         <div>
                             <p>{post.author}</p>
                         </div>
                         <div>
-                            <p>{formatDate(post.created_at)}</p>
+                            <p>{formatDateDayBefore(post.created_at)}</p>
                         </div>
                         <div className={style.board_like}>
                             <p>좋아요</p>
@@ -166,17 +39,17 @@ const BoardPost = ({ post, mbti }) => {
                 <div>
                     <div className={style.board_post_right}>
                         {post.mbti.map((m) => (
-                            <p style={{ backgroundColor: getButtonColor(m) }}>{m}</p>
+                            <p style={{backgroundColor: getButtonColor(m)}}>{m}</p>
                         ))}
                     </div>
                 </div>
             </div>
-            <hr />
+            <hr/>
         </>
     )
 }
 
-const BoardPostList = ({ mbti, posts }) => {
+const BoardPostList = ({mbti, posts}) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [posts])
@@ -185,14 +58,14 @@ const BoardPostList = ({ mbti, posts }) => {
         <div>
             {posts.map((post) => (
                 <>
-                    <BoardPost post={post} mbti={mbti} />
+                    <BoardPost post={post} mbti={mbti}/>
                 </>
             ))}
         </div>
     )
 }
 
-const BoardCategory = ({ filter, order, onCategoryChanged }) => {
+const BoardCategory = ({filter, order, onCategoryChanged}) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [filter, order])
@@ -250,35 +123,32 @@ const BoardCategory = ({ filter, order, onCategoryChanged }) => {
                     </button>
                 </div>
             </div>
-            <hr className={style.thick_line} />
+            <hr className={style.thick_line}/>
         </div>
     )
 }
 
-const BoardPostBox = ({ mbti, posts }) => {
+const BoardPostBox = ({mbti, posts}) => {
     return (
         <>
-            <BoardPostList mbti={mbti} posts={posts} />
+            <BoardPostList mbti={mbti} posts={posts}/>
         </>
     )
 }
 
 const Board = () => {
-    const { mbti } = useParams()
+    const {mbti} = useParams()
     const [posts, setPosts] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [filter, setFilter] = useState('') //질문, 유머, 창작 등
     const [order, setOrder] = useState('recent') //recent, like, comment
-    const [description, setDescription] = useState('대담한 통솔가') //recent, like, comment
 
     useEffect(() => {
-        console.log('use effect-1')
         handlePageChange(currentPage)
     }, [currentPage, order, filter])
 
     const handleCategoryChanged = (type, data) => {
-        console.log('handle cate', type, data)
         if (type === 'filter') {
             setFilter(data)
             setCurrentPage(1)
@@ -289,8 +159,7 @@ const Board = () => {
     }
 
     const handlePageChange = (page) => {
-        // const mbtiLower = mbti.toLowerCase()
-        let url = getUrl(`/api/posts/mbti/${mbti}/?page=${page}`)
+        let url = getUrl(`/api/posts/mbti/${mbti.toLowerCase()}/?page=${page}`)
         if (filter !== '') {
             url += `&category=${filter}`
         }
@@ -315,18 +184,18 @@ const Board = () => {
     return (
         <>
             <div>
-                <BoardTop mbti={mbti} description={description} />
+                <BoardTop mbti={mbti}/>
 
-                <BoardCategory filter={filter} order={order} onCategoryChanged={handleCategoryChanged} />
-                <BoardPostBox mbti={mbti} posts={posts} />
+                <BoardCategory filter={filter} order={order} onCategoryChanged={handleCategoryChanged}/>
+                <BoardPostBox mbti={mbti} posts={posts}/>
 
                 <div className={style.board_button_container}>
                     <Link to={`/write`}>
-                        <button style={{ backgroundColor: getButtonColor(mbti) }}>글쓰기</button>
+                        <button style={{backgroundColor: getButtonColor(mbti)}}>글쓰기</button>
                     </Link>
                 </div>
 
-                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange} />
+                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
             </div>
         </>
     )
