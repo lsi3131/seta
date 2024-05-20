@@ -77,8 +77,10 @@ const BoardDetail = () => {
     const location = useLocation();
     const {detailId} = useParams()
     const {mbti} = location.state || {};
+
+    /* 기본값 참조하도록 수정*/
     const [post, setPost] = useState({
-        "id": 1997,
+        "id": -1,
         "author": "",
         "category": "",
         "title": "",
@@ -97,6 +99,7 @@ const BoardDetail = () => {
     }, []);
 
     const handleGet = () => {
+        /* 게시판 상세 정보 불러오기 */
         apiClient.get(`/api/posts/${detailId}/`)
             .then(response => {
                 console.log('get post from server', response.data)

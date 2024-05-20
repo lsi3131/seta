@@ -11,8 +11,8 @@ from rest_framework.decorators import api_view, permission_classes
 
 
 def serialize_post(post):
+    # 추천사용자 이름을 체크하기 위해 사용
     like_usernames = [user.username for user in post.likes.all()]
-    print(like_usernames)
 
     return {
         "id": post.id,
