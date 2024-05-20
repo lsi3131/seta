@@ -38,8 +38,9 @@ const BoardTitle = ({mbti, post}) => {
     )
 }
 
-const BoardContent = ({post}) => {
+const BoardContent = ({post, onAddLike}) => {
     useEffect(() => {
+        console.log(`post = ${post.likes}`)
     }, [post]);
 
     return (
@@ -49,7 +50,7 @@ const BoardContent = ({post}) => {
             </div>
 
             <div className={style.board_content_like_button}>
-                <button><img src={like} alt=""/></button>
+                <button onClick={onAddLike}><img src={like} alt=""/></button>
                 <p>{post.likes}</p>
             </div>
             <hr/>
@@ -65,6 +66,9 @@ const BoardDetail = () => {
 
     useEffect(() => {
         handleGet()
+
+        const accessToken = localStorage.getItem('accessToken')
+        console.log('access token', accessToken)
     }, []);
 
     const handleGet = () => {
@@ -78,10 +82,9 @@ const BoardDetail = () => {
             })
     }
 
-    const handlePost = () => {
-        addLikeToPost(detailId)
+    const handleAddLike = () => {
+        addLikeToPost(detailId, 1)
             .then(response => {
-                console.log('add like to server', response.data)
                 handleGet()
             })
             .catch(error => {
@@ -94,9 +97,10 @@ const BoardDetail = () => {
             <div className={style.vertical}>
                 <BoardTop mbti={mbti}/>
 
+                <h3></h3>
                 <BoardTitle mbti={mbti} post={post}/>
 
-                <BoardContent post={post}/>
+                <BoardContent post={post} onAddLike={handleAddLike}/>
 
                 <CommentBox postId={post.id}/>
 

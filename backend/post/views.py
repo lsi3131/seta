@@ -32,8 +32,6 @@ def serialize_comment(comment):
     recommend = [r.id for r in comment.recommend.all()]
     parent_comment_id = comment.parent.id if comment.parent else None
 
-    print(comment.author.mbti)
-
     return {
         "id": comment.id,
         "post": comment.post.id,
@@ -196,7 +194,7 @@ class PostDetailAPIView(APIView):
 
 
 class PostCommentsAPIView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, post_pk):
         post = get_object_or_404(Post, id=post_pk)
@@ -229,7 +227,7 @@ class PostCommentsAPIView(APIView):
 
 
 class PostCommentDetailAPIView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, post_pk, comment_pk):
         comment = get_object_or_404(Comment, id=comment_pk)
