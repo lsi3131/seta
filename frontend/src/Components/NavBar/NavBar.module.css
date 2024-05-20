@@ -1,18 +1,47 @@
-.navbar {
-    font-size: 25px;
+.header {
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width:100%;
+    padding: 20px 0%; /* Navbar의 내부 여백을 지정합니다. */
     background-color: #fff; /* Navbar의 배경색을 흰색으로 설정합니다. */
-    padding: 20px 80px; /* Navbar의 내부 여백을 지정합니다. */
     z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다. */
+    border-bottom: solid 1px rgb(235, 235, 235);
 }
 
-.left a {
-    margin-right: 40px;
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.navbar .right {
-    float: right;
+.logo {
+    font-size: 32px;
+    color:gray;
+    font-weight: 700;
+}
+
+.navbar a {
+    position: relative;
+    font-size: 16px;
+    color: gray;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+.navbar a::before{
+    content:'';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width:0;
+    height:2px;
+    background: gray;
+    transition: .3s;
+}
+
+.navbar a:hover::before {
+    width:100%;
 }

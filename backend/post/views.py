@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated,AllowAny
 from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
@@ -58,7 +58,7 @@ def get_children_data(comment):
 
 
 class PostAPIView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     # mbti게시판과 일치하는 게시글만
     def mbti_board_filter(self, mbti):
@@ -115,7 +115,10 @@ class PostAPIView(APIView):
 
         return Response(paginated_response_data, status=status.HTTP_200_OK)
 
-    def post(self, request, mbti):
+class CreatePostAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
         if message:
@@ -127,9 +130,9 @@ class PostAPIView(APIView):
         post = Post.objects.create(title=title, category=category,
                                    content=content, author=request.user)
         mbti_types = data['mbti']
-        for mbti in mbti_types:
-            mbti = get_object_or_404(Mbti, mbti_type=mbti)
-            post.mbti.add(mbti)
+        for mbti_type in mbti_types:
+            mbti_s = get_object_or_404(Mbti, mbti_type=mbti_type)
+            post.mbti.add(mbti_s)
 
         return Response(
             {"message": "게시글이 작성되었습니다."},

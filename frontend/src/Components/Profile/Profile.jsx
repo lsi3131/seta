@@ -1,9 +1,21 @@
 import style from "./Profile.module.css";
 import {Link, useParams} from "react-router-dom";
-import React from "react";
+import React, {useEffect, useState}from "react";
+import axios from "axios";
+
+// function getUrl(subUrl) {
+//     const urlRoot = 'http://127.0.0.1:8000'
+//     return `${urlRoot}${subUrl}`
+// }
 
 const Profile = () => {
     const {username} = useParams()
+    const [profiles, setProfiles] = useState([])
+
+    useEffect(() => {
+            const respones = axios.get('http://127.0.0.1:8000/api/accounts/admin12/')
+            setProfiles(respones.data)
+    }, []);
 
     return (
         <div className={style.vertical}>
