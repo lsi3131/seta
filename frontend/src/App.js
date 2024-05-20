@@ -1,4 +1,3 @@
-import logo from './logo.svg'
 import './App.css'
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
@@ -11,21 +10,24 @@ import Signup from './Components/Signup/Signup'
 import BoardDetail from './Components/BoardDetail/BoardDetail'
 import Write from './Components/Write/Write'
 import Profile from './Components/Profile/Profile'
+import { UserProvider } from 'userContext'
 
 function App() {
     return (
         <>
-            <Cursor />
-            <NavBar />
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/signup" element={<Signup/>}/>
-                <Route path="/board/:mbti" element={<Board/>}/>
-                <Route path="/detail/:detailId" element={<BoardDetail />}/>
-                <Route path="/write" element={<Write />}/>
-                <Route path="/profile/:username" element={<Profile />}/>
-            </Routes>
+            <UserProvider>
+                <Cursor />
+                <NavBar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/board/:mbti" element={<Board />} />
+                    <Route path="/detail/:detailId" element={<BoardDetail />} />
+                    <Route path="/write" element={<Write />} />
+                    <Route path="/profile/:username" element={<Profile />} />
+                </Routes>
+            </UserProvider>
         </>
     )
 }

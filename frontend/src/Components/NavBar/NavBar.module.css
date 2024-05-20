@@ -8,13 +8,12 @@
     justify-content: space-between;
     align-items: center;
     z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
-
     text-decoration: none;
 }
 
 .logo {
     font-size: 32px;
-    color:gray;
+    color: gray;
     font-weight: 700;
 }
 
@@ -24,19 +23,20 @@
     color: gray;
     font-weight: 500;
     margin-left: 40px;
+    cursor: pointer;
 }
 
-.navbar a::before{
-    content:'';
+.navbar a::before {
+    content: '';
     position: absolute;
     top: 100%;
     left: 0;
-    width:0;
-    height:2px;
+    width: 0;
+    height: 2px;
     background: gray;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .navbar a:hover::before {
-    width:100%;
+    width: 100%;
 }
