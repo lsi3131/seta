@@ -1,3 +1,7 @@
+/* ==============Comment Box ==============*/
+.comment_box {
+    margin-top: 40px;
+}
 
 /* ==============Comment List ==============*/
 .comment_list {
@@ -49,17 +53,18 @@
 }
 
 .comment_left_bottom_like > p {
-    color: #ff0000;
+    color: #000000;
     font-size: 18px;
 }
 
 .comment_right {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
 }
 
 .comment_right_button {
+    display: flex;
 }
 
 .comment_right_button > button {
@@ -74,8 +79,6 @@
     border: none;
     color: #000000;
 }
-
-
 
 .comment_right > p {
     display: inline-block;
@@ -189,7 +192,6 @@
     border: none;
     outline: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
 }
 
 

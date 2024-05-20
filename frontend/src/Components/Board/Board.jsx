@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import style from './Board.module.css'
 import {Link, useParams} from 'react-router-dom'
 import axios from 'axios'
-import {formatDate, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
+import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
 
 function getUrl(subUrl) {
@@ -41,7 +41,7 @@ const BoardPost = ({post, mbti}) => {
                             <p>{post.author}</p>
                         </div>
                         <div>
-                            <p>{formatDate(post.created_at)}</p>
+                            <p>{formatDateDayBefore(post.created_at)}</p>
                         </div>
                         <div className={style.board_like}>
                             <p>좋아요</p>
