@@ -8,18 +8,27 @@ const containerStyles = {
     margin: "0 auto"
 }
 
+const logo_image = {
+    url : require("../../Assets/images/logo.png")
+}
+
 const AuthenticatedNavbar = ({ username }) => {
     return (
         <header className={style.header}>
             <div className={style.container}>
                 <div className={style.logo}>
 
-                    <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
+                    <Link to="/">
+                        <img src= {logo_image.url} className={style.image}/>
+                    </Link>
 
                 </div>
                 <nav className={style.navbar}>
                     <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
                         {username}
+                    </Link>
+                    <Link to={`/write/`}>
+                        글쓰기
                     </Link>
                     <a
                         onClick={() => {
@@ -28,7 +37,7 @@ const AuthenticatedNavbar = ({ username }) => {
                             window.location.href = '/login'
                         }}
                     >
-                        logout
+                        로그아웃
                     </a>
                 </nav>
             </div>
@@ -42,8 +51,8 @@ const UnauthenticatedNavbar = () => {
         <header className={style.header}>
             <div className={style.container}>
                 <div className={style.logo}>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        SETA
+                    <Link to="/">
+                        <img src= {logo_image.url} className={style.image}/>
                     </Link>
                 </div>
                 <nav className={style.navbar}>
