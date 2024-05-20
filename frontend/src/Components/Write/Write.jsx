@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import apiClient from 'services/apiClient'
 
 const Write = () => {
-    const [radios, setRadios] = useState()
+
+    const accessToken = localStorage.getItem('accessToken')
     const [inputs, setInputs] = useState({
         title: '',
         content: '',
