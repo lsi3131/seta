@@ -66,9 +66,6 @@ const BoardDetail = () => {
 
     useEffect(() => {
         handleGet()
-
-        const accessToken = localStorage.getItem('accessToken')
-        console.log('access token', accessToken)
     }, []);
 
     const handleGet = () => {
