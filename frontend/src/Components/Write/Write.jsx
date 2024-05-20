@@ -1,27 +1,18 @@
-import style from "./Write.module.css";
-import { Link,useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import axios from "axios";
-
-
-function getUrl(subUrl) {
-    const urlRoot = 'http://127.0.0.1:8000'
-    return `${urlRoot}${subUrl}`
-}
+import style from './Write.module.css'
+import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
+import apiClient from 'services/apiClient'
 
 const Write = () => {
-    const accessToken = localStorage.getItem('accessToken')
     const [radios, setRadios] = useState()
-
     const [inputs, setInputs] = useState({
-        title: "",
-        content: "",
-        category: "",
-        mbti: []
-    });
+        title: '',
+        content: '',
+        category: '',
+        mbti: [],
+    })
 
-    const { title, content, category, mbti } = inputs;
-
+    const { title, content, category, mbti } = inputs
 
     const [mbti_checks, setMbtiChecks] = useState([
         { id: 1, label: 'ISTJ', checked: false },
@@ -39,81 +30,94 @@ const Write = () => {
         { id: 13, label: 'ESTJ', checked: false },
         { id: 14, label: 'ESFJ', checked: false },
         { id: 15, label: 'ENFJ', checked: false },
-        { id: 16, label: 'ENTJ', checked: false }
-    ]);
+        { id: 16, label: 'ENTJ', checked: false },
+    ])
 
     const handleCheckboxChange = (id) => {
-        const updatedCheckboxes = mbti_checks.map(check =>
-            check.id === id ? { ...check, checked: !check.checked } : check
-        );
-        setMbtiChecks(updatedCheckboxes);
+        const updatedCheckboxes = mbti_checks.map((check) =>
+            check.id === id ? { ...check, checked: !check.checked } : check,
+        )
+        setMbtiChecks(updatedCheckboxes)
 
-        const updatedMbti = updatedCheckboxes.filter(check => check.checked).map(check => check.label);
+        const updatedMbti = updatedCheckboxes.filter((check) => check.checked).map((check) => check.label)
         setInputs({
             ...inputs,
-            mbti: updatedMbti
-        });
-    };
+            mbti: updatedMbti,
+        })
+    }
 
     const onChange = (e) => {
-        const { value, id, type, name } = e.target;
+        const { value, id, type, name } = e.target
         if (type === 'radio' && name === 'radios') {
             setInputs({
                 ...inputs,
-                category: value
-            });
+                category: value,
+            })
         } else {
             setInputs({
                 ...inputs,
-                [id]: value
-            });
+                [id]: value,
+            })
         }
-    };
+    }
 
     const onSubmit = async (e) => {
-        e.preventDefault();
-        const url = getUrl(`/api/posts/create/`);
-
-        console.log(inputs)
-        console.log(url)
+        e.preventDefault()
 
         try {
-            const response = await axios.post(url, inputs, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            window.location.href = '/detail/:detailId'; //내가 작성한 게시물로 가야하는데
-            console.log('Server response:', response.data);
+            const response = await apiClient.post('/api/posts/create/', inputs)
+            window.location.href = '/detail/:detailId' //내가 작성한 게시물로 가야하는데
+            console.log('Server response:', response.data)
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error:', error)
         }
-    };
+    }
 
     return (
         <div className={style.vertical}>
             <div className={style.board_top}>
                 <h1>글작성</h1>
             </div>
-            <form className={style.form }onSubmit={onSubmit}>
+            <form className={style.form} onSubmit={onSubmit}>
                 <div className={style.radio}>
                     <div>
-                        <input type="radio" id='category1' name="radios" value="질문있어요" checked={category === "질문있어요"} onChange={onChange} />
+                        <input
+                            type="radio"
+                            id="category1"
+                            name="radios"
+                            value="질문있어요"
+                            checked={category === '질문있어요'}
+                            onChange={onChange}
+                        />
                         <label htmlFor="category1">질문있어요</label>
                     </div>
                     <div>
-                        <input type="radio" id='category2' name="radios" value="유머" checked={category === "유머"} onChange={onChange} />
+                        <input
+                            type="radio"
+                            id="category2"
+                            name="radios"
+                            value="유머"
+                            checked={category === '유머'}
+                            onChange={onChange}
+                        />
                         <label htmlFor="category2">유머</label>
                     </div>
                     <div>
-                        <input type="radio" id='category3' name="radios" value="창작" checked={category === "창작"} onChange={onChange} />
+                        <input
+                            type="radio"
+                            id="category3"
+                            name="radios"
+                            value="창작"
+                            checked={category === '창작'}
+                            onChange={onChange}
+                        />
                         <label htmlFor="category3">창작</label>
                     </div>
                 </div>
-            <hr />
+                <hr />
                 <div className={style.mbti}>
-                    {mbti_checks.map(check => (
-                        <div key={check.id} >
+                    {mbti_checks.map((check) => (
+                        <div key={check.id}>
                             <input
                                 type="checkbox"
                                 id={`check-${check.id}`}
@@ -129,24 +133,32 @@ const Write = () => {
                 <div className={style.title}>
                     <div>
                         <label htmlFor="title">제목</label>
-                        <input type="text" id="title"
-                        placeholder="제목을 입력해 주세요"
-                        value={title} onChange={onChange} />
+                        <input
+                            type="text"
+                            id="title"
+                            placeholder="제목을 입력해 주세요"
+                            value={title}
+                            onChange={onChange}
+                        />
                     </div>
                 </div>
                 <div className={style.content}>
                     <div>
                         <label htmlFor="content">내용</label>
-                        <textarea 
-                        id="content" 
-                        placeholder="뭐 욕설안돼 어쩌구 비방이 저쩌구 신고될수있으니 주의해 주세요" 
-                        value={content} onChange={onChange} />
+                        <textarea
+                            id="content"
+                            placeholder="뭐 욕설안돼 어쩌구 비방이 저쩌구 신고될수있으니 주의해 주세요"
+                            value={content}
+                            onChange={onChange}
+                        />
                     </div>
                 </div>
-                <button className={style.button} type="submit">등록</button>
+                <button className={style.button} type="submit">
+                    등록
+                </button>
             </form>
         </div>
-    );
-};
+    )
+}
 
-export default Write;
+export default Write
