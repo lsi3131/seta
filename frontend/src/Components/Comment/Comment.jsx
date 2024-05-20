@@ -73,7 +73,7 @@ const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
                             }
                             <button>신고</button>
                         </div>
-                        <p style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti}</p>
+                        <p style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</p>
                     </div>
                 </div>
             </div>
