@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width:100%;
-    padding: 20px 0%; /* Navbar의 내부 여백을 지정합니다. */
+    padding: 20px 0;
     background-color: #fff; /* Navbar의 배경색을 흰색으로 설정합니다. */
     z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
     border-bottom: solid 1px rgb(235, 235, 235);
@@ -17,10 +17,9 @@
     justify-content: space-between;
 }
 
-.logo {
-    font-size: 32px;
-    color: gray;
-    font-weight: 700;
+.image {
+    width:171px;
+    height:36px;
 }
 
 .navbar a {
