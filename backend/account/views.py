@@ -9,17 +9,16 @@ from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
 
-
 validator = AccountValidator()
 User = get_user_model()
 
-class AccountAPIView(APIView):
 
+class AccountAPIView(APIView):
     permission_classes = [AccountVIEWPermission]
 
     def post(self, request):
@@ -59,20 +58,19 @@ class AccountAPIView(APIView):
 
         if data.get('email') and not validator.validate('email', {'data': email}):
             return validator.get_response_data()
-        
+
         user.email = email
         user.introduce = introduce
         user.save()
 
         return Response({
-            "message":"회원 정보가 수정되었습니다"
+            "message": "회원 정보가 수정되었습니다"
         }, status=status.HTTP_200_OK)
 
     def delete(self, request):
         user = request.user
         user.delete()
         return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
-
 
 
 class AccountPasswordAPIView(APIView):
@@ -116,6 +114,7 @@ class AccountPasswordAPIView(APIView):
 
         return Response({"message": "인증에 성공했습니다."}, status=status.HTTP_200_OK)
 
+
 class ProfileAPIView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
@@ -132,9 +131,10 @@ class ProfileAPIView(APIView):
             "percentPJ": user.percentPJ,
             "following_count": user.following.count(),
             "followers_count": user.followers.count(),
-            "posts": [ serialize_post(post) for post in user.post_set.all() ],
-            "like_posts": [ serialize_post(post) for post in user.like_posts.all() ]
+            "posts": [serialize_post(post) for post in user.post_set.all()],
+            "like_posts": [serialize_post(post) for post in user.like_posts.all()]
         }, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def validate_password(request):
@@ -157,11 +157,11 @@ def validate_email(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def follow(request, username):
-    to_user= get_object_or_404(User, username=username)
+    to_user = get_object_or_404(User, username=username)
     from_user = request.user
 
-    #frontend에 'follow'값을 보내주면 'follow'기능 요청
-    following = request.data.get('follow',0)
+    # frontend에 'follow'값을 보내주면 'follow'기능 요청
+    following = request.data.get('follow', 0)
 
     if following:
         Follow.objects.get_or_create(
@@ -170,14 +170,13 @@ def follow(request, username):
         return Response(
             {"message": f"{from_user} following {to_user}"}, status=status.HTTP_200_OK)
     else:
-        follower =Follow.objects.filter(from_user=from_user, to_user=to_user)
+        follower = Follow.objects.filter(from_user=from_user, to_user=to_user)
         follower.delete()
         return Response(
             {"message": f"{from_user} Un following {to_user}"}, status=status.HTTP_200_OK)
 
 
 class MbtiAPIView(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
@@ -191,3 +190,18 @@ class MbtiAPIView(APIView):
         user.mbti = Mbti.objects.get(mbti_type=mbti_type)
         user.save()
         return Response({"message": "MBTI가 설정되었습니다."}, status=status.HTTP_200_OK)
+
+
+class MbtiDetailAPIView(APIView):
+    def get(self, request, mbti_type):
+        mbti = Mbti.objects.get(mbti_type__icontains=mbti_type)
+
+        if not mbti:
+            return Response({"error": "존재하지 않는 타입입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        serialize_data = {
+            'mbti_type': mbti_type,
+            'description': mbti.description
+        }
+
+        return Response(serialize_data, status=status.HTTP_200_OK)

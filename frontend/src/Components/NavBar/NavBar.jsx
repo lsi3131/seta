@@ -1,24 +1,47 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import style from './NavBar.module.css'
+import { UserContext } from 'userContext'
 
 const containerStyles = {
     width: "1200px",
     margin: "0 auto"
 }
 
+const logo_image = {
+    url : require("../../Assets/images/logo.png")
+}
+
 const AuthenticatedNavbar = ({ username }) => {
     return (
         <header className={style.header}>
-            <div className={style.logo}>
-                <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
+            <div className={style.container}>
+                <div className={style.logo}>
+
+                    <Link to="/">
+                        <img src= {logo_image.url} className={style.image}/>
+                    </Link>
+
+                </div>
+                <nav className={style.navbar}>
+                    <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
+                        {username}
+                    </Link>
+                    <Link to={`/write/`}>
+                        글쓰기
+                    </Link>
+                    <a
+                        onClick={() => {
+                            localStorage.removeItem('accessToken')
+                            localStorage.removeItem('refreshToken')
+                            window.location.href = '/login'
+                        }}
+                    >
+                        로그아웃
+                    </a>
+                </nav>
             </div>
-            <nav className={style.navbar}>
-                <Link to="/logout" style={{ textDecoration: 'none'}}>로그아웃</Link>
-                <Link to={`/profile/${username}/`}>{username}</Link>
-            </nav>
         </header>
-        
     )
 }
 
@@ -28,18 +51,24 @@ const UnauthenticatedNavbar = () => {
         <header className={style.header}>
             <div className={style.container}>
                 <div className={style.logo}>
-                    <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
+                    <Link to="/">
+                        <img src= {logo_image.url} className={style.image}/>
+                    </Link>
                 </div>
                 <nav className={style.navbar}>
-                    <Link to="/login" style={{ textDecoration: 'none'}}>로그인</Link>
-                    {/* 테스트용. 추후 삭제*/}
-                    <Link to={`/profile/test_istj`} style={{ textDecoration: 'none'}}>프로필</Link>
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                        로그인
+                    </Link>
                 </nav>
             </div>
         </header>
     )
 }
-const Navbar = ({ username }) => {
-    return <div style={containerStyles}>{username ? <AuthenticatedNavbar username={username} /> : <UnauthenticatedNavbar />}</div>
+const Navbar = () => {
+    const currentUser = useContext(UserContext)
+    console.log(currentUser)
+    return (
+        <div>{currentUser ? <AuthenticatedNavbar username={currentUser.username} /> : <UnauthenticatedNavbar />}</div>
+    )
 }
 export default Navbar
