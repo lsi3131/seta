@@ -14,3 +14,29 @@
 .div {
   margin-top: 10px;
 }
+
+.image {
+  border-radius: 0.5rem;
+  width: 250px;
+  height: 250px;
+  margin : 10px 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.image:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  
+}
+
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0 auto;
+}

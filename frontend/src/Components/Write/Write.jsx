@@ -13,6 +13,7 @@ const Write = () => {
     })
 
     const { title, content, category, mbti } = inputs
+    const [Error, setError] =useState(' ')
 
     const [mbti_checks, setMbtiChecks] = useState([
         { id: 1, label: 'ISTJ', checked: false },
@@ -61,21 +62,28 @@ const Write = () => {
         }
     }
 
-    const onSubmit = async (e) => {
-        e.preventDefault()
 
+    const onSubmit = async (e) => {
         try {
             const response = await apiClient.post('/api/posts/create/', inputs)
             window.location.href = '/detail/:detailId' //내가 작성한 게시물로 가야하는데
             console.log('Server response:', response.data)
         } catch (error) {
-            console.error('Error:', error)
+            if (!inputs.category) {
+                setError('카테고리를 선택하세요')
+            } else if (inputs.mbti.length == 0) {
+                setError('MBTI를 선택하세요')
+            } else if (!inputs.title) {
+                setError('제목을 입력하세요')
+            } else if (!inputs.content) {
+                setError('내용을 입력하세요')
+            }   
         }
     }
 
     return (
         <div className={style.vertical}>
-            <div className={style.board_top}>
+            <div className={style.board_top} >
                 <h1>글작성</h1>
             </div>
             <form className={style.form} onSubmit={onSubmit}>
@@ -133,13 +141,11 @@ const Write = () => {
                 <div className={style.title}>
                     <div>
                         <label htmlFor="title">제목</label>
-                        <input
-                            type="text"
-                            id="title"
-                            placeholder="제목을 입력해 주세요"
-                            value={title}
-                            onChange={onChange}
-                        />
+
+                        <input type="text" id="title"
+                        placeholder="제목을 입력해 주세요"
+                        // required
+                        value={title} onChange={onChange} />
                     </div>
                 </div>
                 <div className={style.content}>
@@ -153,9 +159,10 @@ const Write = () => {
                         />
                     </div>
                 </div>
-                <button className={style.button} type="submit">
-                    등록
-                </button>
+
+                <p></p>
+                <p className={style.Error}>{Error}</p>
+                <button className={style.button} type="submit">등록</button>
             </form>
         </div>
     )
