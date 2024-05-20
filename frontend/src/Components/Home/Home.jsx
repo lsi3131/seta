@@ -5,7 +5,7 @@ import ImageSlider from "../ImageSlider/ImageSlider";
 
 const Home = () => {
     const slides = [
-        { url: "http://via.placeholder.com/1200x501", title: "image1"},
+        { url: require("../../Assets/images/slide_image_mbti_test.png"), title: "mbti_test"},
         { url: "http://via.placeholder.com/1200x502", title: "image2"},
         { url: "http://via.placeholder.com/1200x503", title: "image3"},
         { url: "http://via.placeholder.com/1200x504", title: "image4"}
