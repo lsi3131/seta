@@ -9,6 +9,7 @@ from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
 
+
 def serialize_post(post):
     return {
         "id": post.id,
@@ -31,10 +32,13 @@ def serialize_comment(comment):
     recommend = [r.id for r in comment.recommend.all()]
     parent_comment_id = comment.parent.id if comment.parent else None
 
+    print(comment.author.mbti)
+
     return {
         "id": comment.id,
         "post": comment.post.id,
         "author": comment.author.username,
+        "author_mbti": comment.author.mbti.mbti_type,
         "parent_id": parent_comment_id,
         "content": comment.content,
         "recommend": recommend,
@@ -119,9 +123,9 @@ class PostAPIView(APIView):
 
         title = data['title']
         content = data['content']
-        category = PostCategory.objects.get(name = data['category'])
+        category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                            content=content,author=request.user)
+                                   content=content, author=request.user)
         mbti_types = data['mbti']
         for mbti in mbti_types:
             mbti = get_object_or_404(Mbti, mbti_type=mbti)
@@ -132,6 +136,7 @@ class PostAPIView(APIView):
             status=status.HTTP_201_CREATED
         )
 
+
 class PostDetailAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -140,14 +145,14 @@ class PostDetailAPIView(APIView):
         post.hits += 1
         post.save()
 
-        #게시글에는 내용 추가
+        # 게시글에는 내용 추가
         serialize = serialize_post(post)
         serialize['content'] = post.content
         return Response(serialize, status=status.HTTP_200_OK)
-    
+
     def put(self, request, post_pk):
         post = get_object_or_404(Post, id=post_pk)
-        if post.author!= request.user:
+        if post.author != request.user:
             return Response(
                 {"error": "작성자만 수정할 수 있습니다."},
                 status=status.HTTP_400_BAD_REQUEST
@@ -155,7 +160,7 @@ class PostDetailAPIView(APIView):
         data = request.data.copy()
         data["content"] = data.get("content", post.content)
         data["title"] = data.get("title", post.title)
-        data["category"] = PostCategory.objects.get(name = data.get("category", post.category))
+        data["category"] = PostCategory.objects.get(name=data.get("category", post.category))
         data["mbti"] = data.get("mbti", post.mbti)
         if data["mbti"]:
             mbti_set = []
@@ -172,10 +177,10 @@ class PostDetailAPIView(APIView):
             {"message": "게시글이 수정되었습니다."},
             status=status.HTTP_200_OK
         )
-    
+
     def delete(self, request, post_pk):
         post = get_object_or_404(Post, id=post_pk)
-        if post.author!= request.user:
+        if post.author != request.user:
             return Response(
                 {"error": "작성자만 삭제할 수 있습니다."},
                 status=status.HTTP_400_BAD_REQUEST
@@ -185,6 +190,7 @@ class PostDetailAPIView(APIView):
             {"message": "게시글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
 
 class PostCommentsAPIView(APIView):
     # permission_classes = [IsAuthenticatedOrReadOnly]
@@ -262,21 +268,22 @@ class PostCommentDetailAPIView(APIView):
             status=status.HTTP_204_NO_CONTENT
         )
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def LikeyPost(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
-    user = request.user.id 
+    user = request.user.id
 
-    #frontend에서 'like'요청을 보내면 '좋아요'기능 실행
+    # frontend에서 'like'요청을 보내면 '좋아요'기능 실행
     like = request.data.get('like', 0)
-    
-    if like:    
+
+    if like:
         post.likes.add(user)
-        return Response({'message': '좋아요'},status=status.HTTP_200_OK)
+        return Response({'message': '좋아요'}, status=status.HTTP_200_OK)
     else:
         post.likes.remove(user)
-        return Response({'message': '좋아요 취소'},status=status.HTTP_200_OK)
+        return Response({'message': '좋아요 취소'}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -285,12 +292,12 @@ def Recommend(request, post_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
     user = request.user.id
 
-    #frontend에서 'recommend' 보내면 '추천'기능 실행
-    Reco = request.data.get('recommend',0)
+    # frontend에서 'recommend' 보내면 '추천'기능 실행
+    Reco = request.data.get('recommend', 0)
 
-    if Reco:    
+    if Reco:
         comment.recommend.add(user)
-        return Response({ "message":"추천"},status=status.HTTP_200_OK)
+        return Response({"message": "추천"}, status=status.HTTP_200_OK)
     else:
         comment.recommend.remove(user)
-        return Response({ "message":"추천 취소"},status=status.HTTP_200_OK)
+        return Response({"message": "추천 취소"}, status=status.HTTP_200_OK)
