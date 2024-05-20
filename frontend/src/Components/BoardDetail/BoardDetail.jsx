@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import style from './BoardDetail.module.css'
 import {useLocation, useParams} from "react-router-dom";
-import {getFontColor, getButtonColor} from "../../Utils/helpers";
+import {getFontColor, getButtonColor, formatDate} from "../../Utils/helpers";
 import CommentBox from "../Comment/Comment";
 import BoardTop from "../BoardTop/BoardTop"
 import axios from "axios";
@@ -28,7 +28,7 @@ const BoardTitle = ({mbti, post}) => {
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
                     <p>{post.author}</p>
-                    <p>{post.created_at}</p>
+                    <p>{formatDate(post.created_at)}</p>
                 </div>
                 <div className={style.board_title_bottom_right}>
                     <p>조회 {post.hits}</p>
@@ -42,11 +42,10 @@ const BoardTitle = ({mbti, post}) => {
 }
 
 const BoardContent = ({post, username, onSetLike}) => {
-    const [likeOn, setLikeOn] = useState(0)
+    const [likeOn, setLikeOn] = useState(false)
 
     useEffect(() => {
         const likeOn = post.like_usernames.includes(username)
-        console.log('like on', likeOn)
         setLikeOn(likeOn)
     }, [post]);
 
@@ -69,7 +68,6 @@ const BoardContent = ({post, username, onSetLike}) => {
                 </button>
                 <p>{post.likes}</p>
             </div>
-            <hr/>
         </div>
     )
 }

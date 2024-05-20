@@ -1,22 +1,37 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import style from './Comment.module.css'
 import {getButtonColor, getUpdateTime} from "../../Utils/helpers";
-import {getCommentsByPostId} from "../../api/services/CommentService";
 import like from "../../Assets/images/comment/like.png"
+import unlike from "../../Assets/images/comment/unlike.png"
+import apiClient from "../../services/apiClient";
+import {UserContext} from "../../userContext";
 
-const Comment = ({
-                     username,
-                     userId,
-                     accessToken,
-                     articleId,
-                     comment,
-                     onDeleteComment,
-                     onUpdateComment,
-                     onAddComment,
-                 }) => {
-    const [addCommentModeOn, setAddCommentModeOn] = useState(false);
-    const [content, setContent] = useState('');
-    const [recommendList, setRecommendList] = useState(comment.recommend)
+const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
+    const currentUser = useContext(UserContext)
+
+    useEffect(() => {
+
+    }, [comment]);
+
+    const isSameUser = (comment) => {
+        if (currentUser === null) {
+            return;
+        }
+
+        return comment.author === currentUser['username'];
+    }
+
+    const isLikeOn = (comment) => {
+        if (currentUser === null) {
+            return false;
+        }
+
+        return comment.recommend.includes(currentUser['user_id'])
+    }
+
+    const handleSetLike = () => {
+        onAddLikeComment(comment.id, !isLikeOn(comment))
+    }
 
     const submitDeleteComment = () => {
         const result = window.confirm("댓글을 삭제하시겠습니까?");
@@ -35,8 +50,13 @@ const Comment = ({
                             <p>{comment.author}</p>
                             <p>{getUpdateTime(comment.created_at)}</p>
                             <div className={style.comment_left_bottom_like}>
-                                <button><img src={like} alt=""/></button>
-                                <p>{comment.recommend}</p>
+                                <button onClick={handleSetLike}>
+                                    {isLikeOn(comment) ?
+                                        <img src={like} alt=""/> :
+                                        <img src={unlike} alt=""/>
+                                    }
+                                </button>
+                                <p>{comment.recommend.length}</p>
                             </div>
                         </div>
                     </div>
@@ -45,6 +65,12 @@ const Comment = ({
                             <button>대댓글</button>
                             <button>공감</button>
                             <button>쪽지</button>
+                            {isSameUser(comment) &&
+                                <>
+                                    <button>수정</button>
+                                    <button onClick={submitDeleteComment}>삭제</button>
+                                </>
+                            }
                             <button>신고</button>
                         </div>
                         <p style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti}</p>
@@ -56,9 +82,6 @@ const Comment = ({
                     <div className="" style={{marginLeft: "50px"}}>
                         <Comment
                             key={child.id}
-                            accessToken={accessToken}
-                            username={username}
-                            userId={userId}
                             comment={child}
                         />
                     </div>
@@ -68,23 +91,23 @@ const Comment = ({
     );
 };
 
-const CommentList = ({comments}) => {
+const CommentList = ({comments, username, onDeleteComment, onAddLikeComment}) => {
     return (
         <div className={style.comment_list}>
             {comments.map((comment, index) => (
                 <>
                     <hr/>
-                    <Comment key={index} comment={comment}/>
+                    <Comment key={index} comment={comment} onDeleteComment={onDeleteComment} onAddLikeComment={onAddLikeComment}/>
                 </>
             ))}
         </div>
     );
 };
 
-const CommentInput = ({username, onAddComment, parentCommentId}) => {
+const CommentInput = ({onAddComment, parentCommentId}) => {
     const [content, setContent] = useState('');
 
-    const handleSubmit = async (e) => {
+    const handleAddComment = async (e) => {
         e.preventDefault();
         onAddComment(content, parentCommentId)
         setContent('');
@@ -92,23 +115,21 @@ const CommentInput = ({username, onAddComment, parentCommentId}) => {
 
     return (
         <div className={style.comment_input_container}>
-                <textarea
-                    placeholder="댓글을 입력하세요"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={4}
-                ></textarea>
+            <textarea
+                placeholder="댓글을 입력하세요"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={2}
+            ></textarea>
             <div className={style.comment_input_buttons_container}>
-                <p></p>
-                <button onClick={handleSubmit} style={{width: '100px'}}>댓글 등록</button>
+                <button onClick={handleAddComment} style={{width: '100px'}}>댓글 등록</button>
             </div>
         </div>
     );
 };
 
-const CommentBox = ({postId, userId, username}) => {
-    const accessToken = localStorage.getItem('accessToken')
-    // sessionStorage
+const CommentBox = ({postId}) => {
+    const currentUser = useContext(UserContext)
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
@@ -116,7 +137,7 @@ const CommentBox = ({postId, userId, username}) => {
     }, [postId]);
 
     const handleGetComment = () => {
-        getCommentsByPostId(postId)
+        apiClient.get(`/api/posts/${postId}/comments/`)
             .then(response => {
                 console.log('get comments successful:', response.data);
                 setComments(response.data);
@@ -126,25 +147,63 @@ const CommentBox = ({postId, userId, username}) => {
             })
     };
 
-    const handlePutComment = () => {
-        getCommentsByPostId(postId)
+    const handlePostComment = (content) => {
+        const data = {
+            content: content
+        };
+        apiClient.post(`/api/posts/${postId}/comments/`, data)
             .then(response => {
                 console.log('get comments successful:', response.data);
-                setComments(response.data);
+
+                /* comment 정보 업데이트 */
+                handleGetComment();
             })
             .catch(error => {
                 console.error('Error during add comments:', error.response.data.error);
             })
-    };
+    }
+
+    const handleDeleteComment = (commentId) => {
+        apiClient.delete(`/api/posts/${postId}/comments/${commentId}/`)
+            .then(response => {
+                console.log('delete comments successful:', response.data);
+
+                /* comment 정보 업데이트 */
+                handleGetComment();
+            })
+            .catch(error => {
+                console.error('Error during add comments:', error.response.data.error);
+            })
+    }
+
+    const handleAddLikeComment = (commentId, isLikeOn) => {
+        const data = {
+            recommend: isLikeOn ? 1 : 0
+        };
+
+        apiClient.post(`/api/posts/${postId}/comments/${commentId}/recommend/`, data)
+            .then(response => {
+                console.log('post comments successful:', response.data);
+
+                /* comment 정보 업데이트 */
+                handleGetComment();
+            })
+            .catch(error => {
+                console.error('Error during add comments:', error.response.data.error);
+            })
+    }
 
 
     return (
-        <div>
-            <CommentInput postId={postId} username={username}/>
-            <CommentList comments={comments}/>
+        <div className={style.comment_box}>
+            {currentUser &&
+                <CommentInput postId={postId} onAddComment={handlePostComment}/>
+            }
+            <CommentList comments={comments} onDeleteComment={handleDeleteComment}
+                         onAddLikeComment={handleAddLikeComment}/>
         </div>
     );
-};
+}
 
 export default CommentBox;
 
