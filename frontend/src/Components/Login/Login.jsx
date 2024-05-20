@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 import * as Components from './Components'
-import axios from 'axios'
+import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
 
 function Login() {
@@ -58,15 +58,10 @@ function Login() {
 
     const [isLogin, setIsLogin] = React.useState(false)
 
-    function getUrl(subUrl) {
-        const urlRoot = 'http://127.0.0.1:8000'
-        return `${urlRoot}${subUrl}`
-    }
-
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.post(getUrl('/api/login/'), {
+            const response = await apiClient.post('/api/login/', {
                 username: usernameIn,
                 password: passwordIn,
             })
@@ -99,8 +94,8 @@ function Login() {
             return
         }
 
-        axios
-            .post(getUrl('/api/accounts/'), {
+        apiClient
+            .post('/api/accounts/', {
                 username: usernameUp,
                 email: emailUp,
                 password: passwordUp,
@@ -128,9 +123,8 @@ function Login() {
             data: usernameUp,
         }
 
-        const url = getUrl('/api/accounts/validate/username/')
         try {
-            const response = await axios.post(url, data)
+            const response = await apiClient.post('/api/accounts/validate/username/', data)
             setUsernameCheckMessage(response.data.message)
             setFormValidateChecker((prevState) => ({
                 ...prevState,
@@ -159,9 +153,8 @@ function Login() {
             data: passwordUp,
         }
 
-        const url = getUrl('/api/accounts/validate/password/')
         try {
-            const response = await axios.post(url, data)
+            const response = await apiClient.post('/api/accounts/validate/password/', data)
             console.log(response.data.message)
             setPasswordCheckMessage(response.data.message)
             setFormValidateChecker((prevState) => ({
@@ -228,9 +221,8 @@ function Login() {
             data: emailUp,
         }
 
-        const url = getUrl('/api/accounts/validate/email/')
         try {
-            const response = await axios.post(url, data)
+            const response = await apiClient.post('/api/accounts/validate/email/', data)
             setEmailCheckMessage(response.data.message)
             setFormValidateChecker((prevState) => ({
                 ...prevState,
