@@ -18,7 +18,7 @@
 body {
     height: 100vh;
     width: 1200px;
-    margin: 0 auto;
+    margin: 100px auto;
 }
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
