@@ -21,6 +21,9 @@ const AuthenticatedNavbar = ({ username }) => {
                     <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
                         {username}
                     </Link>
+                    <Link to={`/write/`} style={{ textDecoration: 'none' }}>
+                        글쓰기
+                    </Link>
                     <a
                         onClick={() => {
                             localStorage.removeItem('accessToken')
@@ -28,7 +31,7 @@ const AuthenticatedNavbar = ({ username }) => {
                             window.location.href = '/login'
                         }}
                     >
-                        logout
+                        로그아웃
                     </a>
                 </nav>
             </div>
