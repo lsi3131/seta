@@ -126,6 +126,18 @@ const CommentBox = ({postId, userId, username}) => {
             })
     };
 
+    const handlePutComment = () => {
+        getCommentsByPostId(postId)
+            .then(response => {
+                console.log('get comments successful:', response.data);
+                setComments(response.data);
+            })
+            .catch(error => {
+                console.error('Error during add comments:', error.response.data.error);
+            })
+    };
+
+
     return (
         <div>
             <CommentInput postId={postId} username={username}/>
