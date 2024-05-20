@@ -4,24 +4,11 @@ import {Link, useParams} from 'react-router-dom'
 import axios from 'axios'
 import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
+import BoardTop from "../BoardTop/BoardTop";
 
 function getUrl(subUrl) {
     const urlRoot = 'http://127.0.0.1:8000'
     return `${urlRoot}${subUrl}`
-}
-
-const BoardTop = ({mbti, description}) => {
-    return (
-        <div className={style.board_top} style={{background: getMainColor(mbti)}}>
-            <div className={style.board_top_text_container}>
-                <h3>{mbti}</h3>
-                <p>{description}</p>
-            </div>
-            <div className={style.board_top_image}>
-                <img className={style.board_top_image_size} src={getImage(mbti)} alt=""/>
-            </div>
-        </div>
-    )
 }
 
 const BoardPost = ({post, mbti}) => {
@@ -156,7 +143,6 @@ const Board = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [filter, setFilter] = useState('') //질문, 유머, 창작 등
     const [order, setOrder] = useState('recent') //recent, like, comment
-    const [description, setDescription] = useState('대담한 통솔가') //recent, like, comment
 
     useEffect(() => {
         handlePageChange(currentPage)
@@ -198,7 +184,7 @@ const Board = () => {
     return (
         <>
             <div>
-                <BoardTop mbti={mbti} description={description}/>
+                <BoardTop mbti={mbti}/>
 
                 <BoardCategory filter={filter} order={order} onCategoryChanged={handleCategoryChanged}/>
                 <BoardPostBox mbti={mbti} posts={posts}/>
