@@ -11,7 +11,6 @@ function getUrl(subUrl) {
 
 const Write = () => {
     const accessToken = localStorage.getItem('accessToken')
-    const [radios, setRadios] = useState()
 
     const [inputs, setInputs] = useState({
         title: "",
