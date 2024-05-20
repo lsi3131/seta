@@ -1,66 +1,17 @@
 
-.board_top {
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  height: 200px;
-  /* padding: 25px 40px; */
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  background: #c9c9c9;
-} 
-
-@media (max-width: 1200px) {
-  body {
-    width: 100%;
-  }
-}
-
-.board_top h1{
+.board_top h2{
   width: 1200px;
-  margin: 0 auto;
-  font-size: 50px;
+  font-size: 40px;
   font-weight: bold;
-  text-align: center;
+
 }
 
-
+.board_top h2,
 .form {
   display: flex;
   flex-direction: column;
   width: 800px;
-  margin: 5rem auto;
-
-}
-
-/* input_Radio */
-.radio {
-  display: flex;
-  font-size: 1.4rem;
-  font-weight: 200;
-}
-
-.radio input[type='radio'] {
-  display: none;
-}
-
-.radio input[type='radio']+label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 10rem;
-  cursor: pointer;
-  user-select: none;
-  transition: 0.2s;
-}
-
-.radio input[type='radio']+label:hover{
-  font-weight: 700;
-  transition:0.3s;
-  transform: scale(1.1);
-}
-.radio input[type='radio']:checked+label {
-  font-weight: 700;
+  margin: 1rem auto;
 }
 
 /* MBTI 선택  */
@@ -93,34 +44,41 @@
 }
 
 
-
 /* 제목 */
 .title, 
 .content {
-  margin-top: 2rem;
+  margin-top: 1rem;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-.title div,
+.title div{
+  height: 2.5rem;
+  display: flex;
+  justify-content: space-between
+}
+
+.title div input{
+  width: 60%;
+  height: 100%;
+}
+
+.title div select{
+  margin-left: 10px;
+  width: 40%;
+  font-size: 1rem;
+}
+
+
+
 .content div {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
 }
 
 .title input {
   font-size: 1rem;
   height: 2rem;
-  padding-left: 10px;
-}
-
-.title label,
-.content label {
-  font-size: 1.4rem;
-  font-weight: 500;
   padding-left: 10px;
 }
 
