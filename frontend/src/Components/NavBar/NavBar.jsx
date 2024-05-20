@@ -11,25 +11,27 @@ const containerStyles = {
 const AuthenticatedNavbar = ({ username }) => {
     return (
         <header className={style.header}>
-            <div className={style.logo}>
+            <div className={style.container}>
+                <div className={style.logo}>
 
-                <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
+                    <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
 
+                </div>
+                <nav className={style.navbar}>
+                    <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
+                        {username}
+                    </Link>
+                    <a
+                        onClick={() => {
+                            localStorage.removeItem('accessToken')
+                            localStorage.removeItem('refreshToken')
+                            window.location.href = '/login'
+                        }}
+                    >
+                        logout
+                    </a>
+                </nav>
             </div>
-            <nav className={style.navbar}>
-                <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
-                    {username}
-                </Link>
-                <a
-                    onClick={() => {
-                        localStorage.removeItem('accessToken')
-                        localStorage.removeItem('refreshToken')
-                        window.location.href = '/login'
-                    }}
-                >
-                    logout
-                </a>
-            </nav>
         </header>
     )
 }
@@ -38,20 +40,18 @@ const AuthenticatedNavbar = ({ username }) => {
 const UnauthenticatedNavbar = () => {
     return (
         <header className={style.header}>
-            <div className={style.logo}>
-                <Link to="/" style={{ textDecoration: 'none' }}>
-                    Logo
-                </Link>
+            <div className={style.container}>
+                <div className={style.logo}>
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        SETA
+                    </Link>
+                </div>
+                <nav className={style.navbar}>
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                        로그인
+                    </Link>
+                </nav>
             </div>
-            <nav className={style.navbar}>
-                <Link to="/login" style={{ textDecoration: 'none' }}>
-                    로그인
-                </Link>
-                {/* 테스트용. 추후 삭제*/}
-                <Link to={`/profile/test_istj`} style={{ textDecoration: 'none' }}>
-                    프로필
-                </Link>
-            </nav>
         </header>
     )
 }
