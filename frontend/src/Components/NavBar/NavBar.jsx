@@ -3,13 +3,18 @@ import { Link } from 'react-router-dom'
 import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
 
+const containerStyles = {
+    width: "1200px",
+    margin: "0 auto"
+}
+
 const AuthenticatedNavbar = ({ username }) => {
     return (
         <header className={style.header}>
             <div className={style.logo}>
-                <Link to="/" style={{ textDecoration: 'none' }}>
-                    Logo
-                </Link>
+
+                <Link to="/" style={{ textDecoration: 'none'}}>SETA</Link>
+
             </div>
             <nav className={style.navbar}>
                 <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>

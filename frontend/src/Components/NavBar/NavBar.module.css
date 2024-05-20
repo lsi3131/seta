@@ -1,14 +1,22 @@
 .header {
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width:100%;
     padding: 20px 0%; /* Navbar의 내부 여백을 지정합니다. */
     background-color: #fff; /* Navbar의 배경색을 흰색으로 설정합니다. */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
     text-decoration: none;
+    border-bottom: solid 1px rgb(235, 235, 235);
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
 }
 
 .logo {
