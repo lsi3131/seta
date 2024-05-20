@@ -1,5 +1,4 @@
-import {axiosAuth} from "../GbobalInstance"
-
+import apiClient from "../../services/apiClient"
 export const addLikeToPost = async (postId, like_on) => {
     const accessToken = localStorage.getItem('accessToken')
     const headers = {
@@ -10,14 +9,12 @@ export const addLikeToPost = async (postId, like_on) => {
     }
 
     const url = `/api/posts/${postId}/likey/`
-    console.log(url)
-    console.log(accessToken)
-    return await axiosAuth.post(`/api/posts/${postId}/likey/`, data, {headers: headers})
+    return await apiClient.post(`/api/posts/${postId}/likey/`, data, {headers: headers})
 }
 
 export const getPostById = async (postId) => {
-    return await axiosAuth.get(`/api/posts/${postId}/`)
+    return await apiClient.get(`/api/posts/${postId}/`)
 }
 export const getCommentsByPostId = async (postId) => {
-    return await axiosAuth.get(`/api/posts/${postId}/comments/`)
+    return await apiClient.get(`/api/posts/${postId}/comments/`)
 }
