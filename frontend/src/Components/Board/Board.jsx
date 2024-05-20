@@ -2,14 +2,9 @@ import React, {useEffect, useState} from 'react';
 import style from './Board.module.css'
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
-import {formatDate, getButtonColor, getFontColor} from "../../Utils/helpers"
+import {formatDate, getButtonColor, getFontColor, getUrl} from "../../Utils/helpers"
 import Pagination from "../Pagenation/Pagination";
 import BoardTop from "../BoardTop/BoardTop";
-
-function getUrl(subUrl) {
-    const urlRoot = 'http://127.0.0.1:8000'
-    return `${urlRoot}${subUrl}`
-}
 
 const BoardPost = ({post, mbti}) => {
     return (
@@ -168,7 +163,6 @@ const Board = () => {
                 setPosts(response.data['results'])
                 setTotalPage(response.data['total_page'])
                 setCurrentPage(page)
-                console.log(posts)
             }).catch(error => {
             console.error('Error during get posts:', error)
         })

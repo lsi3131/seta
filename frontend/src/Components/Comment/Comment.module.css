@@ -1,17 +1,215 @@
-.button {
-  background-color: #007bff;
-  color: #ffffff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+
+/* ==============Comment List ==============*/
+.comment_list {
+    margin-top: 20px;
 }
 
-.button:hover {
-  background-color: #0056b3;
+/* ==============Comment ==============*/
+.comment {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0
 }
-.vertical {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
+
+.comment_left {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.comment_left > pre {
+    font-size: 18px;
+}
+
+.comment_left_bottom {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.comment_left_bottom > p {
+    margin-right: 20px;
+    font-size: 18px;
+}
+
+.comment_left_bottom_like {
+    display: flex;
+    align-items: center;
+}
+
+.comment_left_bottom_like > button{
+    border: none;
+    background-color: transparent;
+    margin-right: 8px;
+}
+
+.comment_left_bottom_like > button > img{
+    width: 30px;
+    height: 30px;
+}
+
+.comment_left_bottom_like > p {
+    color: #ff0000;
+    font-size: 18px;
+}
+
+.comment_right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.comment_right_button {
+}
+
+.comment_right_button > button {
+    margin-right: 10px;
+    background-color: #ffffff;
+    border: none;
+    color: #969696
+}
+
+.comment_right_button > button:hover {
+    background-color: #ffffff;
+    border: none;
+    color: #000000;
+}
+
+
+
+.comment_right > p {
+    display: inline-block;
+    color: #ffffff;
+    background-color: #0056b3;
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px 35px;
+    border-radius: 10px;
+}
+
+
+.comment_author {
+    margin-right: 10px;
+}
+
+
+.comment_update_buttons_container {
+    margin-bottom: 10px;
+}
+
+.comment_update_buttons_container > button {
+    background-color: #434343b2;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.comment_root {
+    display: flex;
+}
+
+.comment_bottom {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.comment_bottom > span {
+    width: auto;
+    background-color: transparent;
+    color: black;
+    font-size: 16px;
+    /*height: 40px;*/
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.comment_bottom > button {
+    width: auto;
+    text-align: left;
+    height: 40px;
+    background-color: transparent;
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+/*============== Comment Input =================*/
+.comment_input_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.comment_input_container > textarea {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    width: 100%;
+    padding-top: 10px;
+    padding-left: 10px;
+    font-size: 15px;
+    outline: none;
+    background-color: #ffffff;
+    border: 2px solid #00000029;
+}
+
+.comment_input_container > textarea:focus {
+    border-color: gray;
+}
+
+.comment_input_buttons_container {
+    display: flex;
+}
+
+.comment_input_buttons_container > button {
+    background-color: #434343b2;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+
+.comment_reply_container {
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+
+.comment_horizontal {
+    display: flex;
+    justify-content: right;
+}
+
+.comment_vertical {
+    display: flex;
+    justify-content: right;
+    flex-direction: column;
+}
+
+.comment_justify_end {
+    display: flex;
+    justify-content: flex-end;
 }
