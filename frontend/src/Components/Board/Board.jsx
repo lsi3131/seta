@@ -159,7 +159,7 @@ const Board = () => {
     }
 
     const handlePageChange = (page) => {
-        let url = getUrl(`/api/posts/mbti/${mbti.toLowerCase()}/?page=${page}`)
+        let url = getUrl(`/api/posts/mbti/${mbti}/?page=${page}`)
         if (filter !== '') {
             url += `&category=${filter}`
         }
