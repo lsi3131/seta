@@ -206,12 +206,6 @@ const Board = () => {
                                onCategoryChanged={handleCategoryChanged}/>
                 <BoardPostBox mbti={mbti} posts={posts}/>
 
-                <div className={style.board_button_container}>
-                    <Link to={`/write`}>
-                        <button style={{backgroundColor: getButtonColor(mbti)}}>글쓰기</button>
-                    </Link>
-                </div>
-
                 <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
             </div>
         </>

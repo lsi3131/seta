@@ -58,6 +58,10 @@
     margin-right: 8px;
 }
 
+.comment_left_bottom_1_1_like > button:hover{
+    cursor: pointer;
+}
+
 .comment_left_bottom_1_1_like > button > img{
     width: 30px;
     height: 30px;
@@ -89,6 +93,7 @@
     background-color: #ffffff;
     border: none;
     color: #000000;
+    cursor: pointer;
 }
 
 .comment_right > p {
@@ -98,7 +103,7 @@
     text-align: center;
     margin: 10px 0;
     padding: 10px 35px;
-    border-radius: 10px;
+    border-radius: 18px;
 }
 
 
