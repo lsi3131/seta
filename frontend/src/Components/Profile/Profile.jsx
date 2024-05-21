@@ -3,12 +3,10 @@ import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import apiClient from "services/apiClient";
+import { UserContext } from "userContext";
 import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
 
-// function getUrl(subUrl) {
-//     const urlRoot = 'http://127.0.0.1:8000'
-//     return `${urlRoot}${subUrl}`
-// }
 
 const Profile = () => {
     const [users, setUsers] = useState({})
@@ -17,7 +15,7 @@ const Profile = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await axios.get('http://127.0.0.1:8000/api/accounts/alicia46/')
+            const response = await apiClient.get('http://127.0.0.1:8000/api/accounts/alicia46/')
             console.log(response.data.posts)
             setUsers(response.data)
         }

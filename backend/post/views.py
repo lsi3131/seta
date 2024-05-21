@@ -119,6 +119,11 @@ class PostAPIView(APIView):
 
 class CreatePostAPIView(APIView):
     permission_classes=[IsAuthenticated]
+    def get(self, request):
+        categorys = get_list_or_404(PostCategory)
+        data = [{'category': category.name,
+                 'id': category.id } for category in categorys]
+        return Response(data,status=status.HTTP_200_OK)
 
     def post(self, request):
         data = request.data.copy()
