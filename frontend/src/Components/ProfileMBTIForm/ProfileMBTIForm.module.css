@@ -1,0 +1,28 @@
+.container {
+    width : 35rem;
+    margin: 2rem 0;
+}
+
+.introduce, .mbtiRatio, .followRanking, .followerRanking {
+    border: 1px solid rgb(221, 221, 221);
+}
+
+.introduce {
+    width: 100%;
+    height: 7rem;
+}
+
+.mbtiRatio {
+    width: 100%;
+    height: 7rem;
+}
+
+.followerRanking {
+    width: 100%;
+    height: 7rem;
+}
+
+.followRanking {
+    width: 100%;
+    height: 7rem;
+}
