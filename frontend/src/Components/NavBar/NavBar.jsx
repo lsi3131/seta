@@ -25,7 +25,10 @@ const AuthenticatedNavbar = ({ username }) => {
                     <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
                         {username}
                     </Link>
-                    <Link to={`/write/`}>글쓰기</Link>
+
+                    <Link to={`/write/`} style={{ textDecoration: 'none' }}>
+                        글쓰기
+                    </Link>
                     <a
                         onClick={() => {
                             localStorage.removeItem('accessToken')

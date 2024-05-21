@@ -11,6 +11,7 @@ import BoardDetail from './Components/BoardDetail/BoardDetail'
 import Write from './Components/Write/Write'
 import Profile from './Components/Profile/Profile'
 import Update from './Components/Update/Update'
+import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/update/:detailId" element={<Update />} />
                 </Routes>
+                <Footer />
             </UserProvider>
         </>
     )

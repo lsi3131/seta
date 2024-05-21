@@ -1,33 +1,138 @@
-import style from './Profile.module.css'
-import { Link, useParams } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 
-// function getUrl(subUrl) {
-//     const urlRoot = 'http://127.0.0.1:8000'
-//     return `${urlRoot}${subUrl}`
-// }
+import style from "./Profile.module.css";
+import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
+import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import apiClient from "services/apiClient";
+import { UserContext } from "userContext";
+import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
+
+
 
 const Profile = () => {
-    const { username } = useParams()
-    const [profiles, setProfiles] = useState([])
+    const [users, setUsers] = useState({})
+    const [view, setView] = useState('posts')
+    const [visivlePosts, setVisivlePosts] = useState(5)
 
     useEffect(() => {
-        const respones = axios.get('http://127.0.0.1:8000/api/accounts/admin/')
-        setProfiles(respones.data)
-    }, [])
+        async function fetchData() {
+            const response = await apiClient.get('http://127.0.0.1:8000/api/accounts/alicia46/')
+            console.log(response.data.posts)
+            setUsers(response.data)
+        }
+        fetchData();
+    }, []);
+
+    const MorePosts = () => {
+        setVisivlePosts((prevVisiblePosts) => prevVisiblePosts + 5)
+    }
 
     return (
         <div className={style.vertical}>
-            <h1>프로필 - {username}</h1>
-
-            <div className={style.horizontal}>
-                <p>내가 작성한 글 |</p>
-                <p>좋아요</p>
+            <div className={style.board_top} >
+                <div className={style.board_top_content}>
+                    <div className={style.board_top_lift}>
+                        <div className={style.board_top_text_container}>
+                            <p>{users.mbti}</p>
+                            <h2>{users.username}</h2>
+                        </div>
+                        <div>
+                            <img className={style.board_top_image} src={getImage(users.mbti)} />
+                        </div>
+                    </div>
+                    <div className={style.board_top_right}>
+                        <div className={style.board_top_count}>
+                            <div>
+                                {users.posts && <h2>{users.posts.length}</h2>}
+                                <p>게시물</p>
+                            </div>
+                            <div>
+                                <h2>{users.followers_count}</h2>
+                                <p>팔로워</p>
+                            </div>
+                            <div>
+                                <h2>{users.following_count}</h2>
+                                <p>팔로잉</p>
+                            </div>
+                        </div>
+                        <div className={style.boder_top_mbti_box}>
+                            {users.mbti &&
+                                <div className={style.board_top_mbti}>
+                                    <h3>{users.mbti[0]}</h3>
+                                    <p>{Math.floor(users.percentIE)}%</p>
+                                    <h3>{users.mbti[1]}</h3>
+                                    <p>{Math.floor(users.percentNS)}%</p>
+                                    <h3>{users.mbti[2]}</h3>
+                                    <p>{Math.floor(users.percentFT)}%</p>
+                                    <h3>{users.mbti[3]}</h3>
+                                    <p>{Math.floor(users.percentPJ)}%</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <p>작성한 글 리스트</p>
+            <ProfileMBTIForm />
+            <div className={style.board_content}>
+                <div className={style.board_category}>
+                    <button onClick={() => setView('posts')}>내가 작성한 글</button>
+                    <button onClick={() => setView('like_posts')}>좋아요 한 글 </button>
+                </div>
+                <hr />
+                {view === 'posts' && users.posts && (
+                    <div className={style.board_posts}>
+                        {users.posts.slice(0, visivlePosts).map((post) => (
+                            <>
+                            <div className={style.board_post}>
+                                <div className={style.board_post_left}>
+                                    <div className={style.board_post_category}>
+                                        <p style={{ color: getFontColor(users.mbti) }}>{post.category}</p>
+                                    </div>
+                                    <div key={post.id} className={style.board_post_title}>
+                                        <Link to={`/detail/${post.id}`}>{post.title}</Link>
+                                        <p style={{ color: getFontColor(users.mbti) }}>[{post.hits}]</p>
+                                    </div>
+                                    <div className={style.board_post_bottom}>
+                                        <div>
+                                            <p>{post.author}</p>
+                                        </div>
+                                        <div>
+                                            <p>{formatDate(post.created_at)}</p>
+                                        </div>
+                                        <div className={style.board_like}>
+                                            <p>좋아요 {post.likes}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className={style.board_post_right}>
+                                        {post.mbti.map(m => (
+                                            <p style={{ backgroundColor: getButtonColor(m) }}>{m}</p>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            </>
+                        ))}
+                        {visivlePosts < users.posts.length && (
+                            <button className={style.morebutton}onClick={MorePosts}>더보기</button>
+                        )}
+                    </div>
+                )}
+                {view === 'like_posts' && users.like_posts && (
+                    <div className={style.posts}>
+                        {users.like_posts.slice(0, visivlePosts).map((post) => (
+                            <div key={post.id} className={style.post}>
+                                <Link to={`/detail/${post.id}`}>{post.title}</Link>
+                            </div>
+                        ))}
+                        {visivlePosts < users.like_posts.length && (
+                            <button onClick={MorePosts}>더보기</button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )
