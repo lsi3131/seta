@@ -18,19 +18,41 @@
 .mbti {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
   height: 80px;
   align-items: center;
   justify-content: center;
 }
+
+.mbti div input[type='checkbox']{
+  display: none;
+}
+.mbti div input[type='checkbox']+label{
+  width: 100px;
+  font-weight: 400;
+  border-radius: 5px; 
+  padding-top: 2px; ;
+}
+.mbti div input[type='checkbox']+label:hover{
+  cursor: pointer;
+}
+
+.mbtibox{
+  width: 40px;
+  line-height: 30px; 
+  color: #fff;
+}
+
+
 .mbti div{
+  display: flex;
+  justify-content: center;
   flex: 0 0 12.5%;
   text-align: center;
   user-select: none;
   transition: transform 0.3s ease-in-out;
 }
 
-.mbti div:hover{
+.mbtibox:hover{
   transition:0.3s;
   font-weight: 700;
   transform: scale(1.3);
@@ -40,7 +62,8 @@
 
 .mbti input:checked+label {
   text-decoration: underline ;
-  font-weight: 500;
+  transform: scale(1.2);
+  box-shadow: 0px 0px 5px #555;
 }
 
 
@@ -66,14 +89,7 @@
   margin-left: 10px;
   width: 40%;
   font-size: 1rem;
-}
-
-
-
-.content div {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  padding-left: 8px ;
 }
 
 .title input {
@@ -81,6 +97,17 @@
   height: 2rem;
   padding-left: 10px;
 }
+
+.title select:hover{
+  cursor: pointer;
+}
+
+.content div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 
 /* 내용 */
 
@@ -114,4 +141,5 @@
 .button:hover{
   background-color:rgba(170,170,170,79%);
   transition:0.2s;
+  cursor: pointer;
 }
