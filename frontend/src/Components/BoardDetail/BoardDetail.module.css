@@ -4,6 +4,7 @@
 }
 
 .board_title_category {
+
 }
 
 .board_title_category > p {
@@ -26,7 +27,7 @@
     font-size: 20px;
     color: #ffffff;
     background-color: #0056b3;
-    padding: 20px 35px;
+    padding: 10px 40px;
     border-radius: 20px;
 }
 
@@ -60,15 +61,11 @@
     flex-direction: column;
     margin-top: 15px;
     margin-bottom: 15px;
-    border-bottom: 2px solid gray;
-    border-top: 2px solid gray;
-    padding: 30px 20px;
 }
 
 .board_content_text {
     display: flex;
     flex-direction: column;
-    min-height: 300px;
 }
 
 .board_content_text > p {
@@ -89,6 +86,10 @@
     margin: 10px;
     border: none;
     background-color: transparent;
+}
+
+.board_content_like_button > button:hover{
+    cursor: pointer;
 }
 
 .board_content_like_button > button > img {
