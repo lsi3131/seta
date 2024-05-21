@@ -1,29 +1,25 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react'
 import style from './BoardDetail.module.css'
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {getFontColor, getButtonColor, formatDate, isValidMbti} from "../../Utils/helpers";
-import CommentBox from "../Comment/Comment";
-import BoardTop from "../BoardTop/BoardTop"
-import axios from "axios";
-import like from "../../Assets/images/board/like.png"
-import unlike from "../../Assets/images/board/unlike.png"
-import {addLikeToPost, getPostById} from "../../api/services/CommentService";
-import apiClient from "../../services/apiClient";
-import {UserContext} from "../../userContext";
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { getFontColor, getButtonColor, formatDate, isValidMbti } from '../../Utils/helpers'
+import CommentBox from '../Comment/Comment'
+import BoardTop from '../BoardTop/BoardTop'
+import like from '../../Assets/images/board/like.png'
+import unlike from '../../Assets/images/board/unlike.png'
+import apiClient from '../../services/apiClient'
+import { UserContext } from '../../userContext'
 
-const BoardTitle = ({mbti, post}) => {
-    useEffect(() => {
-    }, [post]);
-
+const BoardTitle = ({ mbti, post }) => {
+    useEffect(() => {}, [post])
 
     return (
         <div className={style.board_title_container}>
-            <div style={{color: getFontColor(mbti)}} className={style.board_title_category}>
+            <div style={{ color: getFontColor(mbti) }} className={style.board_title_category}>
                 <p>{post.category}</p>
             </div>
             <div className={style.board_title}>
                 <h2>{post.title}</h2>
-                <p style={{backgroundColor: getButtonColor(mbti)}}>{mbti}</p>
+                <p style={{ backgroundColor: getButtonColor(mbti) }}>{mbti}</p>
             </div>
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
@@ -36,18 +32,17 @@ const BoardTitle = ({mbti, post}) => {
                     <p>댓글 {post.comments}</p>
                 </div>
             </div>
-            <hr/>
         </div>
     )
 }
 
-const BoardContent = ({post, username, onSetLike}) => {
+const BoardContent = ({ post, username, onSetLike }) => {
     const [likeOn, setLikeOn] = useState(false)
 
     useEffect(() => {
         const likeOn = post.like_usernames.includes(username)
         setLikeOn(likeOn)
-    }, [post]);
+    }, [post, username])
 
     const handleLikeOn = () => {
         onSetLike(!likeOn)
@@ -61,10 +56,7 @@ const BoardContent = ({post, username, onSetLike}) => {
 
             <div className={style.board_content_like_button}>
                 <button onClick={handleLikeOn}>
-                    {likeOn ?
-                        <img src={like} alt=""/> :
-                        <img src={unlike} alt=""/>
-                    }
+                    {likeOn ? <img src={like} alt="" /> : <img src={unlike} alt="" />}
                 </button>
                 <p>{post.likes}</p>
             </div>
@@ -73,80 +65,99 @@ const BoardContent = ({post, username, onSetLike}) => {
 }
 
 const BoardDetail = () => {
-    const currentUser = useContext(UserContext);
-    const {detailId} = useParams()
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const navigate = useNavigate();
-    // const mbti = 'isfp';
+    const currentUser = useContext(UserContext)
+    const { detailId } = useParams()
+    const location = useLocation()
+    const params = new URLSearchParams(location.search)
+    const navigate = useNavigate()
     const mbti = params.get('mbti')
 
-    /* 기본값 참조하도록 수정*/
-    const [post, setPost] = useState({
-        "id": -1,
-        "author": "",
-        "category": "",
-        "title": "",
-        "hits": 0,
-        "likes": 0,
-        "like_usernames": [],
-        "comments": 0,
-        "mbti": [],
-        "created_at": "",
-        "updated_at": "",
-        "content": ""
-    });
+    const [post, setPost] = useState(null)
+    const [isValid, setIsValid] = useState(true)
+    const [isLoading, setIsLoading] = useState(true) // 로딩 상태 추가
 
     useEffect(() => {
-        if (!isValidMbti(mbti)) {
+        handleGet()
+    }, [detailId, mbti, navigate])
+
+    useEffect(() => {
+        if (post && post.mbti) {
+            if (!post.mbti.includes(mbti)) {
+                setIsValid(false)
+                navigate('/')
+            } else {
+                setIsLoading(false) // 유효성 검사 후 로딩 상태 해제
+            }
+        }
+    }, [post, mbti, navigate])
+
+    const handleGet = async () => {
+        try {
+            const response = await apiClient.get(`/api/posts/${detailId}/`)
+            setPost(response.data)
+        } catch (error) {
+            console.error('Error during get post detail:', error)
+            setIsValid(false)
             navigate('/')
         }
-        handleGet()
-    }, []);
-
-    const handleGet = () => {
-        /* 게시판 상세 정보 불러오기 */
-        apiClient.get(`/api/posts/${detailId}/`)
-            .then(response => {
-                console.log('get post from server', response.data)
-                setPost(response.data)
-            })
-            .catch(error => {
-                console.error('Error during get post detail:', error)
-            })
     }
 
-    const handleSetLike = (like_on) => {
-        if (currentUser === null) {
+    const handleSetLike = async (like_on) => {
+        if (!currentUser) {
             return
         }
 
         const data = {
-            like: like_on ? 1 : 0
+            like: like_on ? 1 : 0,
         }
-        console.log('like data', data)
-        apiClient.post(`/api/posts/${post.id}/likey/`, data)
-            .then(response => {
-                handleGet()
-            })
-            .catch(error => {
-                console.error('Error during add like to post:', error)
-            });
+
+        try {
+            await apiClient.post(`/api/posts/${post.id}/likey/`, data)
+            handleGet()
+        } catch (error) {
+            console.error('Error during add like to post:', error)
+        }
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div> // 데이터를 불러오는 동안 로딩 메시지 표시
+    }
+
+    if (!isValid) {
+        return null // 유효하지 않은 경우 아무것도 렌더링하지 않음
     }
 
     return (
-        <>
-            <div className={style.vertical}>
-                <BoardTop mbti={mbti}/>
-
-                <BoardTitle mbti={mbti} post={post}/>
-
-                <BoardContent post={post} username={currentUser ? currentUser['username'] : ""}
-                              onSetLike={handleSetLike}/>
-
-                <CommentBox postId={post.id}/>
-            </div>
-        </>
+        <div className={style.vertical}>
+            <BoardTop mbti={mbti} />
+            <BoardTitle mbti={mbti} post={post} />
+            <BoardContent post={post} username={currentUser ? currentUser.username : ''} onSetLike={handleSetLike} />
+            {post.author === currentUser.username ? (
+                <div className={style.buttonSection}>
+                    <button
+                        onClick={() => {
+                            navigate(`/update/${post.id}?mbti=${mbti}`)
+                        }}
+                    >
+                        수정
+                    </button>
+                    <button
+                        onClick={async () => {
+                            try {
+                                await apiClient.delete(`/api/posts/${post.id}/`)
+                                navigate(`/board/${mbti}`)
+                            } catch (error) {
+                                console.error('Error during delete post:', error)
+                            }
+                        }}
+                    >
+                        삭제
+                    </button>
+                </div>
+            ) : null}
+            <CommentBox postId={post.id} />
+        </div>
     )
 }
-export default BoardDetail;
+
+export default BoardDetail
