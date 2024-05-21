@@ -21,7 +21,7 @@ const BoardTitle = ({mbti, post}) => {
             </div>
             <div className={style.board_title}>
                 <h2>{post.title}</h2>
-                <p style={{backgroundColor: getButtonColor(mbti)}}>{mbti}</p>
+                <p style={{backgroundColor: getButtonColor(mbti)}}>{mbti.toUpperCase()}</p>
             </div>
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
