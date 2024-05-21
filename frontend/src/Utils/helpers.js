@@ -116,6 +116,8 @@ export const getImage = (mbti) => {
     if (mbti === null) {
         return ""
     }
+    if (!mbti) return null;
+    
     return mbtiParams[mbti.toLowerCase()].image
 }
 
@@ -123,6 +125,7 @@ export const getMainColor = (mbti) => {
     if (mbti === null) {
         return ""
     }
+    if (!mbti) return null;
 
     return mbtiParams[mbti.toLowerCase()].mainColor
 }
@@ -130,6 +133,7 @@ export const getFontColor = (mbti) => {
     if (mbti === null) {
         return ""
     }
+    if (!mbti) return null;
 
     return mbtiParams[mbti.toLowerCase()].fontColor
 }
@@ -138,6 +142,7 @@ export const getButtonColor = (mbti) => {
     if (mbti === null) {
         return ""
     }
+    if (!mbti) return null;
 
     return mbtiParams[mbti.toLowerCase()].buttonColor
 }
