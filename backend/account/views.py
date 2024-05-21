@@ -208,7 +208,7 @@ class MbtiDetailAPIView(APIView):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def Myposts(request, username ):
     user = get_object_or_404(User, username=username)
     posts = user.post_set.all()
