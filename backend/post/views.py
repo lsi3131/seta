@@ -231,7 +231,8 @@ class PostCommentsAPIView(APIView):
 
         response_data = []
         for comment in comments:
-            response_data.append(serialize_comment(comment))
+            if not comment.parent:
+                response_data.append(serialize_comment(comment))
 
         return Response(response_data, status=status.HTTP_200_OK)
 

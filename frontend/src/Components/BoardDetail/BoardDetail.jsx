@@ -4,10 +4,8 @@ import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {getFontColor, getButtonColor, formatDate, isValidMbti} from "../../Utils/helpers";
 import CommentBox from "../Comment/Comment";
 import BoardTop from "../BoardTop/BoardTop"
-import axios from "axios";
 import like from "../../Assets/images/board/like.png"
 import unlike from "../../Assets/images/board/unlike.png"
-import {addLikeToPost, getPostById} from "../../api/services/CommentService";
 import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
 
