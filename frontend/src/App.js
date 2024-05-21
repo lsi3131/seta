@@ -10,6 +10,7 @@ import Signup from './Components/Signup/Signup'
 import BoardDetail from './Components/BoardDetail/BoardDetail'
 import Write from './Components/Write/Write'
 import Profile from './Components/Profile/Profile'
+import Update from './Components/Update/Update'
 import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/detail/:detailId" element={<BoardDetail />} />
                     <Route path="/write" element={<Write />} />
                     <Route path="/profile/:username" element={<Profile />} />
+                    <Route path="/update/:detailId" element={<Update />} />
                 </Routes>
                 <Footer />
             </UserProvider>

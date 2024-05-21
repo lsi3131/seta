@@ -8,39 +8,38 @@ export const formatDateDayBefore = (dateString) => {
 }
 
 export const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hour = String(date.getHours()).padStart(2, '0');
-    const minute = String(date.getMinutes()).padStart(2, '0');
+    const date = new Date(dateString)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hour = String(date.getHours()).padStart(2, '0')
+    const minute = String(date.getMinutes()).padStart(2, '0')
 
-    return `${year}.${month}.${day} ${hour}:${minute}`;
+    return `${year}.${month}.${day} ${hour}:${minute}`
 }
 
-
 export const getUpdateTime = (timestamp) => {
-    const currentDate = new Date();
-    const previousDate = new Date(timestamp);
+    const currentDate = new Date()
+    const previousDate = new Date(timestamp)
 
-    const difference = currentDate - previousDate;
-    const seconds = Math.floor(difference / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
+    const difference = currentDate - previousDate
+    const seconds = Math.floor(difference / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
 
     if (hours >= 24) {
-        const year = previousDate.getFullYear();
-        const month = String(previousDate.getMonth() + 1).padStart(2, '0');
-        const day = String(previousDate.getDate()).padStart(2, '0');
-        const hour = String(previousDate.getHours()).padStart(2, '0');
-        const minute = String(previousDate.getMinutes()).padStart(2, '0');
-        return `${year}.${month}.${day} ${hour}:${minute}`;
+        const year = previousDate.getFullYear()
+        const month = String(previousDate.getMonth() + 1).padStart(2, '0')
+        const day = String(previousDate.getDate()).padStart(2, '0')
+        const hour = String(previousDate.getHours()).padStart(2, '0')
+        const minute = String(previousDate.getMinutes()).padStart(2, '0')
+        return `${year}.${month}.${day} ${hour}:${minute}`
     } else if (hours > 0) {
-        return `${hours}시간 전`;
+        return `${hours}시간 전`
     } else if (minutes > 0) {
-        return `${minutes}분 전`;
+        return `${minutes}분 전`
     } else {
-        return `${seconds}초 전`;
+        return `${seconds}초 전`
     }
 }
 
@@ -114,7 +113,7 @@ export const mbtiParams = {
 
 export const getImage = (mbti) => {
     if (mbti === null) {
-        return ""
+        return ''
     }
     if (!mbti) return null;
     
@@ -123,7 +122,7 @@ export const getImage = (mbti) => {
 
 export const getMainColor = (mbti) => {
     if (mbti === null) {
-        return ""
+        return ''
     }
     if (!mbti) return null;
 
@@ -131,7 +130,7 @@ export const getMainColor = (mbti) => {
 }
 export const getFontColor = (mbti) => {
     if (mbti === null) {
-        return ""
+        return ''
     }
     if (!mbti) return null;
 
@@ -140,7 +139,7 @@ export const getFontColor = (mbti) => {
 
 export const getButtonColor = (mbti) => {
     if (mbti === null) {
-        return ""
+        return ''
     }
     if (!mbti) return null;
 
@@ -151,4 +150,3 @@ export const getUrl = (subUrl) => {
     const urlRoot = 'http://127.0.0.1:8000'
     return `${urlRoot}${subUrl}`
 }
-
