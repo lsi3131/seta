@@ -20,7 +20,7 @@ const BoardPost = ({post, mbti}) => {
                         <p style={{color: getFontColor(mbti)}}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
-                        <Link to={`/detail/${post.id}`} state={{ mbti: mbti}}>{post.title}</Link>
+                        <Link to={`/detail/${post.id}?mbti=${mbti}`}>{post.title}</Link>
                         <p style={{color: getFontColor(mbti)}}>[{post.hits}]</p>
                     </div>
                     <div className={style.board_post_bottom}>

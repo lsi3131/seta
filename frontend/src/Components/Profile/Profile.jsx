@@ -2,7 +2,7 @@ import style from "./Profile.module.css";
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import formatDate from "../../Utils/helpers"
+import {formatDate} from "../../Utils/helpers"
 
 // function getUrl(subUrl) {
 //     const urlRoot = 'http://127.0.0.1:8000'
