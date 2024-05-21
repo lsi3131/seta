@@ -129,14 +129,7 @@ class PostAPIView(APIView):
 
 
 class CreatePostAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        categorys = get_list_or_404(PostCategory)
-        data = [{'category': category.name,
-                 'id': category.id} for category in categorys]
-        return Response(data, status=status.HTTP_200_OK)
-
+    permission_classes=[IsAuthenticated]
     def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
@@ -147,7 +140,7 @@ class CreatePostAPIView(APIView):
         content = data['content']
         category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                                   content=content, author=request.user)
+                                content=content, author=request.user)
         mbti_types = data['mbti']
         for mbti_type in mbti_types:
             mbti_s = get_object_or_404(Mbti, mbti_type=mbti_type)
@@ -204,7 +197,7 @@ class PostDetailAPIView(APIView):
         data = request.data.copy()
         data["content"] = data.get("content", post.content)
         data["title"] = data.get("title", post.title)
-        data["category"] = PostCategory.objects.get(name=data.get("category", post.category))
+        data["category_id"] = PostCategory.objects.get(name=data.get("category", post.category))
         data["mbti"] = data.get("mbti", post.mbti)
         if data["mbti"]:
             mbti_set = []
@@ -212,9 +205,11 @@ class PostDetailAPIView(APIView):
                 mbti = get_object_or_404(Mbti, mbti_type=mbti)
                 mbti_set.append(mbti)
             post.mbti.set(mbti_set)
+
         message = validate_post_data(data)
         if message:
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        
         post.__dict__.update(**data)
         post = post.save()
         return Response(
@@ -346,3 +341,10 @@ def Recommend(request, post_pk, comment_pk):
     else:
         comment.recommend.remove(user)
         return Response({"message": "추천 취소"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getCategory(request):
+    categorys = get_list_or_404(PostCategory)
+    data = [{'category': category.name,
+            'id': category.id } for category in categorys]
+    return Response(data, status=status.HTTP_200_OK)
