@@ -319,7 +319,7 @@ const CommentBox = ({postId}) => {
                          onDeleteComment={handleDeleteComment}
                          onAddLikeComment={handleAddLikeComment}/>
 
-            <Counter/>
+            {/*<Counter/>*/}
         </div>
     );
 }
