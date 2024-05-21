@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import style from './BoardDetail.module.css'
-import {useLocation, useParams} from "react-router-dom";
-import {getFontColor, getButtonColor, formatDate} from "../../Utils/helpers";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {getFontColor, getButtonColor, formatDate, isValidMbti} from "../../Utils/helpers";
 import CommentBox from "../Comment/Comment";
 import BoardTop from "../BoardTop/BoardTop"
 import axios from "axios";
@@ -74,9 +74,12 @@ const BoardContent = ({post, username, onSetLike}) => {
 
 const BoardDetail = () => {
     const currentUser = useContext(UserContext);
-    const location = useLocation();
     const {detailId} = useParams()
-    const {mbti} = location.state || {};
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const navigate = useNavigate();
+    // const mbti = 'isfp';
+    const mbti = params.get('mbti')
 
     /* 기본값 참조하도록 수정*/
     const [post, setPost] = useState({
@@ -95,6 +98,9 @@ const BoardDetail = () => {
     });
 
     useEffect(() => {
+        if (!isValidMbti(mbti)) {
+            navigate('/')
+        }
         handleGet()
     }, []);
 
