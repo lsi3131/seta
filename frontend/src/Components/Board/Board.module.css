@@ -74,15 +74,24 @@
 }
 
 .board_post_right {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
 }
 
-.board_post_right > p {
+.board_post_right > button {
     color: #FFFFFF;
-    /*background-color: #0056b3;*/
-    margin: 5px;
-    padding: 15px 25px;
-    border-radius: 10px;
+    margin: 3px;
+    border-radius: 14px;
+    border: none;
+    font-size: 12px;
+    width: 60px;
+    height: 25px;
+}
+
+.board_post_right > button:hover {
+    transform: translateY(-0.1rem);
+    box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
+    cursor: pointer;
 }
 
 .board_post_category {
@@ -135,6 +144,7 @@
 
 .board_category_sub > button:hover {
     font-weight: bold;
+    cursor: pointer;
 }
 
 .board_like {
