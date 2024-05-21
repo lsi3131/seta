@@ -2,6 +2,7 @@ import style from './Write.module.css'
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react'
 import apiClient from 'services/apiClient'
+import { getFontColor,getMainColor } from '../../Utils/helpers'
 
 
 const Write = () => {
@@ -46,6 +47,7 @@ const Write = () => {
         fetchData();
     }, []);
 
+//onChange와 합치기나 변경
     const handleCheckboxChange = (id) => {
         const updatedCheckboxes = mbti_checks.map((check) =>
             check.id === id ? { ...check, checked: !check.checked } : check,
@@ -79,15 +81,14 @@ const Write = () => {
         e.preventDefault();
         try {
             const response = await apiClient.post('/api/posts/create/', inputs)
-            console.log(response.data)
             navigate(`/`);
         } catch (error) {
             if (!inputs.category) {
-                setError('카테고리를 선택하세요')
-            } else if (inputs.mbti.length === 0) {
                 setError('MBTI를 선택하세요')
-            } else if (!inputs.title) {
+            } else if (inputs.mbti.length === 0) {
                 setError('제목을 입력하세요')
+            } else if (!inputs.title) {
+                setError('카테고리를 선택하세요')
             } else if (!inputs.content) {
                 setError('내용을 입력하세요')
             }
@@ -103,18 +104,25 @@ const Write = () => {
                 <h2>게시물 작성</h2>
             </div>
             <form className={style.form} onSubmit={onSubmit}>
-            <hr />
+                <hr />
                 <div className={style.mbti}>
                     {mbti_checks.map((check) => (
                         <div key={check.id}>
-                            <input
-                                type="checkbox"
-                                id={`check-${check.id}`}
-                                value={check.label}
-                                checked={check.checked}
-                                onChange={() => handleCheckboxChange(check.id)}
-                            />
-                            <label htmlFor={`check-${check.id}`}>{check.label}</label>
+                            <div className={style.mbtibox}>
+                                <input
+                                    type="checkbox"
+                                    id={`check-${check.id}`}
+                                    value={check.label}
+                                    checked={check.checked}
+                                    onChange={() => handleCheckboxChange(check.id)}
+                                />
+                                <label
+                                    htmlFor={`check-${check.id}`}
+                                    style={{ backgroundColor: getFontColor(check.label)}}
+                                >
+                                    {check.label}
+                                </label>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -125,7 +133,8 @@ const Write = () => {
                             placeholder="제목을 입력해 주세요"
                             // required
                             value={title} onChange={onChange} />
-                        <select name="category" id="category" value={inputs.category} onChange={onChange}>
+                        <select name="category" id="category" value={inputs.category} onChange={onChange}
+                        className={style.select}>
                             <option className={style.option} value="" selected disabled hidden> 카테고리를 선택해주세요</option>
                             {categorys && categorys.map((cate) =>
                                 <option key={cate.id} value={cate.category}>{cate.category}</option>
