@@ -2,11 +2,13 @@ import style from './Update.module.css'
 import { useParams, useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import apiClient from 'services/apiClient'
+import { getFontColor } from 'Utils/helpers'
 
 const Update = () => {
     const { detailId } = useParams()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
+    const [categorys, setCategorys] = useState('')
     const [inputs, setInputs] = useState({
         id: '',
         title: '',
@@ -41,6 +43,9 @@ const Update = () => {
                 const response = await apiClient.get(`/api/posts/${detailId}/?purpose=update`)
                 const post = response.data
 
+                const cateResponse = await apiClient.get('/api/posts/category/')
+                setCategorys(cateResponse.data)
+
                 setInputs({
                     id: post.id,
                     title: post.title,
@@ -53,7 +58,7 @@ const Update = () => {
                 )
                 setLoading(false)
             } catch (error) {
-                navigate(`/detail/${detailId}`, { state: { mbti: 'ENFP' } })
+                navigate(-1)
             }
         }
         fetchPost()
@@ -85,8 +90,8 @@ const Update = () => {
     }
 
     const onChange = (e) => {
-        const { value, id, type, name } = e.target
-        if (type === 'radio' && name === 'radios') {
+        const { value, id, name } = e.target
+        if (name === 'category' && id === 'category') {
             setInputs({
                 ...inputs,
                 category: value,
@@ -100,9 +105,11 @@ const Update = () => {
     }
 
     const onSubmit = async (e) => {
+        e.preventDefault()
         try {
             const response = await apiClient.put(`/api/posts/${detailId}/`, inputs)
-            navigate(`/detail/${detailId}`, { state: { mbti: 'ENFP' } })
+            console.log(inputs)
+            navigate(`/detail/${detailId}?mbti=${inputs.mbti[0]}`)
             console.log('Server response:', response.data)
         } catch (error) {
             if (!inputs.category) {
@@ -120,64 +127,28 @@ const Update = () => {
     return (
         <div className={style.vertical}>
             <div className={style.board_top}>
-                <h1>글작성</h1>
+                <h2>게시물 수정</h2>
             </div>
             <form className={style.form} onSubmit={onSubmit}>
-                <div className={style.radio}>
-                    <div>
-                        <input
-                            type="radio"
-                            id="category1"
-                            name="radios"
-                            value="질문있어요"
-                            checked={inputs.category === '질문있어요'}
-                            onChange={onChange}
-                        />
-                        <label htmlFor="category1">질문있어요</label>
-                    </div>
-                    <div>
-                        <input
-                            type="radio"
-                            id="category2"
-                            name="radios"
-                            value="유머"
-                            checked={inputs.category === '유머'}
-                            onChange={onChange}
-                        />
-                        <label htmlFor="category2">유머</label>
-                    </div>
-                    <div>
-                        <input
-                            type="radio"
-                            id="category3"
-                            name="radios"
-                            value="창작"
-                            checked={inputs.category === '창작'}
-                            onChange={onChange}
-                        />
-                        <label htmlFor="category3">창작</label>
-                    </div>
-                </div>
-                <hr />
-                <div className={style.mbti}>
-                    {mbti_checks.map((check) => (
-                        <div key={check.id}>
-                            <input
-                                type="checkbox"
-                                id={`check-${check.id}`}
-                                value={check.label}
-                                checked={check.checked}
-                                onChange={() => handleCheckboxChange(check.id)}
-                            />
-                            <label htmlFor={`check-${check.id}`}>{check.label}</label>
-                        </div>
-                    ))}
-                </div>
-                <hr />
                 <div className={style.title}>
                     <div>
-                        <label htmlFor="title">제목</label>
-
+                        <select
+                            name="category"
+                            id="category"
+                            value={inputs.category}
+                            onChange={onChange}
+                            className={style.select}
+                        >
+                            <option className={style.option} value="" disabled>
+                                카테고리를 선택해주세요
+                            </option>
+                            {categorys &&
+                                categorys.map((cate) => (
+                                    <option key={cate.id} value={cate.category}>
+                                        {cate.category}
+                                    </option>
+                                ))}
+                        </select>
                         <input
                             type="text"
                             id="title"
@@ -188,9 +159,33 @@ const Update = () => {
                         />
                     </div>
                 </div>
+
+                <div className={style.mbti}>
+                    {mbti_checks.map((check) => (
+                        <div key={check.id}>
+                            <div className={style.mbtibox}>
+                                <input
+                                    type="checkbox"
+                                    id={`check-${check.id}`}
+                                    value={check.label}
+                                    checked={check.checked}
+                                    onChange={() => handleCheckboxChange(check.id)}
+                                    className={style.checkboxInput}
+                                />
+                                <label
+                                    htmlFor={`check-${check.id}`}
+                                    className={`${style.badgeLabel} ${check.checked ? style.checked : ''}`}
+                                    style={{ backgroundColor: check.checked ? getFontColor(check.label) : '#ccc' }}
+                                >
+                                    {check.label}
+                                </label>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 <div className={style.content}>
                     <div>
-                        <label htmlFor="content">내용</label>
                         <textarea
                             id="content"
                             placeholder="뭐 욕설안돼 어쩌구 비방이 저쩌구 신고될수있으니 주의해 주세요"
@@ -203,7 +198,7 @@ const Update = () => {
                 <p></p>
                 <p className={style.Error}>{Error}</p>
                 <button className={style.button} type="submit">
-                    등록
+                    수정 완료
                 </button>
             </form>
         </div>
