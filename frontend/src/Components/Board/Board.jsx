@@ -39,9 +39,12 @@ const BoardPost = ({post, mbti}) => {
                 </div>
                 <div>
                     <div className={style.board_post_right}>
-                        {post.mbti.map((m) => (
+                        {post.mbti.slice(0, 3).map((m) => (
                             <p style={{backgroundColor: getButtonColor(m)}}>{m}</p>
                         ))}
+                        {post.mbti.length > 3 && (
+                            <p>외 {post.mbti.length - 3}</p>
+                        )}
                     </div>
                 </div>
             </div>
