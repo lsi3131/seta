@@ -4,14 +4,9 @@ import { ResponsiveBar } from '@nivo/bar'
 
 const data = [
     {
-        "mbti": "EI",
-        "E": 40,
-        "I": 60,
-    },
-    {
-        "mbti": "NS",
-        "N": 90,
-        "S": 10,
+        "mbti": "JP",
+        "J": 80,
+        "P": 20,
     },
     {
         "mbti": "TF",
@@ -19,11 +14,46 @@ const data = [
         "F": 70,
     },
     {
-        "mbti": "JP",
-        "J": 80,
-        "P": 20,
+        "mbti": "NS",
+        "N": 90,
+        "S": 10,
+    },
+    {
+        "mbti": "EI",
+        "E": 10,
+        "I": 90,
     },
 ]
+
+const entjFormat = (value) => {
+    if (value === 'EI') {
+        return 'E';
+    }
+    else if (value === 'NS') {
+        return 'N';
+    }
+    else if (value === 'TF') {
+        return 'T';
+    }
+    else if (value === 'JP') {
+        return 'J';
+    }
+}
+
+const isfpFormat = (value) => {
+    if (value === 'EI') {
+        return 'I';
+    }
+    else if (value === 'NS') {
+        return 'S';
+    }
+    else if (value === 'TF') {
+        return 'F';
+    }
+    else if (value === 'JP') {
+        return 'P';
+    }
+}
 
 
 const ProfileChart = ({ data }) => (
@@ -41,7 +71,7 @@ const ProfileChart = ({ data }) => (
         ]}
         indexBy="mbti"
         padding={0.3}
-        margin={{right: 30, left: 30 }}
+        margin={{right: 20, left: 20 }}
         layout="horizontal"
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
@@ -59,9 +89,7 @@ const ProfileChart = ({ data }) => (
         axisRight={{
             tickSize: 0,
             tickPadding: 7,
-            format: value => ['I', 'S', 'F', 'P'].map((mbti, idx) => {
-                return mbti
-            }),
+            format: value => `${isfpFormat(value)}`,
             tickRotation: 0,
             legendOffset: -46,
             truncateTickAt: 0
@@ -70,9 +98,7 @@ const ProfileChart = ({ data }) => (
         axisLeft={{
             tickSize: 0,
             tickPadding: 7,
-            format: value => ['E', 'N', 'T', 'J'].map((mbti, idx) => {
-                return mbti
-            }),
+            format: value => `${entjFormat(value)}`,
             tickRotation: 0,
             legendOffset: -46,
             truncateTickAt: 0
