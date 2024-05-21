@@ -5,6 +5,7 @@ import axios from 'axios'
 import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
 import BoardTop from "../BoardTop/BoardTop";
+import apiClient from "../../services/apiClient";
 
 function getUrl(subUrl) {
     const urlRoot = 'http://127.0.0.1:8000'
@@ -21,7 +22,7 @@ const BoardPost = ({post, mbti}) => {
                     </div>
                     <div className={style.board_post_title}>
                         <Link to={`/detail/${post.id}?mbti=${mbti}`}>{post.title}</Link>
-                        <p style={{color: getFontColor(mbti)}}>[{post.hits}]</p>
+                        <p style={{color: getFontColor(mbti)}}>[{post.comments}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
                         <div>
@@ -65,10 +66,10 @@ const BoardPostList = ({mbti, posts}) => {
     )
 }
 
-const BoardCategory = ({filter, order, onCategoryChanged}) => {
+const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
-    }, [filter, order])
+    }, [filter, order, categories])
 
     const handleFilter = (data) => {
         onCategoryChanged('filter', data)
@@ -101,15 +102,13 @@ const BoardCategory = ({filter, order, onCategoryChanged}) => {
                     <button style={categoryButtonFontStyle('')} onClick={() => handleFilter('')}>
                         전체글
                     </button>
-                    <button style={categoryButtonFontStyle('질문')} onClick={() => handleFilter('질문')}>
-                        질문있어요
-                    </button>
-                    <button style={categoryButtonFontStyle('유머')} onClick={() => handleFilter('유머')}>
-                        유머
-                    </button>
-                    <button style={categoryButtonFontStyle('창작')} onClick={() => handleFilter('창작')}>
-                        창작
-                    </button>
+                    {categories.map((category) => (
+                        <>
+                            <button style={categoryButtonFontStyle(category.name)} onClick={() => handleFilter(category.name)}>
+                                {category.name}
+                            </button>
+                        </>
+                    ))}
                 </div>
                 <div className={style.board_category_sub}>
                     <button style={orderButtonFontStyle('recent')} onClick={() => handleOrder('recent')}>
@@ -139,12 +138,14 @@ const BoardPostBox = ({mbti, posts}) => {
 const Board = () => {
     const {mbti} = useParams()
     const [posts, setPosts] = useState([])
+    const [categories, setCategories] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [filter, setFilter] = useState('') //질문, 유머, 창작 등
     const [order, setOrder] = useState('recent') //recent, like, comment
 
     useEffect(() => {
+        handleGetCategory()
         handlePageChange(currentPage)
     }, [currentPage, order, filter])
 
@@ -158,8 +159,21 @@ const Board = () => {
         }
     }
 
+    const handleGetCategory = () => {
+        let url = `/api/posts/category/`
+        apiClient
+            .get(url)
+            .then((response) => {
+                setCategories(response.data)
+            })
+            .catch((error) => {
+                console.error('Error during get posts:', error)
+            })
+
+    }
+
     const handlePageChange = (page) => {
-        let url = getUrl(`/api/posts/mbti/${mbti.toLowerCase()}/?page=${page}`)
+        let url = `/api/posts/mbti/${mbti.toLowerCase()}/?page=${page}`
         if (filter !== '') {
             url += `&category=${filter}`
         }
@@ -167,8 +181,7 @@ const Board = () => {
             url += `&order=${order}`
         }
 
-        console.log(url)
-        axios
+        apiClient
             .get(url)
             .then((response) => {
                 setPosts(response.data['results'])
@@ -186,7 +199,7 @@ const Board = () => {
             <div>
                 <BoardTop mbti={mbti}/>
 
-                <BoardCategory filter={filter} order={order} onCategoryChanged={handleCategoryChanged}/>
+                <BoardCategory filter={filter} order={order} categories={categories} onCategoryChanged={handleCategoryChanged}/>
                 <BoardPostBox mbti={mbti} posts={posts}/>
 
                 <div className={style.board_button_container}>
