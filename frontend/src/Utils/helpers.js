@@ -126,7 +126,7 @@ export const getMainColor = (mbti) => {
     }
     if (!mbti) return null;
 
-    return mbtiParams[mbti.toLowerCase()].mainColor
+    return mbtiParams[mbti].mainColor
 }
 export const getFontColor = (mbti) => {
     if (mbti === null) {
