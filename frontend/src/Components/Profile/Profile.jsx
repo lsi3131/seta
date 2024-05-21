@@ -2,31 +2,34 @@
 import style from "./Profile.module.css";
 import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
 import { Link, useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import apiClient from "services/apiClient";
 import { UserContext } from "userContext";
 import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
+import ProfileMyPost from "Components/ProfileMyPost/ProfileMyPost";
 
 
 
 const Profile = () => {
     const [users, setUsers] = useState({})
-    const [view, setView] = useState('posts')
-    const [visivlePosts, setVisivlePosts] = useState(5)
+    const [error, setError] = useState(null)
+    const currentUser = useContext(UserContext)
 
     useEffect(() => {
         async function fetchData() {
-            const response = await apiClient.get('http://127.0.0.1:8000/api/accounts/alicia46/')
-            console.log(response.data.posts)
-            setUsers(response.data)
+            try{
+                const response = await apiClient.get(`api/accounts/alicia46/`)
+                setUsers(response.data)
+                console.log(users)
+                // ${currentUser.username}
+            } catch (error) {
+                setError('데이터를 불러오는데 실패했습니다.')
+            }
         }
         fetchData();
     }, []);
 
-    const MorePosts = () => {
-        setVisivlePosts((prevVisiblePosts) => prevVisiblePosts + 5)
-    }
 
     return (
         <div className={style.vertical}>
@@ -74,66 +77,7 @@ const Profile = () => {
                 </div>
             </div>
             <ProfileMBTIForm />
-            <div className={style.board_content}>
-                <div className={style.board_category}>
-                    <button onClick={() => setView('posts')}>내가 작성한 글</button>
-                    <button onClick={() => setView('like_posts')}>좋아요 한 글 </button>
-                </div>
-                <hr />
-                {view === 'posts' && users.posts && (
-                    <div className={style.board_posts}>
-                        {users.posts.slice(0, visivlePosts).map((post) => (
-                            <>
-                            <div className={style.board_post}>
-                                <div className={style.board_post_left}>
-                                    <div className={style.board_post_category}>
-                                        <p style={{ color: getFontColor(users.mbti) }}>{post.category}</p>
-                                    </div>
-                                    <div key={post.id} className={style.board_post_title}>
-                                        <Link to={`/detail/${post.id}`}>{post.title}</Link>
-                                        <p style={{ color: getFontColor(users.mbti) }}>[{post.hits}]</p>
-                                    </div>
-                                    <div className={style.board_post_bottom}>
-                                        <div>
-                                            <p>{post.author}</p>
-                                        </div>
-                                        <div>
-                                            <p>{formatDate(post.created_at)}</p>
-                                        </div>
-                                        <div className={style.board_like}>
-                                            <p>좋아요 {post.likes}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className={style.board_post_right}>
-                                        {post.mbti.map(m => (
-                                            <p style={{ backgroundColor: getButtonColor(m) }}>{m}</p>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            </>
-                        ))}
-                        {visivlePosts < users.posts.length && (
-                            <button className={style.morebutton}onClick={MorePosts}>더보기</button>
-                        )}
-                    </div>
-                )}
-                {view === 'like_posts' && users.like_posts && (
-                    <div className={style.posts}>
-                        {users.like_posts.slice(0, visivlePosts).map((post) => (
-                            <div key={post.id} className={style.post}>
-                                <Link to={`/detail/${post.id}`}>{post.title}</Link>
-                            </div>
-                        ))}
-                        {visivlePosts < users.like_posts.length && (
-                            <button onClick={MorePosts}>더보기</button>
-                        )}
-                    </div>
-                )}
-            </div>
+            <ProfileMyPost props={users}/>
         </div>
     )
 }
