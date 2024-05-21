@@ -3,11 +3,79 @@ import style from './Comment.module.css'
 import {getButtonColor, getUpdateTime} from "../../Utils/helpers";
 import like from "../../Assets/images/comment/like.png"
 import unlike from "../../Assets/images/comment/unlike.png"
+import reply from "../../Assets/images/comment/reply.png"
 import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
+import {Counter} from "./ReducerTest";
 
-const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
+const CommentSubInput = ({
+                             mode,
+                             parentId,
+                             commentId,
+                             initialContent,
+                             onAddComment,
+                             onUpdateComment,
+                             onCloseComment
+                         }) => {
+    const [content, setContent] = useState(initialContent)
+
+    useEffect(() => {
+        console.log(commentId)
+    }, []);
+
+    const getModeText = () => {
+        let text = '댓글 등록';
+        if (mode === 'reply') {
+            text = '댓글 등록';
+        } else if (mode === 'update') {
+            text = '댓글 수정';
+        }
+        return text;
+    }
+
+    const handleRegisterComment = () => {
+        if (mode === 'reply') {
+            console.log('reply', onAddComment)
+            // onAddComment(content, parentId)
+        } else if (mode === 'update') {
+            console.log('update', content)
+            onUpdateComment(commentId, content)
+        }
+    }
+
+    return (
+        <>
+            <hr/>
+            <div className={style.comment_sub_input}>
+                <div className={style.comment_sub_input_1}>
+                    <div className={style.comment_sub_input_1_1}>
+                        <img src={reply} alt=""/>
+                        <p>{getModeText()}</p>
+                    </div>
+                </div>
+                <div className={style.comment_sub_input_2}>
+                    <textarea
+                        placeholder="댓글을 입력하세요"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        rows={4}/>
+                    <button onClick={handleRegisterComment}>댓글 등록</button>
+                </div>
+
+            </div>
+        </>
+    )
+}
+
+const Comment = ({
+                     comment,
+                     onAddComment,
+                     onUpdateComment,
+                     onDeleteComment,
+                     onAddLikeComment
+                 }) => {
     const currentUser = useContext(UserContext)
+    const [inputModeType, setInputModeType] = useState('')
 
     useEffect(() => {
 
@@ -33,7 +101,15 @@ const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
         onAddLikeComment(comment.id, !isLikeOn(comment))
     }
 
-    const submitDeleteComment = () => {
+    const handleInputMode = (modeType) => {
+        if (modeType !== inputModeType) {
+            setInputModeType(modeType)
+        } else {
+            setInputModeType("")
+        }
+    }
+
+    const handleDeleteComment = () => {
         const result = window.confirm("댓글을 삭제하시겠습니까?");
         if (result) {
             onDeleteComment(comment.id)
@@ -62,13 +138,11 @@ const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
                     </div>
                     <div className={style.comment_right}>
                         <div className={style.comment_right_button}>
-                            <button>대댓글</button>
-                            <button>공감</button>
-                            <button>쪽지</button>
+                            <button onClick={() => handleInputMode('reply')}>댓글</button>
                             {isSameUser(comment) &&
                                 <>
-                                    <button>수정</button>
-                                    <button onClick={submitDeleteComment}>삭제</button>
+                                    <button onClick={() => handleInputMode('update')}>수정</button>
+                                    <button onClick={handleDeleteComment}>삭제</button>
                                 </>
                             }
                             <button>신고</button>
@@ -76,12 +150,26 @@ const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
                         <p style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</p>
                     </div>
                 </div>
+                {inputModeType === 'reply' &&
+                    <CommentSubInput mode={inputModeType} initialContent="" onAddComment={onAddComment}
+                                     onUpdateComment={onUpdateComment}/>
+                }
+                {inputModeType === 'update' &&
+                    <CommentSubInput mode={inputModeType} initialContent={comment.content} onAddComment={onAddComment}
+                                     onUpdateComment={onUpdateComment}/>
+                }
+
             </div>
             {comment.children && comment.children.map(child => (
                 <>
-                    <div className="" style={{marginLeft: "50px"}}>
+                    <div className={style.comment_reply_container}>
+                        <img src={reply} alt=""/>
                         <Comment
                             key={child.id}
+                            onAddComment={onAddComment}
+                            onDeleteComment={onDeleteComment}
+                            onAddLikeComment={onAddLikeComment}
+                            onUpdateComment={onUpdateComment}
                             comment={child}
                         />
                     </div>
@@ -91,13 +179,23 @@ const Comment = ({comment, onDeleteComment, onAddLikeComment}) => {
     );
 };
 
-const CommentList = ({comments, username, onDeleteComment, onAddLikeComment}) => {
+const CommentList = ({
+                         comments,
+                         onAddComment,
+                         onUpdateComment,
+                         onDeleteComment,
+                         onAddLikeComment
+                     }) => {
     return (
         <div className={style.comment_list}>
             {comments.map((comment, index) => (
                 <>
                     <hr/>
-                    <Comment key={index} comment={comment} onDeleteComment={onDeleteComment} onAddLikeComment={onAddLikeComment}/>
+                    <Comment key={index} comment={comment}
+                             onAddComment={onAddComment}
+                             onUpdateComment={onUpdateComment}
+                             onDeleteComment={onDeleteComment}
+                             onAddLikeComment={onAddLikeComment}/>
                 </>
             ))}
         </div>
@@ -119,7 +217,7 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
                 placeholder="댓글을 입력하세요"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                rows={2}
+                rows={4}
             ></textarea>
             <div className={style.comment_input_buttons_container}>
                 <button onClick={handleAddComment} style={{width: '100px'}}>댓글 등록</button>
@@ -147,19 +245,35 @@ const CommentBox = ({postId}) => {
             })
     };
 
-    const handlePostComment = (content) => {
+    const handlePostComment = (content, parentId = null) => {
         const data = {
             content: content
         };
         apiClient.post(`/api/posts/${postId}/comments/`, data)
             .then(response => {
-                console.log('get comments successful:', response.data);
+                console.log('post comments successful:', response.data);
 
                 /* comment 정보 업데이트 */
                 handleGetComment();
             })
             .catch(error => {
                 console.error('Error during add comments:', error.response.data.error);
+            })
+    }
+
+    const handlePutComment = (commentId, content) => {
+        const data = {
+            content: content
+        };
+        apiClient.put(`/api/posts/${postId}/comments/${commentId}/`, data)
+            .then(response => {
+                console.log('put comments successful:', response.data);
+
+                /* comment 정보 업데이트 */
+                handleGetComment();
+            })
+            .catch(error => {
+                console.error('Error during put comments:', error.response.data.error);
             })
     }
 
@@ -199,8 +313,13 @@ const CommentBox = ({postId}) => {
             {currentUser &&
                 <CommentInput postId={postId} onAddComment={handlePostComment}/>
             }
-            <CommentList comments={comments} onDeleteComment={handleDeleteComment}
+            <CommentList comments={comments}
+                         onAddComment={handlePostComment}
+                         onUpdateComment={handlePutComment}
+                         onDeleteComment={handleDeleteComment}
                          onAddLikeComment={handleAddLikeComment}/>
+
+            <Counter/>
         </div>
     );
 }
