@@ -1,19 +1,20 @@
 import style from './Write.module.css'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import apiClient from 'services/apiClient'
-import { getFontColor,getMainColor } from '../../Utils/helpers'
-
+import { getFontColor, getMainColor } from '../../Utils/helpers'
+import { is } from '@babel/types'
 
 const Write = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const [categorys, setCategorys] = useState('')
+    const [isloading, setIsLoading] = useState(true)
     const [inputs, setInputs] = useState({
         title: '',
         content: '',
         category: '',
         mbti: [],
-    });
+    })
 
     const { title, content, category, mbti } = inputs
     const [Error, setError] = useState(' ')
@@ -39,15 +40,17 @@ const Write = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await apiClient.get('/api/posts/create/')
-            console.log(response.data)
-            console.log(response.data.category)
-            setCategorys(response.data)
+            try {
+                const response = await apiClient.get('/api/posts/category/')
+                setCategorys(response.data)
+                setIsLoading(false)
+            } catch (error) {
+                console.error('카테고리 데이터를 불러오는 중에 오류가 발생했습니다:', error)
+            }
         }
-        fetchData();
-    }, []);
+        fetchData()
+    }, [])
 
-//onChange와 합치기나 변경
     const handleCheckboxChange = (id) => {
         const updatedCheckboxes = mbti_checks.map((check) =>
             check.id === id ? { ...check, checked: !check.checked } : check,
@@ -76,37 +79,65 @@ const Write = () => {
         }
     }
 
-
     const onSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         try {
             const response = await apiClient.post('/api/posts/create/', inputs)
             const postId = response.data.id
-            
-            navigate(`detail/${postId}/`,);
+
+            navigate(`/detail/${postId}/?mbti=${inputs.mbti[0]}`)
         } catch (error) {
             if (!inputs.category) {
-                setError('MBTI를 선택하세요')
+                setError('카테고리를 선택해주세요')
             } else if (inputs.mbti.length === 0) {
-                setError('제목을 입력하세요')
+                setError('게시될 MBTI 게시판을 선택해주세요')
             } else if (!inputs.title) {
-                setError('카테고리를 선택하세요')
+                setError('제목을 입력해주세요')
             } else if (!inputs.content) {
-                setError('내용을 입력하세요')
+                setError('내용을 입력해주세요')
             }
         }
-    };
+    }
 
-
-
-
+    if (isloading) {
+        return <div>loading...</div>
+    }
     return (
         <div className={style.vertical}>
-            <div className={style.board_top} >
+            <div className={style.board_top}>
                 <h2>게시물 작성</h2>
             </div>
             <form className={style.form} onSubmit={onSubmit}>
-                <hr />
+                <div className={style.title}>
+                    <div>
+                        <select
+                            name="category"
+                            id="category"
+                            value={inputs.category}
+                            onChange={onChange}
+                            className={style.select}
+                        >
+                            <option className={style.option} value="" disabled>
+                                카테고리를 선택해주세요
+                            </option>
+                            {categorys &&
+                                categorys.map((cate) => (
+                                    <option key={cate.id} value={cate.category}>
+                                        {cate.category}
+                                    </option>
+                                ))}
+                        </select>
+                        <input
+                            type="text"
+                            id="title"
+                            placeholder="제목을 입력해 주세요"
+                            // required
+                            value={title}
+                            onChange={onChange}
+                        />
+                    </div>
+                </div>
+
                 <div className={style.mbti}>
                     {mbti_checks.map((check) => (
                         <div key={check.id}>
@@ -117,10 +148,12 @@ const Write = () => {
                                     value={check.label}
                                     checked={check.checked}
                                     onChange={() => handleCheckboxChange(check.id)}
+                                    className={style.checkboxInput}
                                 />
                                 <label
                                     htmlFor={`check-${check.id}`}
-                                    style={{ backgroundColor: getFontColor(check.label)}}
+                                    className={`${style.badgeLabel} ${check.checked ? style.checked : ''}`}
+                                    style={{ backgroundColor: check.checked ? getFontColor(check.label) : '#ccc' }}
                                 >
                                     {check.label}
                                 </label>
@@ -128,22 +161,7 @@ const Write = () => {
                         </div>
                     ))}
                 </div>
-                <hr />
-                <div className={style.title}>
-                    <div>
-                        <input type="text" id="title"
-                            placeholder="제목을 입력해 주세요"
-                            // required
-                            value={title} onChange={onChange} />
-                        <select name="category" id="category" value={inputs.category} onChange={onChange}
-                        className={style.select}>
-                            <option className={style.option} value="" selected disabled hidden> 카테고리를 선택해주세요</option>
-                            {categorys && categorys.map((cate) =>
-                                <option key={cate.id} value={cate.category}>{cate.category}</option>
-                            )}
-                        </select>
-                    </div>
-                </div>
+
                 <div className={style.content}>
                     <div>
                         <textarea
@@ -157,7 +175,9 @@ const Write = () => {
 
                 <p></p>
                 <p className={style.Error}>{Error}</p>
-                <button className={style.button} type="submit">등록</button>
+                <button className={style.button} type="submit">
+                    등록
+                </button>
             </form>
         </div>
     )
