@@ -45,7 +45,7 @@ export const getUpdateTime = (timestamp) => {
 }
 
 // =================== MBTI 이미지 ======================
-const mbtiParams = {
+export const mbtiParams = {
     "intj": {
         image: require("../Assets/images/intj.jpg"), mainColor: "#F0DCFF",
         fontColor: "#DDB0FF", buttonColor: "#DDB0FF"
