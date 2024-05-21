@@ -12,6 +12,7 @@ import ProfileMyPost from "Components/ProfileMyPost/ProfileMyPost";
 
 
 const Profile = () => {
+    const { username } = useParams();
     const [users, setUsers] = useState({})
     const [error, setError] = useState(null)
     const currentUser = useContext(UserContext)
@@ -19,17 +20,19 @@ const Profile = () => {
     useEffect(() => {
         async function fetchData() {
             try{
-                const response = await apiClient.get(`api/accounts/alicia46/`)
+                const response = await apiClient.get(`api/accounts/${username}/`)
                 setUsers(response.data)
-                console.log(users)
-                // ${currentUser.username}
             } catch (error) {
                 setError('데이터를 불러오는데 실패했습니다.')
             }
         }
         fetchData();
-    }, []);
+    }, [username]);
 
+
+    if (!users){
+        return <div></div>
+    }
 
     return (
         <div className={style.vertical}>
@@ -47,7 +50,7 @@ const Profile = () => {
                     <div className={style.board_top_right}>
                         <div className={style.board_top_count}>
                             <div>
-                                {users.posts && <h2>{users.posts.length}</h2>}
+                                {users.posts_count && <h2>{users.posts_count}</h2>}
                                 <p>게시물</p>
                             </div>
                             <div>
