@@ -1,3 +1,4 @@
+
 import style from "./Profile.module.css";
 import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
 import { Link, useParams } from "react-router-dom";
@@ -6,6 +7,7 @@ import axios from "axios";
 import apiClient from "services/apiClient";
 import { UserContext } from "userContext";
 import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
+
 
 
 const Profile = () => {
@@ -136,4 +138,4 @@ const Profile = () => {
     )
 }
 
-export default Profile;
+export default Profile

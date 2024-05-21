@@ -13,7 +13,6 @@ from rest_framework.decorators import api_view, permission_classes
 def serialize_post(post):
     # 추천사용자 이름을 체크하기 위해 사용
     like_usernames = [user.username for user in post.likes.all()]
-
     return {
         "id": post.id,
         "author": post.author.username,
@@ -27,6 +26,18 @@ def serialize_post(post):
         "created_at": post.created_at,
         "updated_at": post.updated_at,
     }
+
+def serialize_post_update(post):
+    return{
+        "id": post.id,
+        "author": post.author.username,
+        "category": post.category.name,
+        "title": post.title,
+        "content": post.content,
+        "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
+    }
+
+
 
 
 def serialize_comment(comment):
@@ -151,11 +162,20 @@ class PostDetailAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, post_pk):
+        purpose = request.GET.get('purpose')
         post = get_object_or_404(Post, id=post_pk)
+
+        if purpose == 'update':
+            if request.user != post.author:
+                return Response(
+                    {"error": "작성자만 수정할 수 있습니다."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            serialize = serialize_post_update(post)
+            return Response(serialize, status=status.HTTP_200_OK)
+        
         post.hits += 1
         post.save()
-
-        # 게시글에는 내용 추가
         serialize = serialize_post(post)
         serialize['content'] = post.content
         return Response(serialize, status=status.HTTP_200_OK)
