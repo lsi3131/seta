@@ -78,6 +78,14 @@ const Comment = ({
         setInputModeType('')
     }, [comment]);
 
+    const shouldLogin = () => {
+        return currentUser === null
+    }
+
+    const canReply = () => {
+        return currentUser && currentUser['mbti_type'] !== null;
+    }
+
     const isSameUser = (comment) => {
         if (currentUser === null) {
             return;
@@ -131,7 +139,7 @@ const Comment = ({
                     <div className={style.comment_right}>
                         <div className={style.comment_right_button}>
                             <div className={style.comment_left_bottom_1_1_like}>
-                                <button onClick={handleSetLike}>
+                                <button onClick={handleSetLike} disabled={shouldLogin()}>
                                     {isLikeOn(comment) ?
                                         <img src={like} alt=""/> :
                                         <img src={unlike} alt=""/>
@@ -139,7 +147,7 @@ const Comment = ({
                                 </button>
                                 <p>{comment.recommend.length}</p>
                             </div>
-                            {!isChild &&
+                            {!isChild && canReply() &&
                                 <button onClick={() => handleInputMode('reply')}>댓글</button>
                             }
                             {isSameUser(comment) &&
@@ -205,7 +213,11 @@ const CommentList = ({
 };
 
 const CommentInput = ({onAddComment, parentCommentId}) => {
+    const currentUser = useContext(UserContext)
     const [content, setContent] = useState('');
+
+    useEffect(() => {
+    }, []);
 
     const handleAddComment = async (e) => {
         e.preventDefault();
@@ -213,16 +225,62 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
         setContent('');
     };
 
+    const navigateToLogin = () => {
+        window.location.href = '/login/'
+    }
+
+    const navigateToProfile = () => {
+        window.location.href = `/profile/${currentUser.username}/`
+    }
+
+
+    const shouldLogin = () => {
+        return currentUser === null;
+    }
+
+    const shouldRegisterMbti = () => {
+        return currentUser && currentUser['mbti_type'] === null
+    }
+
+    const canRegisterComment = () => {
+        return currentUser && currentUser['mbti_type'] !== null
+    }
+
+    const isDisabled = () => {
+        return !canRegisterComment();
+    }
+
     return (
         <div className={style.comment_input_container}>
-            <textarea
-                placeholder="댓글을 입력하세요"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={4}
-            ></textarea>
+            {shouldLogin() && (
+                <textarea
+                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                    placeholder={"댓글을 등록하시려면 로그인 해주세요. 로그인 하시겠습니까?"}
+                    onClick={navigateToLogin}
+                    rows={4}
+                    disabled={false}
+                ></textarea>
+            )}
+            {shouldRegisterMbti() && (
+                <textarea
+                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                    placeholder={"댓글을 등록하시려면 MBTI를 등록해주세요. MBTI를 등록 하시겠습니까?"}
+                    onClick={navigateToProfile}
+                    rows={4}
+                    disabled={false}
+                ></textarea>
+            )}
+            {canRegisterComment() && (
+                <textarea
+                    placeholder={"댓글을 입력하세요"}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    rows={4}
+                ></textarea>
+            )}
+
             <div className={style.comment_input_buttons_container}>
-                <button onClick={handleAddComment} style={{width: '100px'}}>댓글 등록</button>
+                <button onClick={handleAddComment} style={{width: '100px'}} disabled={isDisabled()}>댓글 등록</button>
             </div>
         </div>
     );
@@ -321,9 +379,7 @@ const CommentBox = ({postId}) => {
                          onDeleteComment={handleDeleteComment}
                          onAddLikeComment={handleAddLikeComment}/>
             <hr/>
-            {currentUser &&
-                <CommentInput postId={postId} onAddComment={handlePostComment}/>
-            }
+            <CommentInput postId={postId} onAddComment={handlePostComment}/>
         </div>
     );
 }
