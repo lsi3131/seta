@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
@@ -27,8 +27,9 @@ def serialize_post(post):
         "updated_at": post.updated_at,
     }
 
+
 def serialize_post_update(post):
-    return{
+    return {
         "id": post.id,
         "author": post.author.username,
         "category": post.category.name,
@@ -36,8 +37,6 @@ def serialize_post_update(post):
         "content": post.content,
         "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
     }
-
-
 
 
 def serialize_comment(comment):
@@ -128,13 +127,15 @@ class PostAPIView(APIView):
 
         return Response(paginated_response_data, status=status.HTTP_200_OK)
 
+
 class CreatePostAPIView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         categorys = get_list_or_404(PostCategory)
         data = [{'category': category.name,
-                 'id': category.id } for category in categorys]
-        return Response(data,status=status.HTTP_200_OK)
+                 'id': category.id} for category in categorys]
+        return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request):
         data = request.data.copy()
@@ -158,6 +159,18 @@ class CreatePostAPIView(APIView):
         )
 
 
+class PostCategoryAPIView(APIView):
+    def get(self, request):
+        categories = PostCategory.objects.all()
+
+        serialized_categories = []
+        for category in categories:
+            serialized_categories.append(
+                {"name": category.name}
+            )
+        return Response(serialized_categories, status=status.HTTP_200_OK)
+
+
 class PostDetailAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -173,7 +186,7 @@ class PostDetailAPIView(APIView):
                 )
             serialize = serialize_post_update(post)
             return Response(serialize, status=status.HTTP_200_OK)
-        
+
         post.hits += 1
         post.save()
         serialize = serialize_post(post)
