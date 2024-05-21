@@ -1,7 +1,7 @@
-import style from "./Profile.module.css";
-import {Link, useParams} from "react-router-dom";
-import React, {useEffect, useState}from "react";
-import axios from "axios";
+import style from './Profile.module.css'
+import { Link, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
 // function getUrl(subUrl) {
 //     const urlRoot = 'http://127.0.0.1:8000'
@@ -9,13 +9,13 @@ import axios from "axios";
 // }
 
 const Profile = () => {
-    const {username} = useParams()
+    const { username } = useParams()
     const [profiles, setProfiles] = useState([])
 
     useEffect(() => {
-            const respones = axios.get('http://127.0.0.1:8000/api/accounts/admin12/')
-            setProfiles(respones.data)
-    }, []);
+        const respones = axios.get('http://127.0.0.1:8000/api/accounts/admin/')
+        setProfiles(respones.data)
+    }, [])
 
     return (
         <div className={style.vertical}>
@@ -33,4 +33,4 @@ const Profile = () => {
     )
 }
 
-export default Profile;
+export default Profile

@@ -4,12 +4,12 @@ import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
 
 const containerStyles = {
-    width: "1200px",
-    margin: "0 auto"
+    width: '1200px',
+    margin: '0 auto',
 }
 
 const logo_image = {
-    url : require("../../Assets/images/logo.png")
+    url: require('../../Assets/images/logo.png'),
 }
 
 const AuthenticatedNavbar = ({ username }) => {
@@ -17,19 +17,15 @@ const AuthenticatedNavbar = ({ username }) => {
         <header className={style.header}>
             <div className={style.container}>
                 <div className={style.logo}>
-
                     <Link to="/">
-                        <img src= {logo_image.url} className={style.image}/>
+                        <img src={logo_image.url} className={style.image} />
                     </Link>
-
                 </div>
                 <nav className={style.navbar}>
                     <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
                         {username}
                     </Link>
-                    <Link to={`/write/`}>
-                        글쓰기
-                    </Link>
+                    <Link to={`/write/`}>글쓰기</Link>
                     <a
                         onClick={() => {
                             localStorage.removeItem('accessToken')
@@ -52,7 +48,7 @@ const UnauthenticatedNavbar = () => {
             <div className={style.container}>
                 <div className={style.logo}>
                     <Link to="/">
-                        <img src= {logo_image.url} className={style.image}/>
+                        <img src={logo_image.url} className={style.image} />
                     </Link>
                 </div>
                 <nav className={style.navbar}>
@@ -66,7 +62,6 @@ const UnauthenticatedNavbar = () => {
 }
 const Navbar = () => {
     const currentUser = useContext(UserContext)
-    console.log(currentUser)
     return (
         <div>{currentUser ? <AuthenticatedNavbar username={currentUser.username} /> : <UnauthenticatedNavbar />}</div>
     )
