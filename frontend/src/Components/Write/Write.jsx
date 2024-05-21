@@ -82,6 +82,7 @@ const Write = () => {
         try {
             const response = await apiClient.post('/api/posts/create/', inputs)
             const postId = response.data.id
+            
             navigate(`detail/${postId}/`,);
         } catch (error) {
             if (!inputs.category) {
