@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react'
 import style from './Board.module.css'
-import {Link, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
 import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
 import BoardTop from "../BoardTop/BoardTop";
 import apiClient from "../../services/apiClient";
 
-function getUrl(subUrl) {
-    const urlRoot = 'http://127.0.0.1:8000'
-    return `${urlRoot}${subUrl}`
-}
-
 const BoardPost = ({post, mbti}) => {
+    const navigate = useNavigate();
+
+    const handleMoveToPostMbti = (postMbti) => {
+        navigate(`/board/${postMbti}/`)
+    }
+
     return (
         <>
             <div className={style.board_post}>
@@ -39,12 +40,10 @@ const BoardPost = ({post, mbti}) => {
                 </div>
                 <div>
                     <div className={style.board_post_right}>
-                        {post.mbti.slice(0, 3).map((m) => (
-                            <p style={{backgroundColor: getButtonColor(m)}}>{m}</p>
+                        {post.mbti.map((m) => (
+                            <button onClick={() => handleMoveToPostMbti(m)}
+                                    style={{backgroundColor: getButtonColor(m)}}>{m.toUpperCase()}</button>
                         ))}
-                        {post.mbti.length > 3 && (
-                            <p>외 {post.mbti.length - 3}</p>
-                        )}
                     </div>
                 </div>
             </div>
@@ -107,7 +106,8 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
                     </button>
                     {categories.map((category) => (
                         <>
-                            <button style={categoryButtonFontStyle(category.name)} onClick={() => handleFilter(category.name)}>
+                            <button style={categoryButtonFontStyle(category.name)}
+                                    onClick={() => handleFilter(category.name)}>
                                 {category.name}
                             </button>
                         </>
@@ -150,7 +150,7 @@ const Board = () => {
     useEffect(() => {
         handleGetCategory()
         handlePageChange(currentPage)
-    }, [currentPage, order, filter])
+    }, [mbti, currentPage, order, filter])
 
     const handleCategoryChanged = (type, data) => {
         if (type === 'filter') {
@@ -202,7 +202,8 @@ const Board = () => {
             <div>
                 <BoardTop mbti={mbti}/>
 
-                <BoardCategory filter={filter} order={order} categories={categories} onCategoryChanged={handleCategoryChanged}/>
+                <BoardCategory filter={filter} order={order} categories={categories}
+                               onCategoryChanged={handleCategoryChanged}/>
                 <BoardPostBox mbti={mbti} posts={posts}/>
 
                 <div className={style.board_button_container}>

@@ -25,7 +25,7 @@ const BoardTop = ({mbti}) => {
     return (
         <div className={style.board_top} style={{background: getMainColor(mbti)}}>
             <div className={style.board_top_text_container}>
-                <h3>{mbti}</h3>
+                <h3>{mbti.toUpperCase()}</h3>
                 <p>{description}</p>
             </div>
             <div className={style.board_top_image}>
