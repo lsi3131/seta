@@ -81,7 +81,8 @@ const Write = () => {
         e.preventDefault();
         try {
             const response = await apiClient.post('/api/posts/create/', inputs)
-            navigate(`/`);
+            const postId = response.data.id
+            navigate(`detail/${postId}/`,);
         } catch (error) {
             if (!inputs.category) {
                 setError('MBTI를 선택하세요')

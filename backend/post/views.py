@@ -142,7 +142,8 @@ class CreatePostAPIView(APIView):
             post.mbti.add(mbti_s)
 
         return Response(
-            {"message": "게시글이 작성되었습니다."},
+            {"message": "게시글이 작성되었습니다.",
+             "id": post.id},
             status=status.HTTP_201_CREATED
         )
 
