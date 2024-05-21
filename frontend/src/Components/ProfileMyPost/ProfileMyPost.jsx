@@ -43,6 +43,7 @@ const ProfileMyPost = (users) => {
     if(!posts){  
         return <div></div>
     }
+    
     return (
         <div className={style.board_contents}>
             <div className={style.board_category}>
