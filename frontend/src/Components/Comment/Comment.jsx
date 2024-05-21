@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import style from './Comment.module.css'
 import {getButtonColor, getUpdateTime} from "../../Utils/helpers";
 import like from "../../Assets/images/comment/like.png"
@@ -121,30 +121,30 @@ const Comment = ({
                         {isChild && <img src={reply} alt=""/>}
 
                         <div className={style.comment_left_1_1}>
-                            <pre>{comment.content}</pre>
-                            <div className={style.comment_left_1_1_bottom}>
+                            <div className={style.comment_left_1_1_author}>
                                 <p>{comment.author}</p>
                                 <p>{getUpdateTime(comment.created_at)}</p>
-                                <div className={style.comment_left_bottom_1_1_like}>
-                                    <button onClick={handleSetLike}>
-                                        {isLikeOn(comment) ?
-                                            <img src={like} alt=""/> :
-                                            <img src={unlike} alt=""/>
-                                        }
-                                    </button>
-                                    <p>{comment.recommend.length}</p>
-                                </div>
                             </div>
+                            <pre>{comment.content}</pre>
                         </div>
                     </div>
                     <div className={style.comment_right}>
                         <div className={style.comment_right_button}>
+                            <div className={style.comment_left_bottom_1_1_like}>
+                                <button onClick={handleSetLike}>
+                                    {isLikeOn(comment) ?
+                                        <img src={like} alt=""/> :
+                                        <img src={unlike} alt=""/>
+                                    }
+                                </button>
+                                <p>{comment.recommend.length}</p>
+                            </div>
                             {!isChild &&
                                 <button onClick={() => handleInputMode('reply')}>댓글</button>
                             }
                             {isSameUser(comment) &&
                                 <>
-                                <button onClick={() => handleInputMode('update')}>수정</button>
+                                    <button onClick={() => handleInputMode('update')}>수정</button>
                                     <button onClick={handleDeleteComment}>삭제</button>
                                 </>
                             }
@@ -191,14 +191,14 @@ const CommentList = ({
     return (
         <div className={style.comment_list}>
             {comments.map((comment, index) => (
-                <>
+                <div>
                     <hr/>
                     <Comment key={index} comment={comment}
                              onAddComment={onAddComment}
                              onUpdateComment={onUpdateComment}
                              onDeleteComment={onDeleteComment}
                              onAddLikeComment={onAddLikeComment}/>
-                </>
+                </div>
             ))}
         </div>
     );
@@ -251,7 +251,7 @@ const CommentBox = ({postId}) => {
         let data = {
             content: content
         };
-        if(parentId) {
+        if (parentId) {
             data.parent_comment_id = parentId;
         }
         apiClient.post(`/api/posts/${postId}/comments/`, data)
@@ -315,14 +315,15 @@ const CommentBox = ({postId}) => {
 
     return (
         <div className={style.comment_box}>
-            {currentUser &&
-                <CommentInput postId={postId} onAddComment={handlePostComment}/>
-            }
             <CommentList comments={comments}
                          onAddComment={handlePostComment}
                          onUpdateComment={handlePutComment}
                          onDeleteComment={handleDeleteComment}
                          onAddLikeComment={handleAddLikeComment}/>
+            <hr/>
+            {currentUser &&
+                <CommentInput postId={postId} onAddComment={handlePostComment}/>
+            }
         </div>
     );
 }
