@@ -1,8 +1,9 @@
 import style from "./Profile.module.css";
+import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {formatDate} from "../../Utils/helpers"
+import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
 
 // function getUrl(subUrl) {
 //     const urlRoot = 'http://127.0.0.1:8000'
@@ -25,87 +26,6 @@ const Profile = () => {
 
     const MorePosts = () => {
         setVisivlePosts((prevVisiblePosts) => prevVisiblePosts + 5)
-    }
-
-    const mbtiParams = {
-        "intj": {
-            image: require("../../Assets/images/intj.jpg"),
-            fontColor: "#DDB0FF", buttonColor: "#DDB0FF"
-        },
-        "intp": {
-            image: require("../../Assets/images/intp.jpg"),
-            fontColor: "#DDB0FF", buttonColor: "#DDB0FF"
-        },
-        "entj": {
-            image: require("../../Assets/images/entj.jpg"),
-            fontColor: "#DDB0FF", buttonColor: "#DDB0FF"
-        },
-        "entp": {
-            image: require("../../Assets/images/entp.jpg"),
-            fontColor: "#DDB0FF", buttonColor: "#DDB0FF"
-        },
-        "esfp": {
-            image: require("../../Assets/images/esfp.jpg"),
-            fontColor: "#FFA800", buttonColor: "#FFA800"
-        },
-        "estp": {
-            image: require("../../Assets/images/estp.jpg"),
-            fontColor: "#FFA800", buttonColor: "#FFA800"
-        },
-        "isfp": {
-            image: require("../../Assets/images/isfp.jpg"),
-            fontColor: "#FFA800", buttonColor: "#FFA800"
-        },
-        "istp": {
-            image: require("../../Assets/images/istp.jpg"),
-            fontColor: "#FFA800", buttonColor: "#FFA800"
-        },
-        "esfj": {
-            image: require("../../Assets/images/esfj.jpg"),
-            fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
-        },
-        "isfj": {
-            image: require("../../Assets/images/isfj.jpg"),
-            fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
-        },
-        "istj": {
-            image: require("../../Assets/images/istj.jpg"),
-            fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
-        },
-        "estj": {
-            image: require("../../Assets/images/estj.jpg"),
-            fontColor: "#72C9CB", buttonColor: "#72C9CB8F"
-        },
-        "infj": {
-            image: require("../../Assets/images/infj.jpg"),
-            fontColor: "#73C964", buttonColor: "#73C964"
-        },
-        "infp": {
-            image: require("../../Assets/images/infp.jpg"),
-            fontColor: "#73C964", buttonColor: "#73C964"
-        },
-        "enfj": {
-            image: require("../../Assets/images/enfj.jpg"),
-            fontColor: "#73C964", buttonColor: "#73C964"
-        },
-        "enfp": {
-            image: require("../../Assets/images/enfp.jpg"),
-            fontColor: "#73C964", buttonColor: "#73C964"
-        },
-    }
-
-    const getImage = (mbti) => {
-        if (!mbti) return null;
-        return mbtiParams[mbti.toLowerCase()].image;
-    }
-
-    const getFontColor = (mbti) => {
-        if (!mbti) return null;
-        return mbtiParams[mbti.toLowerCase()].fontColor
-    }
-
-    const getButtonColor = (mbti) => {
-        return mbtiParams[mbti.toLowerCase()].buttonColor
     }
 
     return (
@@ -153,6 +73,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            <ProfileMBTIForm />
             <div className={style.board_content}>
                 <div className={style.board_category}>
                     <button onClick={() => setView('posts')}>내가 작성한 글</button>
