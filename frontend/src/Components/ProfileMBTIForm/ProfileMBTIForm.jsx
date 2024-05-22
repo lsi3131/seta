@@ -144,28 +144,34 @@ const ProfileMBTIForm = () => {
                 <div className={style.container}>
                     <h3 className={style.title}>내가 팔로우한 mbti 랭킹</h3>
                     <div className={style.followRanking}>
-                        <div className={style.second} style={{ '--target-height': '70px' }}>
-                            <div>2등</div>
+                    <div className={style.rankingContanier}>
+                            <h3 className={style.rankingMbtiText}>ISFJ</h3>
+                            <div className={style.second} style={{ '--target-height': '70px' }}/>
                         </div>
-                        <div className={style.first} style={{ '--target-height': '120px' }}>
-                            <div>1등</div>
+                        <div className={style.rankingContanier}>
+                            <h3 className={style.rankingMbtiText}>ESFJ</h3>
+                            <div className={style.first} style={{ '--target-height': '120px' }}/>
                         </div>
-                        <div className={style.third} style={{ '--target-height': '40px' }}>
-                            <div>3등</div>
+                        <div className={style.rankingContanier}>
+                            <h3 className={style.rankingMbtiText}>INTP</h3>
+                            <div className={style.third} style={{ '--target-height': '40px' }}/>
                         </div>
                     </div>
                 </div>
                 <div className={style.container}>
                     <h3 className={style.title}>나를 팔로우한 mbti 랭킹</h3>
                     <div className={style.followerRanking}>
-                    <div className={style.second} style={{ '--target-height': '70px' }}>
-                            <div>2등</div>
+                        <div className={style.rankingContanier}>
+                            <h3 className={style.rankingMbtiText}>ISFJ</h3>
+                            <div className={style.second} style={{ '--target-height': '70px' }}/>
                         </div>
-                        <div className={style.first} style={{ '--target-height': '120px' }}>
-                            <div>1등</div>
+                        <div className={style.rankingContanier}>
+                            <h3 className={style.rankingMbtiText}>ESFJ</h3>
+                            <div className={style.first} style={{ '--target-height': '120px' }}/>
                         </div>
-                        <div className={style.third} style={{ '--target-height': '40px' }}>
-                            <div>3등</div>
+                        <div className={style.rankingContanier}>
+                            <h3 className={style.rankingMbtiText}>INTP</h3>
+                            <div className={style.third} style={{ '--target-height': '40px' }}/>
                         </div>
                     </div>
                 </div>

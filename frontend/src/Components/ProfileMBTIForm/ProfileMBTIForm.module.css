@@ -31,13 +31,22 @@
     height: 240px;
 }
 
+.rankingContainer {
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    color: white;
+}
+
+.rankingMbtiText {
+    text-align: center;
+    color: #5c5c5c;
+}
 .first, .second, .third {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 150px;
-    color: white;
-    font-weight: bold;
     height: 0; /* Start with height 0 */
     animation: growHeight 0.8s ease forwards;
 }
