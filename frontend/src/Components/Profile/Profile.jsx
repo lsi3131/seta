@@ -27,6 +27,12 @@ const Profile = () => {
         handleGetUserData();
     }, [username]);
 
+    const [showProfileMyPost, setShowProfileMyPost] = useState(false);
+
+    const handleToggleShow = () => {
+        setShowProfileMyPost(prevState => !prevState);
+    };
+
 
     if (!users) {
         return <div></div>
@@ -36,7 +42,14 @@ const Profile = () => {
         <div className={style.vertical}>
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
             <ProfileMBTIForm/>
-            <ProfileMyPost props={users}/>
+           
+            <div >
+              <button className={style.moreButton} onClick={handleToggleShow}>
+                  {showProfileMyPost ? '접기' : '더보기'}
+              </button>
+            {showProfileMyPost && <ProfileMyPost props={users} />}
+            </div>
+
         </div>
     )
 }
