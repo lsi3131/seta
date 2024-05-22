@@ -73,8 +73,11 @@ class AccountAPIView(APIView):
 
     def delete(self, request):
         user = request.user
-        user.delete()
-        return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
+        print(request.data)
+        if request.data.get('password') and check_password(request.data.get('password'), user.password):       
+            user.delete()
+            return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AccountPasswordAPIView(APIView):
