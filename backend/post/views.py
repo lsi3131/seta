@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
@@ -27,8 +27,9 @@ def serialize_post(post):
         "updated_at": post.updated_at,
     }
 
+
 def serialize_post_update(post):
-    return{
+    return {
         "id": post.id,
         "author": post.author.username,
         "category": post.category.name,
@@ -36,8 +37,6 @@ def serialize_post_update(post):
         "content": post.content,
         "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
     }
-
-
 
 
 def serialize_comment(comment):
@@ -128,14 +127,9 @@ class PostAPIView(APIView):
 
         return Response(paginated_response_data, status=status.HTTP_200_OK)
 
+
 class CreatePostAPIView(APIView):
     permission_classes=[IsAuthenticated]
-    def get(self, request):
-        categorys = get_list_or_404(PostCategory)
-        data = [{'category': category.name,
-                 'id': category.id } for category in categorys]
-        return Response(data,status=status.HTTP_200_OK)
-
     def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
@@ -146,7 +140,7 @@ class CreatePostAPIView(APIView):
         content = data['content']
         category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                                   content=content, author=request.user)
+                                content=content, author=request.user)
         mbti_types = data['mbti']
         for mbti_type in mbti_types:
             mbti_s = get_object_or_404(Mbti, mbti_type=mbti_type)
@@ -157,6 +151,18 @@ class CreatePostAPIView(APIView):
              "id": post.id},
             status=status.HTTP_201_CREATED
         )
+
+
+class PostCategoryAPIView(APIView):
+    def get(self, request):
+        categories = PostCategory.objects.all()
+
+        serialized_categories = []
+        for category in categories:
+            serialized_categories.append(
+                {"name": category.name}
+            )
+        return Response(serialized_categories, status=status.HTTP_200_OK)
 
 
 class PostDetailAPIView(APIView):
@@ -174,7 +180,7 @@ class PostDetailAPIView(APIView):
                 )
             serialize = serialize_post_update(post)
             return Response(serialize, status=status.HTTP_200_OK)
-        
+
         post.hits += 1
         post.save()
         serialize = serialize_post(post)
@@ -191,7 +197,7 @@ class PostDetailAPIView(APIView):
         data = request.data.copy()
         data["content"] = data.get("content", post.content)
         data["title"] = data.get("title", post.title)
-        data["category"] = PostCategory.objects.get(name=data.get("category", post.category))
+        data["category_id"] = PostCategory.objects.get(name=data.get("category", post.category))
         data["mbti"] = data.get("mbti", post.mbti)
         if data["mbti"]:
             mbti_set = []
@@ -199,9 +205,11 @@ class PostDetailAPIView(APIView):
                 mbti = get_object_or_404(Mbti, mbti_type=mbti)
                 mbti_set.append(mbti)
             post.mbti.set(mbti_set)
+
         message = validate_post_data(data)
         if message:
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        
         post.__dict__.update(**data)
         post = post.save()
         return Response(
@@ -232,7 +240,8 @@ class PostCommentsAPIView(APIView):
 
         response_data = []
         for comment in comments:
-            response_data.append(serialize_comment(comment))
+            if not comment.parent:
+                response_data.append(serialize_comment(comment))
 
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -332,3 +341,10 @@ def Recommend(request, post_pk, comment_pk):
     else:
         comment.recommend.remove(user)
         return Response({"message": "추천 취소"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getCategory(request):
+    categorys = get_list_or_404(PostCategory)
+    data = [{'category': category.name,
+            'id': category.id } for category in categorys]
+    return Response(data, status=status.HTTP_200_OK)
