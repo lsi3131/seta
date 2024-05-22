@@ -8,6 +8,8 @@ import like from '../../Assets/images/board/like.png'
 import unlike from '../../Assets/images/board/unlike.png'
 import apiClient from '../../services/apiClient'
 import {UserContext} from '../../userContext'
+import * as PropTypes from "prop-types";
+import BoardCommentBadgeList from "./BoardCommentBadgeList";
 
 const BoardTitle = ({mbti, post}) => {
     useEffect(() => {
@@ -20,11 +22,15 @@ const BoardTitle = ({mbti, post}) => {
             </div>
             <div className={style.board_title}>
                 <h2>{post.title}</h2>
-                <p style={{backgroundColor: getButtonColor(mbti)}}>{mbti}</p>
             </div>
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
-                    <p><Link to={`/profile/${post.author}/`}>{post.author}</Link></p>
+                    <p>
+                        <Link to={`/profile/${post.author}/`}>{post.author}
+                            <sup style={{backgroundColor: getButtonColor(mbti)}}>{mbti}</sup>
+                        </Link>
+                    </p>
+
                     <p>{formatDate(post.created_at)}</p>
                 </div>
                 <div className={style.board_title_bottom_right}>
@@ -52,7 +58,7 @@ const BoardContent = ({post, username, onSetLike}) => {
     return (
         <div className={style.board_content_container}>
             <div className={style.board_content_text}>
-                <p>{post.content}</p>
+                <pre>{post.content}</pre>
             </div>
 
             <div className={style.board_content_like_button}>
@@ -157,7 +163,8 @@ const BoardDetail = () => {
                     </button>
                 </div>
             ) : null}
-            <CommentBox postId={post.id}/>
+            <BoardCommentBadgeList post={post}/>
+            <CommentBox post={post}/>
         </div>
     )
 }
