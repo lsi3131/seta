@@ -133,6 +133,57 @@ const ProfileChart = ({percentPJ = 50, percentFT = 50, percentNS = 50, percentIE
     )
 }
 
+const NoMbtiRatio = () => {
+    return (
+        <div className={style.mbtiRatio}>
+            <div className={style.noContentWarning}>
+                <div className={style.warningText}>해당 유저의 MBTI가 없습니다</div>
+                <div className={style.warningTextDetail}>mbti를 검사하여 세타의 다양한 기능을 즐겨보세요</div>
+            </div>
+        </div>
+    )
+}
+
+const MbtiRatio = ({user}) => {
+    return (
+        <div className={style.mbtiRatio}>
+            <ProfileChart percentPJ={user.percentPJ} percentIE={user.percentIE}
+                          percentNS={user.percentNS} percentFT={user.percentFT}/>
+        </div>
+    )
+}
+
+const MbtiRanking = ({ranking}) => {
+        const getRankText = (ranks, rankNum /* 1~3*/) => {
+        /*
+            ranks = [('ISFP', 3), ('ENFP', 2), ('ENTP, 5)]
+         */
+        const rankIndex = rankNum - 1;
+        if (ranks.length <= rankIndex || 0 > rankIndex) {
+            return "아직은 없어요";
+        }
+
+        return ranks[rankIndex][0].toUpperCase();
+    }
+
+    return (
+        <div className={style.followRanking}>
+            <div className={style.rankingContanier}>
+                <h3 className={style.rankingMbtiText}>{getRankText(ranking, 2)}</h3>
+                <div className={style.second} style={{'--target-height': '70px'}}/>
+            </div>
+            <div className={style.rankingContanier}>
+                <h3 className={style.rankingMbtiText}>{getRankText(ranking, 1)}</h3>
+                <div className={style.first} style={{'--target-height': '120px'}}/>
+            </div>
+            <div className={style.rankingcontanier}>
+                <h3 className={style.rankingMbtiText}>{getRankText(ranking, 3)}</h3>
+                <div className={style.third} style={{'--target-height': '40px'}}/>
+            </div>
+        </div>
+    )
+}
+
 const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
     const introduce = `난 너를 믿었던만큼 난 내 친구도 믿었기에
     난 아무런 부담없이 널 내 친구에게 소개시켜 줬고
@@ -161,6 +212,18 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
         return ranks[rankIndex][0].toUpperCase();
     }
 
+    const isRankExists = (ranks) => {
+        return ranks.length !== 0;
+    }
+
+    const isMbtiExists = (user) => {
+        if (user === null) {
+            return false;
+        }
+
+        return user.mbti && user.mbti !== '';
+    }
+
 
     return (
         <div style={{display: "flex", justifyContent: "space-around"}}>
@@ -168,52 +231,38 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
                 <div className={style.container}>
                     <h3 className={style.title}>자기소개</h3>
                     <div className={style.introduce}>
-                        <h4>{introduce}</h4>
+                        <div>{introduce}</div>
                     </div>
 
                 </div>
                 <div className={style.container}>
                     <h3 className={style.title}>내 mbti 성향</h3>
-                    <div className={style.mbtiRatio}>
-                        <ProfileChart percentPJ={user.percentPJ} percentIE={user.percentIE}
-                                      percentNS={user.percentNS} percentFT={user.percentFT}/>
-                    </div>
+                    {isMbtiExists(user) ? (
+                        <MbtiRatio user={user}/>
+                    ) : (
+                        <NoMbtiRatio/>
+                    )}
                 </div>
             </div>
             <div>
                 <div className={style.container}>
                     <h3 className={style.title}>내가 팔로우한 mbti 랭킹</h3>
-                    <div className={style.followRanking}>
-                        <div className={style.rankingContanier}>
-                            <h3 className={style.rankingMbtiText}>{getRankText(followingRanks, 2)}</h3>
-                            <div className={style.second} style={{'--target-height': '70px'}}/>
-                        </div>
-                        <div className={style.rankingContanier}>
-                            <h3 className={style.rankingMbtiText}>{getRankText(followingRanks, 1)}</h3>
-                            <div className={style.first} style={{'--target-height': '120px'}}/>
-                        </div>
-                        <div classname={style.rankingcontanier}>
-                            <h3 className={style.rankingMbtiText}>{getRankText(followingRanks, 3)}</h3>
-                            <div className={style.third} style={{'--target-height': '40px'}}/>
-                        </div>
-                    </div>
+                    {isRankExists(followingRanks) ? (
+                        <MbtiRanking ranking={followingRanks}/>
+                    ) : (
+                        /* TODO: MBTI 팔로우 정보 없는 것 추가할 것 */
+                        <NoMbtiRatio/>
+                    )}
                 </div>
                 <div className={style.container}>
                     <h3 className={style.title}>나를 팔로우한 mbti 랭킹</h3>
-                    <div className={style.followerRanking}>
-                        <div className={style.rankingContanier}>
-                            <h3 className={style.rankingMbtiText}>{getRankText(followerRanks, 2)}</h3>
-                            <div className={style.second} style={{'--target-height': '70px'}}/>
-                        </div>
-                        <div className={style.rankingContanier}>
-                            <h3 className={style.rankingMbtiText}>{getRankText(followerRanks, 1)}</h3>
-                            <div className={style.first} style={{'--target-height': '120px'}}/>
-                        </div>
-                        <div className={style.rankingContanier}>
-                            <h3 className={style.rankingMbtiText}>{getRankText(followerRanks, 3)}</h3>
-                            <div className={style.third} style={{'--target-height': '40px'}}/>
-                        </div>
-                    </div>
+                    {isRankExists(followerRanks) ? (
+                        <MbtiRanking ranking={followerRanks}/>
+                    ) : (
+                        /* TODO: MBTI 팔로우 정보 없는 것 추가할 것 */
+                        <NoMbtiRatio/>
+                    )}
+
                 </div>
             </div>
         </div>
