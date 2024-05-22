@@ -48,7 +48,8 @@ export const MenuContainer = styled.button`
     cursor: pointer;
 
     &:hover {
-        background-color: #f5f5f5;
+        background-color: ${(props) => (props.isActive ? 'rgba(111, 142, 255, 1)' : '#f5f5f5')};
+        color: ${(props) => (props.isActive ? 'white' : 'rgba(153, 153, 153, 1)')};
     }
     &:focus {
         background-color: rgba(111, 142, 255, 1);
