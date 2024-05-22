@@ -15,6 +15,9 @@ from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
 
+from rest_framework_simplejwt.tokens import RefreshToken
+from config.serializers import CustomTokenObtainPairSerializer
+
 validator = AccountValidator()
 User = get_user_model()
 
@@ -223,8 +226,18 @@ class MbtiAPIView(APIView):
             return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         user.mbti = Mbti.objects.get(mbti_type=mbti_type)
+        user.percentIE = data.get('percentIE', 0)
+        user.percentNS = data.get('percentNS', 0)
+        user.percentFT = data.get('percentFT', 0)
+        user.percentPJ = data.get('percentPJ', 0)
         user.save()
-        return Response({"message": "MBTI가 설정되었습니다."}, status=status.HTTP_200_OK)
+
+        serialized_token = CustomTokenObtainPairSerializer.get_token(user)
+        tokens = {
+            'accessToken': str(serialized_token.access_token),
+            'refreshToken': str(serialized_token)
+        }
+        return Response(tokens, status=status.HTTP_200_OK)
 
 
 class MbtiDetailAPIView(APIView):
