@@ -4,7 +4,29 @@
 }
 
 .title {
-    color : #444444
+    color : #444444;
+}
+
+.noContentWarning {
+    position: absolute;
+    text-align: center;
+    width:100%;
+    top: 0;
+    left: 0;
+    margin-top: 6.8rem
+}
+
+.warningText{
+    color : #6B6B6B;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.warningTextDetail{
+    color : #969696;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .introduce, .mbtiRatio, .followRanking, .followerRanking {
@@ -14,6 +36,7 @@
     height: auto;
     min-height: 7rem;
     width: 100%;
+    position: relative;
 }
 
 .introduce {
@@ -31,13 +54,23 @@
     height: 240px;
 }
 
+.rankingContainer {
+    display: flex;
+    justify-content: center;
+    width: 150px;
+    color: white;
+}
+
+.rankingMbtiText {
+    text-align: center;
+    color: #5c5c5c;
+}
+
 .first, .second, .third {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 150px;
-    color: white;
-    font-weight: bold;
     height: 0; /* Start with height 0 */
     animation: growHeight 0.8s ease forwards;
 }

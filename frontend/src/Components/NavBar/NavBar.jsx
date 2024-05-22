@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
 
@@ -33,7 +33,7 @@ const AuthenticatedNavbar = ({ username }) => {
                         onClick={() => {
                             localStorage.removeItem('accessToken')
                             localStorage.removeItem('refreshToken')
-                            window.location.href = '/login'
+                            window.location.reload()
                         }}
                     >
                         로그아웃
@@ -45,7 +45,7 @@ const AuthenticatedNavbar = ({ username }) => {
 }
 
 // 인증되지 않은 사용자를 위한 네비게이션
-const UnauthenticatedNavbar = () => {
+const UnauthenticatedNavbar = ({ currentUrl }) => {
     return (
         <header className={style.header}>
             <div className={style.container}>
@@ -55,7 +55,10 @@ const UnauthenticatedNavbar = () => {
                     </Link>
                 </div>
                 <nav className={style.navbar}>
-                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                    <Link
+                        to={`/login?redirectUrl=${encodeURIComponent(currentUrl)}`}
+                        style={{ textDecoration: 'none' }}
+                    >
                         로그인
                     </Link>
                 </nav>
@@ -65,8 +68,21 @@ const UnauthenticatedNavbar = () => {
 }
 const Navbar = () => {
     const currentUser = useContext(UserContext)
+    const [currentUrl, setCurrentUrl] = useState('')
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        setCurrentUrl(window.location.pathname + window.location.search)
+    }, [navigate])
+
     return (
-        <div>{currentUser ? <AuthenticatedNavbar username={currentUser.username} /> : <UnauthenticatedNavbar />}</div>
+        <div>
+            {currentUser ? (
+                <AuthenticatedNavbar username={currentUser.username} />
+            ) : (
+                <UnauthenticatedNavbar currentUrl={currentUrl} />
+            )}
+        </div>
     )
 }
 export default Navbar
