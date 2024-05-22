@@ -42,7 +42,7 @@ const entjFormat = (value) => {
 
 const isfpFormat = (value) => {
     if (value === 'EI') {
-        return 'I';
+        return 'I'
     }
     else if (value === 'NS') {
         return 'S';
@@ -70,21 +70,17 @@ const ProfileChart = ({ data }) => (
             'P'
         ]}
         indexBy="mbti"
+        theme={{
+            fontSize: '20px',
+        }}
         padding={0.3}
         margin={{right: 20, left: 20 }}
         layout="horizontal"
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
         colors={['#a9a9a9', '#d9d9d9']}
-        borderColor={{
-            from: 'color',
-            modifiers: [
-                [
-                    'darker',
-                    '1.2'
-                ]
-            ]
-        }}
+        borderWidth={2}
+        borderColor={{ theme: 'background' }}
         axisTop={null}
         axisRight={{
             tickSize: 0,
@@ -92,7 +88,7 @@ const ProfileChart = ({ data }) => (
             format: value => `${isfpFormat(value)}`,
             tickRotation: 0,
             legendOffset: -46,
-            truncateTickAt: 0
+            truncateTickAt: 0,
         }}
         axisBottom={null}
         axisLeft={{
@@ -101,7 +97,7 @@ const ProfileChart = ({ data }) => (
             format: value => `${entjFormat(value)}`,
             tickRotation: 0,
             legendOffset: -46,
-            truncateTickAt: 0
+            truncateTickAt: 0,
         }}
         enableGridY={false}
         labelSkipWidth={10}
@@ -148,13 +144,29 @@ const ProfileMBTIForm = () => {
                 <div className={style.container}>
                     <h3 className={style.title}>내가 팔로우한 mbti 랭킹</h3>
                     <div className={style.followRanking}>
-
+                        <div className={style.second} style={{ '--target-height': '70px' }}>
+                            <div>2등</div>
+                        </div>
+                        <div className={style.first} style={{ '--target-height': '120px' }}>
+                            <div>1등</div>
+                        </div>
+                        <div className={style.third} style={{ '--target-height': '40px' }}>
+                            <div>3등</div>
+                        </div>
                     </div>
                 </div>
                 <div className={style.container}>
                     <h3 className={style.title}>나를 팔로우한 mbti 랭킹</h3>
                     <div className={style.followerRanking}>
-
+                    <div className={style.second} style={{ '--target-height': '70px' }}>
+                            <div>2등</div>
+                        </div>
+                        <div className={style.first} style={{ '--target-height': '120px' }}>
+                            <div>1등</div>
+                        </div>
+                        <div className={style.third} style={{ '--target-height': '40px' }}>
+                            <div>3등</div>
+                        </div>
                     </div>
                 </div>
             </div>

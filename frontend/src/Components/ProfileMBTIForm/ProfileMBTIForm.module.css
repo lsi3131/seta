@@ -24,10 +24,44 @@
     height: 300px;
 }
 
-.followerRanking {
-
+.followerRanking, .followRanking {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 240px;
 }
 
-.followRanking {
+.first, .second, .third {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    color: white;
+    font-weight: bold;
+    height: 0; /* Start with height 0 */
+    animation: growHeight 0.8s ease forwards;
+}
 
+.first {
+    max-height: 120px;
+    background-color: rgb(236, 218, 116);
+}
+
+.second {
+    max-height: 70px;
+    background-color: rgb(212, 212, 212);
+}
+
+.third {
+    max-height: 40px;
+    background-color: #e08830;
+}
+
+@keyframes growHeight {
+    from {
+        height: 0;
+    }
+    to {
+        height: var(--target-height);
+    }
 }
