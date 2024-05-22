@@ -92,7 +92,7 @@ class AccountPasswordAPIView(APIView):
 
         # 이전 비밀번호 일치 체크
         if not check_password(old_password, user.password):
-            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "입력하신 비밀번호가 이전과 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         # 신규 비밀번호 유효성 체크
         if not validator.validate('password', {'data': new_password}):

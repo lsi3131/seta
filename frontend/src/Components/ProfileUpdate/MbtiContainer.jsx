@@ -107,14 +107,20 @@ const MbtiUpdate = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 100%;
 `
 
 const UpdateButton = styled.button`
-    padding: 15px 60px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: ${(props) => (props.mbticheck ? 'rgba(0, 0, 255, 0.1)' : 'rgba(0, 0, 0, 0.2)')};
+    width: 100%;
+    height: 40px;
+
+    font-size: 16px;
+    font-weight: 600;
     border: none;
+    border-radius: 5px;
+
+    background-color: ${(props) => (props.mbticheck ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.2)')};
+    color: ${(props) => (props.mbticheck ? 'white' : 'black')};
     disabled: ${(props) => (props.mbticheck ? 'false' : 'true')};
     cursor: ${(props) => (props.mbticheck ? 'pointer' : 'not-allowed')};
 `
@@ -284,7 +290,7 @@ const MbtiContainer = (props) => {
             <MbtiUpdate>
                 <MbtiMessage mbticheck={mbtiCheck}>{mbtiMessage}</MbtiMessage>
                 <UpdateButton mbticheck={mbtiCheck} onClick={handleUpdate}>
-                    MBTI 수정
+                    저장하기
                 </UpdateButton>
             </MbtiUpdate>
         </Container>
