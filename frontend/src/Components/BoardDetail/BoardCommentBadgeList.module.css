@@ -1,0 +1,27 @@
+.root {
+    display: flex;
+    flex-direction: column;
+}
+
+.root > h3{
+    margin-top: 10px;
+    font-size: 16px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.badge_list {
+    display: flex;
+    align-items: center;
+}
+
+.badge_list > p{
+    background-color: #0056b3;
+    color: #ffffff;
+
+    margin: 3px;
+    border-radius: 14px;
+    padding: 5px 20px;
+    text-align: center;
+    font-size: 14px;
+}
