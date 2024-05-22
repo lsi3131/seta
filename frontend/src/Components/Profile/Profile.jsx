@@ -31,8 +31,6 @@ const Profile = () => {
             .then(response => {
                 setFollowingRanks(response.data['following'])
                 setFollowerRanks(response.data['follower'])
-                // setUsers(response.data)
-                console.log('rank', response.data)
             })
             .catch(error => {
                 console.log('fail to get ranking', error)
@@ -53,7 +51,7 @@ const Profile = () => {
     return (
         <div className={style.vertical}>
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
-            <ProfileMBTIForm followingRanks={followingRanks} followerRanks={followerRanks}/>
+            <ProfileMBTIForm user={users} followingRanks={followingRanks} followerRanks={followerRanks}/>
             <ProfileMyPost props={users}/>
         </div>
     )
