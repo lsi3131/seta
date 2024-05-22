@@ -12,6 +12,7 @@ const Profile = () => {
     const {username} = useParams();
     const [users, setUsers] = useState({})
     const [error, setError] = useState(null)
+    const [showProfileMyPost, setShowProfileMyPost] = useState(false);
 
     const [followingRanks, setFollowingRanks] = useState([])
     const [followerRanks, setFollowerRanks] = useState([])
@@ -38,6 +39,11 @@ const Profile = () => {
     }
 
 
+    const handleToggleShow = () => {
+        setShowProfileMyPost(prevState => !prevState);
+    };
+
+
     useEffect(() => {
         handleGetUserData();
         handleGetRanking();
@@ -52,7 +58,14 @@ const Profile = () => {
         <div className={style.vertical}>
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
             <ProfileMBTIForm user={users} followingRanks={followingRanks} followerRanks={followerRanks}/>
-            <ProfileMyPost props={users}/>
+
+            <div >
+              <button className={style.moreButton} onClick={handleToggleShow}>
+                  {showProfileMyPost ? '접기' : '더보기'}
+              </button>
+            {showProfileMyPost && <ProfileMyPost props={users} />}
+            </div>
+
         </div>
     )
 }
