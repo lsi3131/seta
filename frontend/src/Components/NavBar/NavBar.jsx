@@ -13,6 +13,7 @@ const logo_image = {
 }
 
 const AuthenticatedNavbar = ({ username }) => {
+    const navigate = useNavigate()
     return (
         <header className={style.header}>
             <div className={style.container}>
@@ -33,6 +34,9 @@ const AuthenticatedNavbar = ({ username }) => {
                         onClick={() => {
                             localStorage.removeItem('accessToken')
                             localStorage.removeItem('refreshToken')
+                            if (window.location.pathname.includes('profile')) {
+                                navigate('/')
+                            }
                             window.location.reload()
                         }}
                     >
