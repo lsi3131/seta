@@ -11,5 +11,7 @@ urlpatterns = [
     path('validate/password/', views.validate_password),
     path('validate/username/', views.validate_username),
     path('validate/email/', views.validate_email),
-    path('<str:username>/follow/', views.follow)
+    path('<str:username>/', views.ProfileAPIView.as_view()),
+    path('<str:username>/follow/', views.follow),
+    path('<str:username>/myposts/',views.Myposts)
 ]
