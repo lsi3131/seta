@@ -1,30 +1,29 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from './BoardDetail.module.css'
-import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
-import {getFontColor, getButtonColor, formatDate, isValidMbti} from '../../Utils/helpers'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { getFontColor, getButtonColor, formatDate, isValidMbti } from '../../Utils/helpers'
 import CommentBox from '../Comment/Comment'
 import BoardTop from '../BoardTop/BoardTop'
 import like from '../../Assets/images/board/like.png'
 import unlike from '../../Assets/images/board/unlike.png'
 import apiClient from '../../services/apiClient'
-import {UserContext} from '../../userContext'
+import { UserContext } from '../../userContext'
 
-const BoardTitle = ({mbti, post}) => {
-    useEffect(() => {
-    }, [post])
+const BoardTitle = ({ mbti, post }) => {
+    useEffect(() => {}, [post])
 
     return (
         <div className={style.board_title_container}>
-            <div style={{color: getFontColor(mbti)}} className={style.board_title_category}>
+            <div style={{ color: getFontColor(mbti) }} className={style.board_title_category}>
                 <p>{post.category}</p>
             </div>
             <div className={style.board_title}>
                 <h2>{post.title}</h2>
-                <p style={{backgroundColor: getButtonColor(mbti)}}>{mbti}</p>
+                <p style={{ backgroundColor: getButtonColor(mbti) }}>{mbti}</p>
             </div>
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
-                    <p><Link to={`/profile/${post.author}/`}>{post.author}</Link></p>
+                    <p>{post.author}</p>
                     <p>{formatDate(post.created_at)}</p>
                 </div>
                 <div className={style.board_title_bottom_right}>
@@ -37,7 +36,7 @@ const BoardTitle = ({mbti, post}) => {
     )
 }
 
-const BoardContent = ({post, username, onSetLike}) => {
+const BoardContent = ({ post, username, onSetLike }) => {
     const [likeOn, setLikeOn] = useState(false)
 
     useEffect(() => {
@@ -57,7 +56,7 @@ const BoardContent = ({post, username, onSetLike}) => {
 
             <div className={style.board_content_like_button}>
                 <button onClick={handleLikeOn}>
-                    {likeOn ? <img src={like} alt=""/> : <img src={unlike} alt=""/>}
+                    {likeOn ? <img src={like} alt="" /> : <img src={unlike} alt="" />}
                 </button>
                 <p>{post.likes}</p>
             </div>
@@ -67,7 +66,7 @@ const BoardContent = ({post, username, onSetLike}) => {
 
 const BoardDetail = () => {
     const currentUser = useContext(UserContext)
-    const {detailId} = useParams()
+    const { detailId } = useParams()
     const location = useLocation()
     const params = new URLSearchParams(location.search)
     const navigate = useNavigate()
@@ -83,7 +82,7 @@ const BoardDetail = () => {
 
     useEffect(() => {
         if (post && post.mbti) {
-            const include = post.mbti.some(e => e.toLowerCase() === mbti.toLowerCase())
+            const include = post.mbti.some((e) => e.toLowerCase() === mbti.toLowerCase())
             if (!include) {
                 setIsValid(false)
                 navigate('/')
@@ -131,9 +130,10 @@ const BoardDetail = () => {
 
     return (
         <div className={style.vertical}>
-            <BoardTop mbti={mbti}/>
-            <BoardTitle mbti={mbti} post={post}/>
-            <BoardContent post={post} username={currentUser ? currentUser.username : ''} onSetLike={handleSetLike}/>
+            <BoardTop mbti={mbti} />
+            <BoardTitle mbti={mbti} post={post} />
+
+            <BoardContent post={post} username={currentUser ? currentUser.username : ''} onSetLike={handleSetLike} />
             {currentUser && post.author === currentUser.username ? (
                 <div className={style.buttonSection}>
                     <button
@@ -157,7 +157,7 @@ const BoardDetail = () => {
                     </button>
                 </div>
             ) : null}
-            <CommentBox postId={post.id}/>
+            <CommentBox postId={post.id} />
         </div>
     )
 }

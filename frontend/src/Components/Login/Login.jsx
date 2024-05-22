@@ -68,7 +68,13 @@ function Login() {
             const { access, refresh } = response.data
             localStorage.setItem('accessToken', access)
             localStorage.setItem('refreshToken', refresh)
-            window.location.href = '/' // 혹은 메인 화면으로
+
+            const redirectUrl = new URLSearchParams(window.location.search).get('redirectUrl')
+            if (redirectUrl) {
+                window.location.href = decodeURIComponent(redirectUrl)
+            } else {
+                window.location.href = '/'
+            }
         } catch (error) {
             const message = '아이디 또는 비밀번호를 잘못 입력했습니다.'
             setErrorMessage(message)

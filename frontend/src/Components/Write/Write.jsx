@@ -2,13 +2,12 @@ import style from './Write.module.css'
 import { useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import apiClient from 'services/apiClient'
-import { getFontColor, getMainColor } from '../../Utils/helpers'
-import { is } from '@babel/types'
+import { getFontColor } from '../../Utils/helpers'
 
 const Write = () => {
     const navigate = useNavigate()
-    const [categorys, setCategorys] = useState('')
-    const [isloading, setIsLoading] = useState(true)
+    const [categorys, setCategorys] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const [inputs, setInputs] = useState({
         title: '',
         content: '',
@@ -17,7 +16,7 @@ const Write = () => {
     })
 
     const { title, content, category, mbti } = inputs
-    const [Error, setError] = useState(' ')
+    const [error, setError] = useState('')
 
     const [mbti_checks, setMbtiChecks] = useState([
         { id: 1, label: 'INTJ', checked: false },
@@ -42,14 +41,21 @@ const Write = () => {
         async function fetchData() {
             try {
                 const response = await apiClient.get('/api/posts/category/')
+                console.log(response.data)
                 setCategorys(response.data)
-                setIsLoading(false)
             } catch (error) {
                 console.error('카테고리 데이터를 불러오는 중에 오류가 발생했습니다:', error)
             }
         }
         fetchData()
     }, [])
+
+    useEffect(() => {
+        if (categorys.length > 0) {
+            setIsLoading(false)
+            console.log(categorys)
+        }
+    }, [categorys])
 
     const handleCheckboxChange = (id) => {
         const updatedCheckboxes = mbti_checks.map((check) =>
@@ -99,9 +105,10 @@ const Write = () => {
         }
     }
 
-    if (isloading) {
+    if (isLoading) {
         return <div>loading...</div>
     }
+
     return (
         <div className={style.vertical}>
             <div className={style.board_top}>
@@ -121,17 +128,13 @@ const Write = () => {
                                 카테고리를 선택해주세요
                             </option>
                             {categorys &&
-                                categorys.map((cate) => (
-                                    <option key={cate.id} value={cate.category}>
-                                        {cate.category}
-                                    </option>
-                                ))}
+                                categorys.length > 0 &&
+                                categorys.map((cate) => <option value={cate.name}>{cate.name}</option>)}
                         </select>
                         <input
                             type="text"
                             id="title"
                             placeholder="제목을 입력해 주세요"
-                            // required
                             value={title}
                             onChange={onChange}
                         />
@@ -174,7 +177,7 @@ const Write = () => {
                 </div>
 
                 <p></p>
-                <p className={style.Error}>{Error}</p>
+                <p className={style.Error}>{error}</p>
                 <button className={style.button} type="submit">
                     등록
                 </button>
