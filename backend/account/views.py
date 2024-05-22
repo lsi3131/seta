@@ -132,7 +132,7 @@ class ProfileAPIView(APIView):
             "percentPJ": user.percentPJ,
             "following_count": user.following.count(),
             "followers_count": user.followers.count(),
-            "posts_count" : user.post_set.count()
+            "posts_count": user.post_set.count()
         }, status=status.HTTP_200_OK)
 
 
@@ -153,6 +153,7 @@ def validate_email(request):
     validator.validate('email', request.data)
     return validator.get_response_data()
 
+
 @api_view(['GET'])
 def mbtiRank(request, username):
     user = get_object_or_404(User, username=username)
@@ -161,10 +162,11 @@ def mbtiRank(request, username):
     for follower in user.followers.all():
         if follower.mbti:
             follower_mbti_ranking[follower.mbti.mbti_type] = follower_mbti_ranking.get(follower.mbti.mbti_type, 0) + 1
-    
+
     for following in user.following.all():
         if following.mbti:
-            following_mbti_ranking[following.mbti.mbti_type] = following_mbti_ranking.get(following.mbti.mbti_type, 0) + 1
+            following_mbti_ranking[following.mbti.mbti_type] = following_mbti_ranking.get(following.mbti.mbti_type,
+                                                                                          0) + 1
 
     following_mbti_ranking = sorted(following_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
     follower_mbti_ranking = sorted(follower_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
@@ -196,7 +198,16 @@ def follow(request, username):
             {"message": f"{from_user} Un following {to_user}"}, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_follow(request, username):
+    follow_user = get_object_or_404(User, username=request.user.username)
+    exists = follow_user.following.filter(username=username).exists()
 
+    if exists:
+        return Response({'follow': 1}, status=status.HTTP_200_OK)
+    else:
+        return Response({'follow': 0}, status=status.HTTP_200_OK)
 
 
 class MbtiAPIView(APIView):
@@ -213,7 +224,6 @@ class MbtiAPIView(APIView):
         user.mbti = Mbti.objects.get(mbti_type=mbti_type)
         user.save()
         return Response({"message": "MBTI가 설정되었습니다."}, status=status.HTTP_200_OK)
-
 
 
 class MbtiDetailAPIView(APIView):
@@ -233,7 +243,7 @@ class MbtiDetailAPIView(APIView):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def Myposts(request, username ):
+def Myposts(request, username):
     user = get_object_or_404(User, username=username)
     posts = user.post_set.all()
     like_posts = user.like_posts.all()
@@ -242,13 +252,12 @@ def Myposts(request, username ):
     paginator_post = Paginator(posts, per_page)
     paginator_like = Paginator(like_posts, per_page)
 
-
     page_number = request.GET.get("page")
     if page_number:
         posts = paginator_post.get_page(page_number)
         like_posts = paginator_like.get_page(page_number)
     response_posts = [serialize_post(post) for post in posts]
-    response_like_posts = [serialize_post(post) for post in like_posts ]
+    response_like_posts = [serialize_post(post) for post in like_posts]
 
     paginated_posts = {
         'total_page': paginator_post.num_pages,
@@ -261,5 +270,5 @@ def Myposts(request, username ):
         "per_page": per_page,
         'results': response_like_posts,
     }
-    return Response({"paginated_posts":paginated_posts,"paginated_like_posts":paginated_like_posts}, status=status.HTTP_200_OK)
-
+    return Response({"paginated_posts": paginated_posts, "paginated_like_posts": paginated_like_posts},
+                    status=status.HTTP_200_OK)

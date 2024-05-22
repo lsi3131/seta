@@ -47,6 +47,12 @@
     margin-right: 10px;
 }
 
+.board_title_bottom_left > p > a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #444444;
+}
+
 .board_title_bottom_right {
     display: flex;
 }
