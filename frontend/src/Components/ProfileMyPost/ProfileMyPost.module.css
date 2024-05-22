@@ -4,12 +4,24 @@
 }
 
 .board_category button{
-  font-weight: bold;
+  padding-right: 20px;
+  padding-bottom: 10px;
   font-size: 18px;
+  background-color: #FFFFFF;
   border: 0;
+}
+
+
+.board_category button:hover{
+  font-weight: bold;
+  font-size: 18px;border: 0;
   background-color: transparent;
   padding-right: 20px;
   padding-bottom: 10px;
+}
+
+.board_category button:hover{
+  cursor: pointer;
 }
 
 .board_posts {
