@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import style from './BoardDetail.module.css'
-import {useLocation, useNavigate, useParams} from 'react-router-dom'
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {getFontColor, getButtonColor, formatDate, isValidMbti} from '../../Utils/helpers'
 import CommentBox from '../Comment/Comment'
 import BoardTop from '../BoardTop/BoardTop'
@@ -24,7 +24,7 @@ const BoardTitle = ({mbti, post}) => {
             </div>
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
-                    <p>{post.author}</p>
+                    <p><Link to={`/profile/${post.author}/`}>{post.author}</Link></p>
                     <p>{formatDate(post.created_at)}</p>
                 </div>
                 <div className={style.board_title_bottom_right}>
@@ -134,7 +134,7 @@ const BoardDetail = () => {
             <BoardTop mbti={mbti}/>
             <BoardTitle mbti={mbti} post={post}/>
             <BoardContent post={post} username={currentUser ? currentUser.username : ''} onSetLike={handleSetLike}/>
-            {post.author === currentUser.username ? (
+            {currentUser && post.author === currentUser.username ? (
                 <div className={style.buttonSection}>
                     <button
                         onClick={() => {
