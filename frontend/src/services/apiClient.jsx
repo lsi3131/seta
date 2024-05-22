@@ -23,7 +23,11 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config
-        if (error.response?.status === 401) {
+        // 재전송 방지용 플래그
+        originalRequest._retry = originalRequest._retry || false
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true
             const refresh = localStorage.getItem('refreshToken')
             console.log(refresh)
             if (refresh) {
@@ -41,11 +45,18 @@ apiClient.interceptors.response.use(
                 } catch (refreshError) {
                     localStorage.removeItem('accessToken')
                     localStorage.removeItem('refreshToken')
-                    window.location.href = '/login'
-                    return Promise.reject(refreshError)
+                    if (window.location.pathname !== '/login') {
+                        const currentUrl = encodeURIComponent(window.location.pathname + window.location.search)
+                        window.location.href = `/login?redirectUrl=${currentUrl}`
+                        return Promise.reject(refreshError)
+                    }
                 }
             } else {
-                window.location.href = '/login'
+                if (window.location.pathname !== '/login') {
+                    const currentUrl = encodeURIComponent(window.location.pathname + window.location.search)
+                    window.location.href = `/login?redirectUrl=${currentUrl}`
+                    return Promise.reject(error)
+                }
             }
         }
         return Promise.reject(error)

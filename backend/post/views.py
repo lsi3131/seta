@@ -344,10 +344,3 @@ def Recommend(request, post_pk, comment_pk):
     else:
         comment.recommend.remove(user)
         return Response({"message": "추천 취소"}, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def getCategory(request):
-    categorys = get_list_or_404(PostCategory)
-    data = [{'category': category.name,
-            'id': category.id } for category in categorys]
-    return Response(data, status=status.HTTP_200_OK)
