@@ -74,7 +74,10 @@ class PostAPIView(APIView):
 
     # mbti게시판과 일치하는 게시글만
     def mbti_board_filter(self, mbti):
-        mbti = get_object_or_404(Mbti, mbti_type=mbti)
+        # mbti = get_object_or_404(Mbti, mbti_type=mbti)
+        mbti = Mbti.objects.filter(mbti_type__icontains=mbti).first()
+        if not mbti:
+            return None
         posts = Post.objects.filter(mbti=mbti)
         return posts
 
