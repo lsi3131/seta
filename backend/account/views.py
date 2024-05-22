@@ -170,6 +170,7 @@ def mbtiRank(request, username):
 
     following_mbti_ranking = sorted(following_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
     follower_mbti_ranking = sorted(follower_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
+
     return Response({
         "following": following_mbti_ranking,
         "follower": follower_mbti_ranking
