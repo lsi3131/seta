@@ -132,7 +132,8 @@ class PostAPIView(APIView):
 
 
 class CreatePostAPIView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
@@ -143,12 +144,11 @@ class CreatePostAPIView(APIView):
         content = data['content']
         category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                                content=content, author=request.user)
+                                   content=content, author=request.user)
         mbti_types = data['mbti']
         for mbti_type in mbti_types:
             mbti_s = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
             post.mbti.add(mbti_s)
-
 
         return Response(
             {"message": "게시글이 작성되었습니다.",
@@ -185,8 +185,6 @@ class PostDetailAPIView(APIView):
             serialize = serialize_post_update(post)
             return Response(serialize, status=status.HTTP_200_OK)
 
-        post.hits += 1
-        post.save()
         serialize = serialize_post(post)
         serialize['content'] = post.content
         return Response(serialize, status=status.HTTP_200_OK)
@@ -213,7 +211,7 @@ class PostDetailAPIView(APIView):
         message = validate_post_data(data)
         if message:
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
-        
+
         post.__dict__.update(**data)
         post = post.save()
         return Response(
@@ -233,6 +231,15 @@ class PostDetailAPIView(APIView):
             {"message": "게시글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+@api_view(['PUT'])
+def add_hit(request, post_pk):
+    post = get_object_or_404(Post, id=post_pk)
+    post.hits += 1
+    post.save()
+
+    return Response({'message': '조회수가 증가했습니다.'}, status=status.HTTP_200_OK)
 
 
 class PostCommentsAPIView(APIView):
