@@ -264,13 +264,12 @@ def Myposts(request, username):
     }
 
 
-    if request.user == username:
+    if str(request.user) == username:
         paginator_like = Paginator(like_posts, per_page)
-
         if page_number:
             like_posts = paginator_like.get_page(page_number)
         response_like_posts = [serialize_post(post) for post in like_posts ]
-        
+
         paginated_like_posts = {
             'total_page': paginator_like.num_pages,
             "per_page": per_page,
