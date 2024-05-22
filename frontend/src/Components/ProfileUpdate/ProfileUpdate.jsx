@@ -1,8 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
 import * as Components from './Components'
-import MbtiContainer from './MbtiContainer'
 import apiClient from 'services/apiClient'
 import { UserContext } from 'userContext'
+
+import MbtiContainer from './MbtiContainer'
+import IntroContainer from './IntroContainer'
 
 const ProfileUpdate = () => {
     const currentUser = useContext(UserContext)
@@ -74,7 +76,7 @@ const ProfileUpdate = () => {
                     </Components.LeftMenuContainer>
                     <Components.RightContainer>
                         {choice === 1 && <MbtiContainer userInfos={userInfos}></MbtiContainer>}
-                        {choice === 2 && <Components.IntroContainer>2</Components.IntroContainer>}
+                        {choice === 2 && <IntroContainer userInfos={userInfos}></IntroContainer>}
                         {choice === 3 && <Components.PassContainer>3</Components.PassContainer>}
                         {choice === 4 && <Components.SignoutContainer>4</Components.SignoutContainer>}
                     </Components.RightContainer>
