@@ -146,8 +146,9 @@ class CreatePostAPIView(APIView):
                                 content=content, author=request.user)
         mbti_types = data['mbti']
         for mbti_type in mbti_types:
-            mbti_s = get_object_or_404(Mbti, mbti_type=mbti_type)
+            mbti_s = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
             post.mbti.add(mbti_s)
+
 
         return Response(
             {"message": "게시글이 작성되었습니다.",

@@ -6,7 +6,7 @@ import unlike from "../../Assets/images/comment/unlike.png"
 import reply from "../../Assets/images/comment/reply.png"
 import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
-import {Counter} from "./ReducerTest";
+import {Link} from "react-router-dom";
 
 const CommentSubInput = ({
                              mode,
@@ -130,7 +130,12 @@ const Comment = ({
 
                         <div className={style.comment_left_1_1}>
                             <div className={style.comment_left_1_1_author}>
-                                <p>{comment.author}</p>
+                                <p>
+                                    <Link to={`/profile/${comment.author}/`}>{comment.author}
+                                        <sup
+                                            style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</sup>
+                                    </Link>
+                                </p>
                                 <p>{getUpdateTime(comment.created_at)}</p>
                             </div>
                             <pre>{comment.content}</pre>
@@ -158,7 +163,6 @@ const Comment = ({
                             }
                             <button>신고</button>
                         </div>
-                        <p style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</p>
                     </div>
                 </div>
                 {inputModeType === 'reply' &&
@@ -212,7 +216,7 @@ const CommentList = ({
     );
 };
 
-const CommentInput = ({onAddComment, parentCommentId}) => {
+const CommentInput = ({post, onAddComment, parentCommentId}) => {
     const currentUser = useContext(UserContext)
     const [content, setContent] = useState('');
 
@@ -233,7 +237,6 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
         window.location.href = `/profile/${currentUser.username}/`
     }
 
-
     const shouldLogin = () => {
         return currentUser === null;
     }
@@ -242,8 +245,13 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
         return currentUser && currentUser['mbti_type'] === null
     }
 
+    const notIncludedInMbtiList = () => {
+        const include = post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
+        return currentUser && currentUser['mbti_type'] !== null && !include
+    }
+
     const canRegisterComment = () => {
-        return currentUser && currentUser['mbti_type'] !== null
+        return !notIncludedInMbtiList()
     }
 
     const isDisabled = () => {
@@ -252,6 +260,13 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
 
     return (
         <div className={style.comment_input_container}>
+            <div className={style.comment_input_user}>
+                {canRegisterComment() && (
+                    <p>{currentUser.username}
+                        <sup style={{backgroundColor: getButtonColor(currentUser['mbti_type'])}}>{currentUser['mbti_type'].toUpperCase()}</sup>
+                    </p>
+                )}
+            </div>
             {shouldLogin() && (
                 <textarea
                     style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
@@ -278,6 +293,14 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
                     rows={4}
                 ></textarea>
             )}
+            {notIncludedInMbtiList() && (
+                <textarea
+                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                    placeholder={"댓글을 쓸 수 없는 타입입니다"}
+                    rows={4}
+                    disabled={false}
+                ></textarea>
+            )}
 
             <div className={style.comment_input_buttons_container}>
                 <button onClick={handleAddComment} style={{width: '100px'}} disabled={isDisabled()}>댓글 등록</button>
@@ -286,16 +309,15 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
     );
 };
 
-const CommentBox = ({postId}) => {
-    const currentUser = useContext(UserContext)
+const CommentBox = ({post}) => {
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
         handleGetComment()
-    }, [postId]);
+    }, [post]);
 
     const handleGetComment = () => {
-        apiClient.get(`/api/posts/${postId}/comments/`)
+        apiClient.get(`/api/posts/${post.id}/comments/`)
             .then(response => {
                 console.log('get comments successful:', response.data);
                 setComments(response.data);
@@ -312,7 +334,7 @@ const CommentBox = ({postId}) => {
         if (parentId) {
             data.parent_comment_id = parentId;
         }
-        apiClient.post(`/api/posts/${postId}/comments/`, data)
+        apiClient.post(`/api/posts/${post.id}/comments/`, data)
             .then(response => {
                 console.log('post comments successful:', response.data);
 
@@ -328,7 +350,7 @@ const CommentBox = ({postId}) => {
         const data = {
             content: content
         };
-        apiClient.put(`/api/posts/${postId}/comments/${commentId}/`, data)
+        apiClient.put(`/api/posts/${post.id}/comments/${commentId}/`, data)
             .then(response => {
                 console.log('put comments successful:', response.data);
 
@@ -341,7 +363,7 @@ const CommentBox = ({postId}) => {
     }
 
     const handleDeleteComment = (commentId) => {
-        apiClient.delete(`/api/posts/${postId}/comments/${commentId}/`)
+        apiClient.delete(`/api/posts/${post.id}/comments/${commentId}/`)
             .then(response => {
                 console.log('delete comments successful:', response.data);
 
@@ -358,7 +380,7 @@ const CommentBox = ({postId}) => {
             recommend: isLikeOn ? 1 : 0
         };
 
-        apiClient.post(`/api/posts/${postId}/comments/${commentId}/recommend/`, data)
+        apiClient.post(`/api/posts/${post.id}/comments/${commentId}/recommend/`, data)
             .then(response => {
                 console.log('post comments successful:', response.data);
 
@@ -379,7 +401,7 @@ const CommentBox = ({postId}) => {
                          onDeleteComment={handleDeleteComment}
                          onAddLikeComment={handleAddLikeComment}/>
             <hr/>
-            <CommentInput postId={postId} onAddComment={handlePostComment}/>
+            <CommentInput post={post} onAddComment={handlePostComment}/>
         </div>
     );
 }
