@@ -250,14 +250,11 @@ def Myposts(request, username):
 
     per_page = 5
     paginator_post = Paginator(posts, per_page)
-    paginator_like = Paginator(like_posts, per_page)
 
     page_number = request.GET.get("page")
     if page_number:
         posts = paginator_post.get_page(page_number)
-        like_posts = paginator_like.get_page(page_number)
     response_posts = [serialize_post(post) for post in posts]
-    response_like_posts = [serialize_post(post) for post in like_posts]
 
     paginated_posts = {
         'total_page': paginator_post.num_pages,
@@ -265,10 +262,26 @@ def Myposts(request, username):
         'results': response_posts,
     }
 
-    paginated_like_posts = {
-        'total_page': paginator_like.num_pages,
-        "per_page": per_page,
-        'results': response_like_posts,
-    }
-    return Response({"paginated_posts": paginated_posts, "paginated_like_posts": paginated_like_posts},
-                    status=status.HTTP_200_OK)
+
+    if request.user == username:
+        paginator_like = Paginator(like_posts, per_page)
+
+        if page_number:
+            like_posts = paginator_like.get_page(page_number)
+        response_like_posts = [serialize_post(post) for post in like_posts ]
+        
+        paginated_like_posts = {
+            'total_page': paginator_like.num_pages,
+            "per_page": per_page,
+            'results': response_like_posts,
+        }
+        return Response({"paginated_posts":paginated_posts,
+                        "paginated_like_posts":paginated_like_posts}, 
+                        status=status.HTTP_200_OK)
+    
+    return Response({"paginated_posts":paginated_posts}
+                    ,status=status.HTTP_200_OK)
+
+
+
+

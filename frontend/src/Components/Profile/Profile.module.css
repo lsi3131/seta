@@ -167,10 +167,17 @@
   border-radius: 10px;
 }
 
-.morebutton {
+
+
+.moreButton {
   border: 0;
   background-color: transparent;
   font-weight: bold;
   font-size: 18px;
-  margin: 10px 0;
+  margin: 10px auto;
+  
+}
+
+.moreButton button:hover{
+  cursor: pointer;
 }
