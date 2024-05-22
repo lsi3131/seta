@@ -13,6 +13,9 @@ const Profile = () => {
     const [users, setUsers] = useState({})
     const [error, setError] = useState(null)
 
+    const [followingRanks, setFollowingRanks] = useState([])
+    const [followerRanks, setFollowerRanks] = useState([])
+
     const handleGetUserData = () => {
         apiClient.get(`api/accounts/${username}/`)
             .then(response => {
@@ -23,8 +26,23 @@ const Profile = () => {
             })
     }
 
+    const handleGetRanking = () => {
+        apiClient.get(`api/accounts/${username}/ranking/`)
+            .then(response => {
+                setFollowingRanks(response.data['following'])
+                setFollowerRanks(response.data['follower'])
+                // setUsers(response.data)
+                console.log('rank', response.data)
+            })
+            .catch(error => {
+                console.log('fail to get ranking', error)
+            })
+    }
+
+
     useEffect(() => {
         handleGetUserData();
+        handleGetRanking();
     }, [username]);
 
 
@@ -35,7 +53,7 @@ const Profile = () => {
     return (
         <div className={style.vertical}>
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
-            <ProfileMBTIForm/>
+            <ProfileMBTIForm followingRanks={followingRanks} followerRanks={followerRanks}/>
             <ProfileMyPost props={users}/>
         </div>
     )
