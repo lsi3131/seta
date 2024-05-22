@@ -5,7 +5,7 @@ import React, {useContext, useEffect, useState} from "react";
 import apiClient from "services/apiClient";
 import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
 import ProfileMyPost from "Components/ProfileMyPost/ProfileMyPost";
-import ProfileTop from "./ProfileTop/ProfileTop";
+import ProfileTop from "./ProfileTop";
 
 
 const Profile = () => {

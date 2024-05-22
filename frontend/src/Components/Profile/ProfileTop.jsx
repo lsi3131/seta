@@ -1,9 +1,9 @@
 import style from "./ProfileTop.module.css";
-import {getImage} from "../../../Utils/helpers";
+import {getImage} from "../../Utils/helpers";
 import React, {useContext, useEffect, useState} from "react";
-import {UserContext} from "../../../userContext";
+import {UserContext} from "../../userContext";
 import {Link, useNavigate} from "react-router-dom";
-import apiClient from "../../../services/apiClient";
+import apiClient from "../../services/apiClient";
 
 const ProfileTop = ({user, onFollowUpdate}) => {
     const currentUser = useContext(UserContext)
