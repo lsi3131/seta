@@ -142,12 +142,7 @@ const Update = () => {
                             <option className={style.option} value="" disabled>
                                 카테고리를 선택해주세요
                             </option>
-                            {categorys &&
-                                categorys.map((cate) => (
-                                    <option key={cate.id} value={cate.category}>
-                                        {cate.category}
-                                    </option>
-                                ))}
+                            {categorys && categorys.map((cate) => <option value={cate.name}>{cate.name}</option>)}
                         </select>
                         <input
                             type="text"
