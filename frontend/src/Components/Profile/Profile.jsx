@@ -59,13 +59,15 @@ const Profile = () => {
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
             <ProfileMBTIForm user={users} followingRanks={followingRanks} followerRanks={followerRanks}/>
 
-            <div >
-              <button className={style.moreButton} onClick={handleToggleShow}>
-                  {showProfileMyPost ? '접기' : '더보기'}
+            <div className={style.moreButton} >
+              <button  onClick={handleToggleShow}
+              style={{ 
+                backgroundColor: showProfileMyPost ? getButtonColor(users.mbti) : '#ccc'
+                }}>
+                  {showProfileMyPost ? '게시물 접기' : '게시물 보기'}
               </button>
-            {showProfileMyPost && <ProfileMyPost props={users} />}
             </div>
-
+            {showProfileMyPost && <ProfileMyPost props={users} />}
         </div>
     )
 }
