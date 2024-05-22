@@ -24,7 +24,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0;
+  margin: 10px;
 }
 
 .board_post_left {
@@ -35,7 +35,12 @@
 
 .board_post_title{
   display: flex;
-  margin: 10px 0;
+  margin: 7px 0;
+  align-items: center;
+}
+
+.board_post_title > a:hover {
+  color: red;
 }
 
 .board_post_title a{
@@ -58,17 +63,26 @@
 }
 
 .board_post_right {
-  width: 20%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 }
 
-.board_post_right div {
+.board_post_right {
   display: flex;
 }
 
-.board_post_right div > p {
+.board_post_right button {
   color: #FFFFFF;
-  margin: 5px;
-  padding: 8px;
-  border-radius: 10px;
+    margin: 3px;
+    border-radius: 14px;
+    border: none;
+    font-size: 12px;
+    width: 60px;
+    height: 25px;
 }
 
+.board_post_right button:hover {
+  transform: translateY(-0.1rem);
+  box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
+  cursor: pointer;
+}
