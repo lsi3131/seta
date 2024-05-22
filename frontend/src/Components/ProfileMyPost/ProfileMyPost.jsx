@@ -16,6 +16,7 @@ const ProfileMyPost = (users) => {
     const currentUser = useContext(UserContext)
     const user = users.props
 
+
     useEffect(() => {
         if (!user || !user.username) {
             return;
@@ -25,17 +26,8 @@ const ProfileMyPost = (users) => {
             try {
                 const response = await apiClient.get(`api/accounts/${user.username}/myposts/?page=${page}`)
 
-                if (response.data.paginated_like_posts) {
-                    setPosts({
-                        posts: response.data.paginated_posts,
-                        like_posts: response.data.paginated_like_posts
-                    })
-                } else {
-                    setPosts({
-                        posts: response.data.paginated_posts,
-                        like_posts: null
-                    })
-                }
+
+                setPosts(response.data)
 
             } catch (error) {
                 setError('데이터를 불러오는데 실패했습니다.')
@@ -51,6 +43,10 @@ const ProfileMyPost = (users) => {
     if (!posts) {
         return <div></div>
     }
+    console.log(posts)
+    console.log(posts.paginated_like_posts)
+    console.log(posts.paginated_posts)
+
 
     return (
         <div className={style.board_contents}>
@@ -61,9 +57,9 @@ const ProfileMyPost = (users) => {
                 )}
             </div>
             <hr />
-            {(view === 'posts' || (view === 'like_posts' && posts.like_posts !== null)) && (
+            {(view === 'posts' || (view === 'like_posts' )) && (
                 <div key={posts.id} className={style.board_posts}>
-                    {(view === 'posts' ? posts.posts.results : posts.like_posts.results).map((post) => (
+                    {(view === 'posts' ? posts.paginated_posts.results : posts.paginated_like_posts.results).map((post) => (
                         <>
                             <div key={post.id} className={style.board_post}>
                                 <div className={style.board_post_left}>
@@ -71,22 +67,22 @@ const ProfileMyPost = (users) => {
                                         <p style={{ color: getFontColor(user.mbti) }}>{post.category}</p>
                                     </div>
                                     <div key={post.id} className={style.board_post_title}>
-                                        <Link to={`/detail/${post.id}`}>{post.title}</Link>
-                                        <p style={{ color: getFontColor(user.mbti) }}>[{post.hits}]</p>
+                                        <Link to={`/detail/${post.id}?mbti=${post.mbti[0]}`}>{post.title}</Link>
+                                        <p style={{ color: getFontColor(user.mbti) }}>[{post.comments}]</p>
                                     </div>
                                     <div className={style.board_post_bottom}>
                                         <div>
                                             <p>{post.author}</p>
                                         </div>
                                         <div>
-                                        <p>{formatDateDayBefore(post.created_at)}</p>
+                                            <p>{formatDateDayBefore(post.created_at)}</p>
                                         </div>
                                         <div className={style.board_like}>
                                             <p>좋아요 {post.likes}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div >
+                                <div key={post.mbti.id}>
                                     <div className={style.board_post_right}>
                                         {post.mbti.map(m => (
                                             <button style={{ backgroundColor: getButtonColor(m) }}>{m}</button>
@@ -101,7 +97,7 @@ const ProfileMyPost = (users) => {
             )}
             <Pagination
                 currentPage={currentPage}
-                totalPages={(view === 'posts' ? posts.posts.total_page : posts.like_posts !== null ? posts.like_posts.total_page : 0)}
+                totalPages={(view === 'posts' ? posts.paginated_posts.total_page : posts.paginated_like_posts.total_page)}
                 onPageChange={handlePageChange}
             />
         </div>
