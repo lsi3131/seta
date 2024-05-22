@@ -3,110 +3,137 @@ import style from "./ProfileMBTIForm.module.css";
 import {ResponsiveBar} from '@nivo/bar'
 import apiClient from "../../services/apiClient";
 
-const data = [
-    {
-        "mbti": "JP",
-        "J": 80,
-        "P": 20,
-    },
-    {
-        "mbti": "TF",
-        "T": 30,
-        "F": 70,
-    },
-    {
-        "mbti": "NS",
-        "N": 90,
-        "S": 10,
-    },
-    {
-        "mbti": "EI",
-        "E": 10,
-        "I": 90,
-    },
-]
 
-const entjFormat = (value) => {
-    if (value === 'EI') {
-        return 'E';
-    } else if (value === 'NS') {
-        return 'N';
-    } else if (value === 'TF') {
-        return 'T';
-    } else if (value === 'JP') {
-        return 'J';
+const ProfileChart = ({percentPJ = 50, percentFT = 50, percentNS = 50, percentIE = 50}) => {
+    const [chartData, setChartData] = useState([
+        {
+            "mbti": "JP",
+            "J": 50,
+            "P": 50,
+        },
+        {
+            "mbti": "TF",
+            "T": 50,
+            "F": 50,
+        },
+        {
+            "mbti": "NS",
+            "N": 50,
+            "S": 50,
+        },
+        {
+            "mbti": "EI",
+            "E": 50,
+            "I": 50,
+        },
+    ])
+
+    const theme = {
+        axis: {
+            ticks: {
+                text: {
+                    fontSize: 20, // 축의 폰트 크기 설정
+                },
+            },
+        },
+    };
+
+    useEffect(() => {
+        let data = JSON.parse(JSON.stringify(chartData));
+        data[0].P = Math.round(percentPJ)
+        data[0].J = Math.round(100 - percentPJ)
+
+        data[1].F = Math.round(percentFT)
+        data[1].T = Math.round(100 - percentFT)
+
+        data[2].N = Math.round(percentNS)
+        data[2].S = Math.round(100 - percentNS)
+
+        data[3].I = Math.round(percentIE)
+        data[3].E = Math.round(100 - percentIE)
+
+        setChartData(data)
+    }, [percentPJ, percentFT, percentNS, percentIE]);
+
+    const entjFormat = (value) => {
+        if (value === 'EI') {
+            return 'E';
+        } else if (value === 'NS') {
+            return 'N';
+        } else if (value === 'TF') {
+            return 'T';
+        } else if (value === 'JP') {
+            return 'J';
+        }
     }
+
+    const isfpFormat = (value) => {
+        if (value === 'EI') {
+            return 'I'
+        } else if (value === 'NS') {
+            return 'S';
+        } else if (value === 'TF') {
+            return 'F';
+        } else if (value === 'JP') {
+            return 'P';
+        }
+    }
+
+    return (
+        <ResponsiveBar
+            data={chartData}
+            keys={[
+                'E',
+                'I',
+                'N',
+                'S',
+                'T',
+                'F',
+                'J',
+                'P'
+            ]}
+            indexBy="mbti"
+            theme={theme}
+            padding={0.3}
+            margin={{right: 20, left: 20}}
+            layout="horizontal"
+            valueScale={{type: 'linear'}}
+            indexScale={{type: 'band', round: true}}
+            colors={['#a9a9a9', '#d9d9d9']}
+            borderWidth={2}
+            borderColor={{theme: 'background'}}
+            axisTop={null}
+            axisRight={{
+                tickSize: 0,
+                tickPadding: 7,
+                format: value => `${isfpFormat(value)}`,
+                tickRotation: 0,
+                legendOffset: -46,
+                truncateTickAt: 0,
+            }}
+            axisBottom={null}
+            axisLeft={{
+                tickSize: 0,
+                tickPadding: 7,
+                format: value => `${entjFormat(value)}`,
+                tickRotation: 0,
+                legendOffset: -46,
+                truncateTickAt: 0,
+            }}
+            enableGridY={false}
+            labelSkipWidth={10}
+            labelSkipHeight={10}
+            labelTextColor="black"
+            legends={[]}
+            isInteractive={false}
+            role="application"
+            ariaLabel="Nivo bar chart demo"
+            barAriaLabel={e => e.id + ": " + e.formattedValue + " in mbti: " + e.indexValue}
+        />
+    )
 }
 
-const isfpFormat = (value) => {
-    if (value === 'EI') {
-        return 'I'
-    } else if (value === 'NS') {
-        return 'S';
-    } else if (value === 'TF') {
-        return 'F';
-    } else if (value === 'JP') {
-        return 'P';
-    }
-}
-
-
-const ProfileChart = ({data}) => (
-    <ResponsiveBar
-        data={data}
-        keys={[
-            'E',
-            'I',
-            'N',
-            'S',
-            'T',
-            'F',
-            'J',
-            'P'
-        ]}
-        indexBy="mbti"
-        theme={{
-            fontSize: '20px',
-        }}
-        padding={0.3}
-        margin={{right: 20, left: 20}}
-        layout="horizontal"
-        valueScale={{type: 'linear'}}
-        indexScale={{type: 'band', round: true}}
-        colors={['#a9a9a9', '#d9d9d9']}
-        borderWidth={2}
-        borderColor={{theme: 'background'}}
-        axisTop={null}
-        axisRight={{
-            tickSize: 0,
-            tickPadding: 7,
-            format: value => `${isfpFormat(value)}`,
-            tickRotation: 0,
-            legendOffset: -46,
-            truncateTickAt: 0,
-        }}
-        axisBottom={null}
-        axisLeft={{
-            tickSize: 0,
-            tickPadding: 7,
-            format: value => `${entjFormat(value)}`,
-            tickRotation: 0,
-            legendOffset: -46,
-            truncateTickAt: 0,
-        }}
-        enableGridY={false}
-        labelSkipWidth={10}
-        labelSkipHeight={10}
-        labelTextColor="black"
-        legends={[]}
-        isInteractive={false}
-        role="application"
-        ariaLabel="Nivo bar chart demo"
-        barAriaLabel={e => e.id + ": " + e.formattedValue + " in mbti: " + e.indexValue}
-    />
-)
-
-const ProfileMBTIForm = ({followingRanks, followerRanks}) => {
+const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
     const introduce = `난 너를 믿었던만큼 난 내 친구도 믿었기에
     난 아무런 부담없이 널 내 친구에게 소개시켜 줬고
     그런 만남이 있은 후부터 우리는 자주 함께 만나며
@@ -120,14 +147,14 @@ const ProfileMBTIForm = ({followingRanks, followerRanks}) => {
 
     useEffect(() => {
 
-    }, [followingRanks, followerRanks])
+    }, [user, followingRanks, followerRanks])
 
     const getRankText = (ranks, rankNum /* 1~3*/) => {
         /*
             ranks = [('ISFP', 3), ('ENFP', 2), ('ENTP, 5)]
          */
         const rankIndex = rankNum - 1;
-        if(ranks.length <= rankIndex || 0 > rankIndex) {
+        if (ranks.length <= rankIndex || 0 > rankIndex) {
             return "아직은 없어요";
         }
 
@@ -148,7 +175,8 @@ const ProfileMBTIForm = ({followingRanks, followerRanks}) => {
                 <div className={style.container}>
                     <h3 className={style.title}>내 mbti 성향</h3>
                     <div className={style.mbtiRatio}>
-                        <ProfileChart data={data}/>
+                        <ProfileChart percentPJ={user.percentPJ} percentIE={user.percentIE}
+                                      percentNS={user.percentNS} percentFT={user.percentFT}/>
                     </div>
                 </div>
             </div>
