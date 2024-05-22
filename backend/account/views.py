@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.paginator import Paginator
 
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
@@ -131,8 +132,7 @@ class ProfileAPIView(APIView):
             "percentPJ": user.percentPJ,
             "following_count": user.following.count(),
             "followers_count": user.followers.count(),
-            "posts": [serialize_post(post) for post in user.post_set.all()],
-            "like_posts": [serialize_post(post) for post in user.like_posts.all()]
+            "posts_count" : user.post_set.count()
         }, status=status.HTTP_200_OK)
 
 
@@ -231,5 +231,35 @@ class MbtiDetailAPIView(APIView):
         return Response(serialize_data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def Myposts(request, username ):
+    user = get_object_or_404(User, username=username)
+    posts = user.post_set.all()
+    like_posts = user.like_posts.all()
 
-    
+    per_page = 5
+    paginator_post = Paginator(posts, per_page)
+    paginator_like = Paginator(like_posts, per_page)
+
+
+    page_number = request.GET.get("page")
+    if page_number:
+        posts = paginator_post.get_page(page_number)
+        like_posts = paginator_like.get_page(page_number)
+    response_posts = [serialize_post(post) for post in posts]
+    response_like_posts = [serialize_post(post) for post in like_posts ]
+
+    paginated_posts = {
+        'total_page': paginator_post.num_pages,
+        "per_page": per_page,
+        'results': response_posts,
+    }
+
+    paginated_like_posts = {
+        'total_page': paginator_like.num_pages,
+        "per_page": per_page,
+        'results': response_like_posts,
+    }
+    return Response({"paginated_posts":paginated_posts,"paginated_like_posts":paginated_like_posts}, status=status.HTTP_200_OK)
+
