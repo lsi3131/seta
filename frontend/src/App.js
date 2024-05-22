@@ -13,6 +13,7 @@ import Profile from './Components/Profile/Profile'
 import Update from './Components/Update/Update'
 import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
+import ProfileUpdate from './Components/ProfileUpdate/ProfileUpdate'
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/detail/:detailId" element={<BoardDetail />} />
                     <Route path="/write" element={<Write />} />
                     <Route path="/profile/:username" element={<Profile />} />
+                    <Route path="/profile/update/:username" element={<ProfileUpdate />} />
                     <Route path="/update/:detailId" element={<Update />} />
                 </Routes>
                 <Footer />
