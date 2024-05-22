@@ -4,7 +4,29 @@
 }
 
 .title {
-    color : #444444
+    color : #444444;
+}
+
+.noContentWarning {
+    position: absolute;
+    text-align: center;
+    width:100%;
+    top: 0;
+    left: 0;
+    margin-top: 6.8rem
+}
+
+.warningText{
+    color : #6B6B6B;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.warningTextDetail{
+    color : #969696;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .introduce, .mbtiRatio, .followRanking, .followerRanking {
@@ -14,6 +36,7 @@
     height: auto;
     min-height: 7rem;
     width: 100%;
+    position: relative;
 }
 
 .introduce {
@@ -42,6 +65,7 @@
     text-align: center;
     color: #5c5c5c;
 }
+
 .first, .second, .third {
     display: flex;
     justify-content: center;
