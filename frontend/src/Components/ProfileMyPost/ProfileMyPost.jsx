@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import style from "./ProfileMyPost.module.css"
 import apiClient from "services/apiClient";
 import { Link } from "react-router-dom";
-import { formatDate, getFontColor, getButtonColor } from "../../Utils/helpers"
+import { formatDateDayBefore, getFontColor, getButtonColor } from "../../Utils/helpers"
 import Pagination from '../Pagenation/Pagination'
 import { UserContext } from "userContext";
 
@@ -79,7 +79,7 @@ const ProfileMyPost = (users) => {
                                             <p>{post.author}</p>
                                         </div>
                                         <div>
-                                            <p>{formatDate(post.created_at)}</p>
+                                        <p>{formatDateDayBefore(post.created_at)}</p>
                                         </div>
                                         <div className={style.board_like}>
                                             <p>좋아요 {post.likes}</p>

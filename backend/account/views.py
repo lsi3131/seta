@@ -246,8 +246,8 @@ class MbtiDetailAPIView(APIView):
 @permission_classes([IsAuthenticated])
 def Myposts(request, username):
     user = get_object_or_404(User, username=username)
-    posts = user.post_set.all()
-    like_posts = user.like_posts.all()
+    posts = user.post_set.all().order_by('-created_at')
+    like_posts = user.like_posts.all().order_by('-created_at')
 
     per_page = 5
     paginator_post = Paginator(posts, per_page)
