@@ -94,25 +94,3 @@
   margin:0 0 15px 5px;
   color: rgba(120,120,120,100%);
 }
-
-
-.moreButton{
-  text-align: center;
-}
-
-.moreButton button{
-  color: #FFFFFF;
-    margin: 3px;
-    border-radius: 14px;
-    border: none;
-    font-size: 20px;
-    width: 120px;
-    height: 40px;
-
-}
-
-.moreButton button:hover{
-  transform: translateY(-0.1rem);
-  box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
-  cursor: pointer;
-}

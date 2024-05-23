@@ -3,8 +3,6 @@ import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
 import {Link, useParams} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
 import apiClient from "services/apiClient";
-import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
-import ProfileMyPost from "Components/ProfileMyPost/ProfileMyPost";
 import ProfileTop from "./ProfileTop";
 
 
@@ -58,16 +56,7 @@ const Profile = () => {
         <div className={style.vertical}>
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
             <ProfileMBTIForm user={users} followingRanks={followingRanks} followerRanks={followerRanks}/>
-
-            <div className={style.moreButton} >
-              <button  onClick={handleToggleShow}
-              style={{ 
-                backgroundColor: showProfileMyPost ? getButtonColor(users.mbti) : '#ccc'
-                }}>
-                  {showProfileMyPost ? '게시물 접기' : '게시물 보기'}
-              </button>
-            </div>
-            {showProfileMyPost && <ProfileMyPost props={users} />}
+        
         </div>
     )
 }
