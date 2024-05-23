@@ -6,7 +6,6 @@ import NavBar from './Components/NavBar/NavBar'
 import Board from './Components/Board/Board'
 import Home from './Components/Home/Home'
 import Login from './Components/Login/Login'
-import Signup from './Components/Signup/Signup'
 import BoardDetail from './Components/BoardDetail/BoardDetail'
 import Write from './Components/Write/Write'
 import Profile from './Components/Profile/Profile'
@@ -24,7 +23,6 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
                     <Route path="/board/:mbti" element={<Board />} />
                     <Route path="/detail/:detailId" element={<BoardDetail />} />
                     <Route path="/write" element={<Write />} />

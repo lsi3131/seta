@@ -36,10 +36,11 @@ const BodySection = styled.div`
 const Textarea = styled.textarea`
     width: 100%;
     height: 200px;
-    border: 1px solid #eeeeee;
+    border: 2px solid #eeeeee;
     border-radius: 20px;
     padding: 20px;
     font-size: 16px;
+    resize: none;
 `
 
 const Counter = styled.div`
@@ -59,13 +60,16 @@ const ButtonSection = styled.div`
 `
 
 const Button = styled.button`
-    padding: 15px 60px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: rgba(0, 0, 255, 0.1);
-    border: none;
+    width: 100%;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
+    color: white;
     margin-top: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
 `
 
 const IntroMessage = styled.div`
