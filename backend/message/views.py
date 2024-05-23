@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from .models import Message
 
+from .permissions import MessageAccessPermission
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -32,7 +34,7 @@ class MessageAPIView(APIView):
             subject = data['subject']
             body = data['body']
 
-            message = Message.objects.create(
+            Message.objects.create(
                 sender=request.user,
                 recipient=recipient,
                 subject=subject,
@@ -47,13 +49,13 @@ class MessageAPIView(APIView):
             return Response({'error': '입력값 오류입니다'}, status=status.HTTP_400_BAD_REQUEST)
 
 class MessageDetailAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, MessageAccessPermission]
     def get(self, request, message_id):
         try:
             message = Message.objects.get(id=message_id)
-            if request.user != message.sender and request.user != message.recipient:
-                return Response({'error': '권한이 없습니다'}, status=status.HTTP_401_UNAUTHORIZED)
-            
+            if message.is_read == False and request.user == message.recipient:
+                message.is_read = True
+                message.save()
             return Response({
                 'id': message.id,
                 'sender': message.sender.username,
@@ -74,9 +76,7 @@ class MessageDetailAPIView(APIView):
                 message.sender_deleted = True
             elif request.user == message.recipient:
                 message.recipient_deleted = True
-            else:
-                return Response({'error': '권한이 없습니다'}, status=status.HTTP_401_UNAUTHORIZED)
-
+            
             if message.sender_deleted and message.recipient_deleted:
                 message.delete()
             else:
