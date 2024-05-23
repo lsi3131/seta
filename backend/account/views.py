@@ -265,7 +265,7 @@ def Myposts(request, username):
     posts = user.post_set.all().order_by('-created_at')
     like_posts = user.like_posts.all().order_by('-created_at')
 
-    per_page = 5
+    per_page = 10
     paginator_post = Paginator(posts, per_page)
 
     page_number = request.GET.get("page")
