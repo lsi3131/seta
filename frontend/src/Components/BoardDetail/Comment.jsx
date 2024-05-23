@@ -10,6 +10,7 @@ import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
 import {Link} from "react-router-dom";
 import PopupFilter from "./PopupFilter";
+import Report from '../Report/Report';
 
 const CommentSubInput = ({
                              mode,
@@ -164,7 +165,8 @@ const Comment = ({
                                     <button onClick={handleDeleteComment}>삭제</button>
                                 </>
                             }
-                            <button>신고</button>
+                            <Report author={comment.author} 
+                            mbti={currentUser.mbti_type}/>
                         </div>
                     </div>
                 </div>
