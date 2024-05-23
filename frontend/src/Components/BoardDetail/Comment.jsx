@@ -195,13 +195,21 @@ const Comment = ({
 
 const CommentList = ({
                          comments,
+                         commentCount,
                          onAddComment,
                          onUpdateComment,
                          onDeleteComment,
                          onAddLikeComment
                      }) => {
+
+    useEffect(() => {
+    }, [comments, commentCount]);
     return (
         <div className={style.comment_list}>
+            <div>
+                <p>댓글</p>
+                <h3>{commentCount}</h3>
+            </div>
             {comments.map((comment, index) => (
                 <div>
                     <hr/>
@@ -263,7 +271,8 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
             <div className={style.comment_input_user}>
                 {canRegisterComment() && (
                     <p>{currentUser.username}
-                        <sup style={{backgroundColor: getButtonColor(currentUser['mbti_type'])}}>{currentUser['mbti_type'].toUpperCase()}</sup>
+                        <sup
+                            style={{backgroundColor: getButtonColor(currentUser['mbti_type'])}}>{currentUser['mbti_type'].toUpperCase()}</sup>
                     </p>
                 )}
             </div>
@@ -309,99 +318,27 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
     );
 };
 
-const CommentBox = ({post}) => {
-    const [comments, setComments] = useState([]);
-
+const CommentBox = ({
+                        post, comments, commentCount,
+                        onAddComment,
+                        onUpdateComment,
+                        onDeleteComment,
+                        onAddLikeComment,
+                    }) => {
     useEffect(() => {
-        handleGetComment()
-    }, [post]);
-
-    const handleGetComment = () => {
-        apiClient.get(`/api/posts/${post.id}/comments/`)
-            .then(response => {
-                console.log('get comments successful:', response.data);
-                setComments(response.data);
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    };
-
-    const handlePostComment = (content, parentId = null) => {
-        let data = {
-            content: content
-        };
-        if (parentId) {
-            data.parent_comment_id = parentId;
-        }
-        apiClient.post(`/api/posts/${post.id}/comments/`, data)
-            .then(response => {
-                console.log('post comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    const handlePutComment = (commentId, content) => {
-        const data = {
-            content: content
-        };
-        apiClient.put(`/api/posts/${post.id}/comments/${commentId}/`, data)
-            .then(response => {
-                console.log('put comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during put comments:', error.response.data.error);
-            })
-    }
-
-    const handleDeleteComment = (commentId) => {
-        apiClient.delete(`/api/posts/${post.id}/comments/${commentId}/`)
-            .then(response => {
-                console.log('delete comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    const handleAddLikeComment = (commentId, isLikeOn) => {
-        const data = {
-            recommend: isLikeOn ? 1 : 0
-        };
-
-        apiClient.post(`/api/posts/${post.id}/comments/${commentId}/recommend/`, data)
-            .then(response => {
-                console.log('post comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
+    }, [post, commentCount, comments]);
 
 
     return (
         <div className={style.comment_box}>
             <CommentList comments={comments}
-                         onAddComment={handlePostComment}
-                         onUpdateComment={handlePutComment}
-                         onDeleteComment={handleDeleteComment}
-                         onAddLikeComment={handleAddLikeComment}/>
+                         commentCount={commentCount}
+                         onAddComment={onAddComment}
+                         onUpdateComment={onUpdateComment}
+                         onDeleteComment={onDeleteComment}
+                         onAddLikeComment={onAddLikeComment}/>
             <hr/>
-            <CommentInput post={post} onAddComment={handlePostComment}/>
+            <CommentInput post={post} onAddComment={onAddComment}/>
         </div>
     );
 }
