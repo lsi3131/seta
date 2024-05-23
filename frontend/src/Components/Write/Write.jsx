@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import apiClient from 'services/apiClient'
 import { getFontColor } from '../../Utils/helpers'
+import CustomReactQuill from './ReactQuill'
 
 const Write = () => {
     const navigate = useNavigate()
@@ -165,7 +166,7 @@ const Write = () => {
                     ))}
                 </div>
 
-                <div className={style.content}>
+                {/* <div className={style.content}>
                     <div>
                         <textarea
                             id="content"
@@ -174,7 +175,9 @@ const Write = () => {
                             onChange={onChange}
                         />
                     </div>
-                </div>
+                </div> */}
+
+                <CustomReactQuill/>
 
                 <p></p>
                 <p className={style.Error}>{error}</p>
