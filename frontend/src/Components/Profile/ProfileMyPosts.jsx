@@ -15,7 +15,6 @@ const ProfileMyPost = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const currentUser = useContext(UserContext)
 
-    console.log(currentUser)
 
     useEffect(() => {
 
