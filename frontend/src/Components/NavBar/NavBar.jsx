@@ -49,14 +49,15 @@ const AuthenticatedNavbar = ({ currentUser }) => {
                         <a className={style.username} onClick={() => setDropdownVisible(!dropdownVisible)}>
                             {currentUser.username}
                         </a>
-                        <div 
-                        style={{ backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : "#ccc"}}
-                        className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}>
+                        <div
+                            style={{ backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : '#ccc' }}
+                            className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}
+                        >
                             <Link to={`/profile/${currentUser.username}/`} className={style.dropdownItem}>
                                 프로필
                             </Link>
-                            <Link to="/mail" className={style.dropdownItem}>
-                                메일관리
+                            <Link to="/messages/" className={style.dropdownItem}>
+                                메세지 관리
                             </Link>
                             <Link to={`/profile/${currentUser.username}/posts`} className={style.dropdownItem}>
                                 작성한 글 관리
