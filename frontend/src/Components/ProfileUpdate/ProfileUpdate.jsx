@@ -5,6 +5,8 @@ import { UserContext } from 'userContext'
 
 import MbtiContainer from './MbtiContainer'
 import IntroContainer from './IntroContainer'
+import PassContainer from './PassContainer'
+import SignoutContainer from './SignoutContainer'
 
 const ProfileUpdate = () => {
     const currentUser = useContext(UserContext)
@@ -77,8 +79,8 @@ const ProfileUpdate = () => {
                     <Components.RightContainer>
                         {choice === 1 && <MbtiContainer userInfos={userInfos}></MbtiContainer>}
                         {choice === 2 && <IntroContainer userInfos={userInfos}></IntroContainer>}
-                        {choice === 3 && <Components.PassContainer>3</Components.PassContainer>}
-                        {choice === 4 && <Components.SignoutContainer>4</Components.SignoutContainer>}
+                        {choice === 3 && <PassContainer></PassContainer>}
+                        {choice === 4 && <SignoutContainer></SignoutContainer>}
                     </Components.RightContainer>
                 </Components.Containers>
             </Components.BodyContainer>
