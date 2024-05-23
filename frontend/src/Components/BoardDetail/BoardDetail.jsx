@@ -85,6 +85,7 @@ const BoardDetail = () => {
 
     useEffect(() => {
         handleGet()
+        handlePutHits()
     }, [detailId, mbti, navigate])
 
     useEffect(() => {
@@ -98,6 +99,14 @@ const BoardDetail = () => {
             }
         }
     }, [post, mbti, navigate])
+
+    const handlePutHits = async () => {
+        try {
+            await apiClient.get(`/api/posts/${detailId}/hits/`)
+        } catch (error) {
+            console.error('Error during put hits:', error)
+        }
+    }
 
     const handleGet = async () => {
         try {

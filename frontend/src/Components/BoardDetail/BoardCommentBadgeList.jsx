@@ -5,6 +5,7 @@ import {getButtonColor} from "../../Utils/helpers";
 const BoardCommentBadgeList = ({post}) => {
     return (
         <div className={style.root}>
+            <hr/>
             <h3>다음 타입만 댓글을 쓸 수 있어요</h3>
             <div className={style.badge_list}>
                 {post.mbti.map(m => (
