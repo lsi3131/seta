@@ -8,7 +8,7 @@ const BoardTop = ({mbti}) => {
 
     useEffect(() => {
         handleGet();
-    }, []);
+    }, [mbti]);
 
     const handleGet = () => {
         /* mbti 설명 불러오기 */

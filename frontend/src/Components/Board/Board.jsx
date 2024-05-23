@@ -206,7 +206,6 @@ const Board = () => {
                 setPosts(response.data['results'])
                 setTotalPage(response.data['total_page'])
                 setCurrentPage(page)
-                console.log(posts)
             })
             .catch((error) => {
                 console.error('Error during get posts:', error)
@@ -228,7 +227,7 @@ const Board = () => {
 
                 <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
 
-                <BoardSearch />
+                {/*<BoardSearch />*/}
             </div>
         </>
     )

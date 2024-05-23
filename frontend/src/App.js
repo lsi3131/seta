@@ -13,6 +13,7 @@ import Update from './Components/Update/Update'
 import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 import ProfileUpdate from './Components/ProfileUpdate/ProfileUpdate'
+import FabButton from "./UI/FabButton/FabButton";
 
 function App() {
     return (
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/profile/update/:username" element={<ProfileUpdate />} />
                     <Route path="/update/:detailId" element={<Update />} />
                 </Routes>
+                <FabButton/>
                 <Footer />
             </UserProvider>
         </>
