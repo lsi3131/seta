@@ -172,7 +172,7 @@ const BoardDetail = () => {
                     </button>
                 </div>
             ) : null}
-            <BoardCommentBadgeList post={post}/>
+            <BoardCommentBadgeList initializePost={post}/>
             <CommentBox post={post}/>
         </div>
     )
