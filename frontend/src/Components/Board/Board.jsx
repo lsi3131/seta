@@ -228,7 +228,7 @@ const Board = () => {
 
                 <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
 
-                <BoardSearch />
+                {/*<BoardSearch />*/}
             </div>
         </>
     )

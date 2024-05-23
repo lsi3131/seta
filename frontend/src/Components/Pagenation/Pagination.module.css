@@ -6,12 +6,13 @@
 }
 
 .pagination_wrapper button {
-    width: 60px;
+    width: 40px;
     height: 40px;
     border-radius: 20px;
-    border: 1px solid #ccc;
+    /*border: 1px solid #ccc;*/
+    border: none;
     background-color: #fff;
-    margin: 0 5px;
+    margin: 0 2px;
     font-size: 16px;
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
@@ -20,11 +21,11 @@
     background-color: #f0f0f0;
     border-color: #999;
     color: #000;
+    cursor: pointer;
 }
 
 .pagination_wrapper button:disabled {
-    background-color: #ddd;
-    border-color: #ccc;
-    color: #999;
+    background-color: #312e2e;
+    color: #ffffff;
     cursor: not-allowed;
 }
