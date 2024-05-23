@@ -14,6 +14,7 @@ import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 import ProfileUpdate from './Components/ProfileUpdate/ProfileUpdate'
 import ProfileMyPosts from './Components/Profile/ProfileMyPosts'
+import FabButton from "./UI/FabButton/FabButton";
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                     <Route path="/update/:detailId" element={<Update />} />
                     <Route path="/profile/:username/posts" element={< ProfileMyPosts/>} />
                 </Routes>
+                <FabButton/>
                 <Footer />
             </UserProvider>
         </>
