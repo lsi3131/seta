@@ -2,10 +2,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    width:100%;
+    width: 100%;
     padding: 20px 0;
-    background-color: #fff; /* Navbar의 배경색을 흰색으로 설정합니다. */
-    z-index: 1000; /* 다른 요소 위에 Navbar가 표시되도록 z-index를 설정합니다. */
+    background-color: #fff;
+    z-index: 1000;
     border-bottom: solid 1px rgb(235, 235, 235);
 }
 
@@ -18,8 +18,8 @@
 }
 
 .image {
-    width:171px;
-    height:36px;
+    width: 171px;
+    height: 36px;
 }
 
 .navbar a {
@@ -27,7 +27,6 @@
     font-size: 16px;
     color: gray;
     font-weight: 500;
-    margin-left: 40px;
     cursor: pointer;
 }
 
@@ -44,4 +43,46 @@
 
 .navbar a:hover::before {
     width: 100%;
+}
+
+.usernameWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.username {
+    cursor: pointer;
+    /* 추가 스타일 (예: 색상, 패딩 등) */
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: -80px;
+    background-color: white;
+    z-index: 1;
+    padding: 10px 10px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none; /* 숨겨진 상태일 때 클릭 이벤트를 비활성화 */
+}
+
+.dropdownMenu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto; /* 보이는 상태일 때 클릭 이벤트를 활성화 */
+}
+
+.dropdownItem {
+    display: block;
+    padding: 10px 0;
+    width: 200px;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.dropdownItem:hover {
+    background-color: #f1f1f1;
 }

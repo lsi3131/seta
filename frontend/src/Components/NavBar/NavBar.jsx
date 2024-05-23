@@ -1,19 +1,40 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
-
-const containerStyles = {
-    width: '1200px',
-    margin: '0 auto',
-}
+import { getMainColor } from 'Utils/helpers'
 
 const logo_image = {
     url: require('../../Assets/images/logo.png'),
 }
 
-const AuthenticatedNavbar = ({ username }) => {
+const AuthenticatedNavbar = ({ currentUser }) => {
+    const [dropdownVisible, setDropdownVisible] = useState(false)
     const navigate = useNavigate()
+    const dropdownRef = useRef(null)
+
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        if (window.location.pathname.includes('profile')) {
+            navigate('/')
+        }
+        window.location.reload()
+    }
+
+    const handleDocumentClick = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setDropdownVisible(false)
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('click', handleDocumentClick)
+        return () => {
+            document.removeEventListener('click', handleDocumentClick)
+        }
+    }, [])
+
     return (
         <header className={style.header}>
             <div className={style.container}>
@@ -23,32 +44,32 @@ const AuthenticatedNavbar = ({ username }) => {
                     </Link>
                 </div>
                 <nav className={style.navbar}>
-                    <Link to={`/profile/${username}/`} style={{ textDecoration: 'none' }}>
-                        {username}
-                    </Link>
-
-                    <Link to={`/write/`} style={{ textDecoration: 'none' }}>
-                        글쓰기
-                    </Link>
-                    <a
-                        onClick={() => {
-                            localStorage.removeItem('accessToken')
-                            localStorage.removeItem('refreshToken')
-                            if (window.location.pathname.includes('profile')) {
-                                navigate('/')
-                            }
-                            window.location.reload()
-                        }}
-                    >
-                        로그아웃
-                    </a>
+                    <div className={style.usernameWrapper} ref={dropdownRef}>
+                        <a className={style.username} onClick={() => setDropdownVisible(!dropdownVisible)}>
+                            {currentUser.username}
+                        </a>
+                        <div className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}>
+                            <Link to={`/profile/${currentUser.username}/`} className={style.dropdownItem}>
+                                프로필
+                            </Link>
+                            <Link to="/mail" className={style.dropdownItem}>
+                                메일관리
+                            </Link>
+                            <Link to={`/profile/${currentUser.username}/posts`} className={style.dropdownItem}>
+                                작성한 글 관리
+                            </Link>
+                            <hr></hr>
+                            <a onClick={handleLogout} className={style.dropdownItem}>
+                                로그아웃
+                            </a>
+                        </div>
+                    </div>
                 </nav>
             </div>
         </header>
     )
 }
 
-// 인증되지 않은 사용자를 위한 네비게이션
 const UnauthenticatedNavbar = ({ currentUrl }) => {
     return (
         <header className={style.header}>
@@ -70,6 +91,7 @@ const UnauthenticatedNavbar = ({ currentUrl }) => {
         </header>
     )
 }
+
 const Navbar = () => {
     const currentUser = useContext(UserContext)
     const [currentUrl, setCurrentUrl] = useState('')
@@ -82,11 +104,12 @@ const Navbar = () => {
     return (
         <div>
             {currentUser ? (
-                <AuthenticatedNavbar username={currentUser.username} />
+                <AuthenticatedNavbar currentUser={currentUser} />
             ) : (
                 <UnauthenticatedNavbar currentUrl={currentUrl} />
             )}
         </div>
     )
 }
+
 export default Navbar
