@@ -3,10 +3,13 @@ import style from './Comment.module.css'
 import {getButtonColor, getUpdateTime} from "../../Utils/helpers";
 import like from "../../Assets/images/comment/like.png"
 import unlike from "../../Assets/images/comment/unlike.png"
+import filterOn from "../../Assets/images/comment/filter_on.png"
+import filterOff from "../../Assets/images/comment/filter_off.png"
 import reply from "../../Assets/images/comment/reply.png"
 import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
 import {Link} from "react-router-dom";
+import PopupFilter from "./PopupFilter";
 
 const CommentSubInput = ({
                              mode,
@@ -193,6 +196,7 @@ const Comment = ({
     );
 };
 
+
 const CommentList = ({
                          comments,
                          commentCount,
@@ -202,22 +206,59 @@ const CommentList = ({
                          onAddLikeComment
                      }) => {
 
+    const [filterMbtiList, setFilterMbtiList] = useState([])
+
     useEffect(() => {
     }, [comments, commentCount]);
+
+    const [showPopup, setShowPopup] = useState(false);
+
+    const handleShowFilter = () => {
+        setShowPopup(true);
+    }
+
+    const handleCloseFilter = () => {
+        setShowPopup(false);
+    }
+
+    const handleApplyFilter = (mbtiList) => {
+        setFilterMbtiList(mbtiList)
+        setShowPopup(false);
+    }
+
+    const isMbtiInFilter = (comment) => {
+        return filterMbtiList.length === 0 || filterMbtiList.some(e => e.toLowerCase() === comment.author_mbti.toLowerCase());
+    }
+
+    const isFilterOn = () => {
+        return filterMbtiList.length > 0;
+    }
+
     return (
         <div className={style.comment_list}>
-            <div>
-                <p>댓글</p>
-                <h3>{commentCount}</h3>
+            {showPopup && <PopupFilter initialMbtiList={filterMbtiList} onApplyPopup={handleApplyFilter}
+                                       onClosePopup={handleCloseFilter}/>}
+            <div className={style.comment_list_info}>
+                <div className={style.comment_list_info_left}>
+                    <p>댓글</p>
+                    <h3>{commentCount}</h3>
+                </div>
+                <div className={style.comment_list_info_right}>
+                    <button onClick={handleShowFilter}><img src={isFilterOn() ? filterOn : filterOff} alt=""/></button>
+                </div>
             </div>
             {comments.map((comment, index) => (
                 <div>
-                    <hr/>
-                    <Comment key={index} comment={comment}
-                             onAddComment={onAddComment}
-                             onUpdateComment={onUpdateComment}
-                             onDeleteComment={onDeleteComment}
-                             onAddLikeComment={onAddLikeComment}/>
+                    {isMbtiInFilter(comment) && (
+                        <>
+                            <hr/>
+                            <Comment key={index} comment={comment}
+                                     onAddComment={onAddComment}
+                                     onUpdateComment={onUpdateComment}
+                                     onDeleteComment={onDeleteComment}
+                                     onAddLikeComment={onAddLikeComment}/>
+                        </>
+                    )}
                 </div>
             ))}
         </div>

@@ -8,6 +8,42 @@
     margin-top: 20px;
 }
 
+/* ==============Comment List Info ==============*/
+.comment_list_info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment_list_info_left {
+    display: flex;
+    align-items: center;
+}
+
+.comment_list_info_left > p {
+    margin-right: 5px;
+}
+
+.comment_list_info_right {
+
+}
+
+.comment_list_info_right > button {
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: none;
+    margin: 5px;
+}
+
+.comment_list_info_right > button > img{
+    width: 30px;
+    height: 30px;
+}
+
 /* ==============Comment ==============*/
 .comment {
     display: flex;
