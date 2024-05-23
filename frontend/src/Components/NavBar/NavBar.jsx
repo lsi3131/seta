@@ -35,6 +35,7 @@ const AuthenticatedNavbar = ({ currentUser }) => {
         }
     }, [])
 
+    console.log(currentUser)
     return (
         <header className={style.header}>
             <div className={style.container}>
@@ -48,7 +49,9 @@ const AuthenticatedNavbar = ({ currentUser }) => {
                         <a className={style.username} onClick={() => setDropdownVisible(!dropdownVisible)}>
                             {currentUser.username}
                         </a>
-                        <div className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}>
+                        <div 
+                        style={{ backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : "#ccc"}}
+                        className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}>
                             <Link to={`/profile/${currentUser.username}/`} className={style.dropdownItem}>
                                 프로필
                             </Link>
