@@ -1,0 +1,66 @@
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.body {
+    padding: 20px 0;
+    height: 200px;
+    font-size: 20px;
+}
+
+.body p {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.actions {
+    display: flex;
+    justify-content: end;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.replyButton,
+.deleteButton {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+}
+
+.replyButton {
+    background-color: #7a7b7add;
+    color: #fff;
+}
+
+.deleteButton {
+    background-color: #f44336c1;
+    color: #fff;
+}

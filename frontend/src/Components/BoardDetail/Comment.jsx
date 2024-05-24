@@ -3,10 +3,14 @@ import style from './Comment.module.css'
 import {getButtonColor, getUpdateTime} from "../../Utils/helpers";
 import like from "../../Assets/images/comment/like.png"
 import unlike from "../../Assets/images/comment/unlike.png"
+import filterOn from "../../Assets/images/comment/filter_on.png"
+import filterOff from "../../Assets/images/comment/filter_off.png"
 import reply from "../../Assets/images/comment/reply.png"
 import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
-import {Counter} from "./ReducerTest";
+import {Link} from "react-router-dom";
+import PopupFilter from "./PopupFilter";
+import Report from '../Report/Report';
 
 const CommentSubInput = ({
                              mode,
@@ -130,7 +134,12 @@ const Comment = ({
 
                         <div className={style.comment_left_1_1}>
                             <div className={style.comment_left_1_1_author}>
-                                <p>{comment.author}</p>
+                                <p>
+                                    <Link to={`/profile/${comment.author}/`}>{comment.author}
+                                        <sup
+                                            style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</sup>
+                                    </Link>
+                                </p>
                                 <p>{getUpdateTime(comment.created_at)}</p>
                             </div>
                             <pre>{comment.content}</pre>
@@ -156,9 +165,9 @@ const Comment = ({
                                     <button onClick={handleDeleteComment}>삭제</button>
                                 </>
                             }
-                            <button>신고</button>
+                            <Report author={comment.author} 
+                            mbti={currentUser.mbti_type}/>
                         </div>
-                        <p style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</p>
                     </div>
                 </div>
                 {inputModeType === 'reply' &&
@@ -189,30 +198,76 @@ const Comment = ({
     );
 };
 
+
 const CommentList = ({
                          comments,
+                         commentCount,
                          onAddComment,
                          onUpdateComment,
                          onDeleteComment,
                          onAddLikeComment
                      }) => {
+
+    const [filterMbtiList, setFilterMbtiList] = useState([])
+
+    useEffect(() => {
+    }, [comments, commentCount]);
+
+    const [showPopup, setShowPopup] = useState(false);
+
+    const handleShowFilter = () => {
+        setShowPopup(true);
+    }
+
+    const handleCloseFilter = () => {
+        setShowPopup(false);
+    }
+
+    const handleApplyFilter = (mbtiList) => {
+        setFilterMbtiList(mbtiList)
+        setShowPopup(false);
+    }
+
+    const isMbtiInFilter = (comment) => {
+        return filterMbtiList.length === 0 || filterMbtiList.some(e => e.toLowerCase() === comment.author_mbti.toLowerCase());
+    }
+
+    const isFilterOn = () => {
+        return filterMbtiList.length > 0;
+    }
+
     return (
         <div className={style.comment_list}>
+            {showPopup && <PopupFilter initialMbtiList={filterMbtiList} onApplyPopup={handleApplyFilter}
+                                       onClosePopup={handleCloseFilter}/>}
+            <div className={style.comment_list_info}>
+                <div className={style.comment_list_info_left}>
+                    <p>댓글</p>
+                    <h3>{commentCount}</h3>
+                </div>
+                <div className={style.comment_list_info_right}>
+                    <button onClick={handleShowFilter}><img src={isFilterOn() ? filterOn : filterOff} alt=""/></button>
+                </div>
+            </div>
             {comments.map((comment, index) => (
                 <div>
-                    <hr/>
-                    <Comment key={index} comment={comment}
-                             onAddComment={onAddComment}
-                             onUpdateComment={onUpdateComment}
-                             onDeleteComment={onDeleteComment}
-                             onAddLikeComment={onAddLikeComment}/>
+                    {isMbtiInFilter(comment) && (
+                        <>
+                            <hr/>
+                            <Comment key={index} comment={comment}
+                                     onAddComment={onAddComment}
+                                     onUpdateComment={onUpdateComment}
+                                     onDeleteComment={onDeleteComment}
+                                     onAddLikeComment={onAddLikeComment}/>
+                        </>
+                    )}
                 </div>
             ))}
         </div>
     );
 };
 
-const CommentInput = ({onAddComment, parentCommentId}) => {
+const CommentInput = ({post, onAddComment, parentCommentId}) => {
     const currentUser = useContext(UserContext)
     const [content, setContent] = useState('');
 
@@ -233,7 +288,6 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
         window.location.href = `/profile/${currentUser.username}/`
     }
 
-
     const shouldLogin = () => {
         return currentUser === null;
     }
@@ -242,8 +296,13 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
         return currentUser && currentUser['mbti_type'] === null
     }
 
+    const notIncludedInMbtiList = () => {
+        const include = post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
+        return currentUser && currentUser['mbti_type'] !== null && !include
+    }
+
     const canRegisterComment = () => {
-        return currentUser && currentUser['mbti_type'] !== null
+        return !notIncludedInMbtiList()
     }
 
     const isDisabled = () => {
@@ -252,6 +311,14 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
 
     return (
         <div className={style.comment_input_container}>
+            <div className={style.comment_input_user}>
+                {canRegisterComment() && (
+                    <p>{currentUser.username}
+                        <sup
+                            style={{backgroundColor: getButtonColor(currentUser['mbti_type'])}}>{currentUser['mbti_type'].toUpperCase()}</sup>
+                    </p>
+                )}
+            </div>
             {shouldLogin() && (
                 <textarea
                     style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
@@ -278,6 +345,14 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
                     rows={4}
                 ></textarea>
             )}
+            {notIncludedInMbtiList() && (
+                <textarea
+                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                    placeholder={"댓글을 쓸 수 없는 타입입니다"}
+                    rows={4}
+                    disabled={false}
+                ></textarea>
+            )}
 
             <div className={style.comment_input_buttons_container}>
                 <button onClick={handleAddComment} style={{width: '100px'}} disabled={isDisabled()}>댓글 등록</button>
@@ -286,100 +361,27 @@ const CommentInput = ({onAddComment, parentCommentId}) => {
     );
 };
 
-const CommentBox = ({postId}) => {
-    const currentUser = useContext(UserContext)
-    const [comments, setComments] = useState([]);
-
+const CommentBox = ({
+                        post, comments, commentCount,
+                        onAddComment,
+                        onUpdateComment,
+                        onDeleteComment,
+                        onAddLikeComment,
+                    }) => {
     useEffect(() => {
-        handleGetComment()
-    }, [postId]);
-
-    const handleGetComment = () => {
-        apiClient.get(`/api/posts/${postId}/comments/`)
-            .then(response => {
-                console.log('get comments successful:', response.data);
-                setComments(response.data);
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    };
-
-    const handlePostComment = (content, parentId = null) => {
-        let data = {
-            content: content
-        };
-        if (parentId) {
-            data.parent_comment_id = parentId;
-        }
-        apiClient.post(`/api/posts/${postId}/comments/`, data)
-            .then(response => {
-                console.log('post comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    const handlePutComment = (commentId, content) => {
-        const data = {
-            content: content
-        };
-        apiClient.put(`/api/posts/${postId}/comments/${commentId}/`, data)
-            .then(response => {
-                console.log('put comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during put comments:', error.response.data.error);
-            })
-    }
-
-    const handleDeleteComment = (commentId) => {
-        apiClient.delete(`/api/posts/${postId}/comments/${commentId}/`)
-            .then(response => {
-                console.log('delete comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    const handleAddLikeComment = (commentId, isLikeOn) => {
-        const data = {
-            recommend: isLikeOn ? 1 : 0
-        };
-
-        apiClient.post(`/api/posts/${postId}/comments/${commentId}/recommend/`, data)
-            .then(response => {
-                console.log('post comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetComment();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
+    }, [post, commentCount, comments]);
 
 
     return (
         <div className={style.comment_box}>
             <CommentList comments={comments}
-                         onAddComment={handlePostComment}
-                         onUpdateComment={handlePutComment}
-                         onDeleteComment={handleDeleteComment}
-                         onAddLikeComment={handleAddLikeComment}/>
+                         commentCount={commentCount}
+                         onAddComment={onAddComment}
+                         onUpdateComment={onUpdateComment}
+                         onDeleteComment={onDeleteComment}
+                         onAddLikeComment={onAddLikeComment}/>
             <hr/>
-            <CommentInput postId={postId} onAddComment={handlePostComment}/>
+            <CommentInput post={post} onAddComment={onAddComment}/>
         </div>
     );
 }
