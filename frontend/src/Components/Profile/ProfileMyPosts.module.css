@@ -1,16 +1,32 @@
+.vertical{
+  margin: 200px auto ;
+}
+
 
 .board_category+hr{
   border: 2px solid black;
 }
 
 .board_category button{
-  font-weight: bold;
+  width: 200px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  font-size: 20px;
+  font-weight: 200;
+  background-color: #FFFFFF;
+  border: 0;
+}
+
+
+.board_category button:hover{
   font-size: 18px;
   border: 0;
   background-color: transparent;
   padding-right: 20px;
   padding-bottom: 10px;
+  cursor: pointer;
 }
+
 
 .board_posts {
   display: flex;
@@ -68,7 +84,8 @@
 }
 
 .board_post_right {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .board_post_right button {

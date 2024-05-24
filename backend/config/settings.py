@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     "account.apps.AccountConfig",
     "post.apps.PostConfig",
+    'message.apps.MessageConfig',
 ]
 
 MIDDLEWARE = [
