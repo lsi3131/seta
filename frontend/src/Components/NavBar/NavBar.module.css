@@ -67,6 +67,15 @@
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none; /* 숨겨진 상태일 때 클릭 이벤트를 비활성화 */
     border-radius: 15px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center
+}
+
+.dropdownMenu hr{
+    width: 130px;
 }
 
 .dropdownMenu.show {
@@ -76,14 +85,15 @@
 }
 
 .dropdownItem {
-    display: block;
-    padding: 10px 0;
-    width: 150px;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0px;
     text-decoration: none;
     color: black;
-    text-align: center;
+    width: 100px;
 }
 
 .dropdownItem:hover {
-    background-color: #f1f1f1;
+    font-weight: bold;
+    color: black;
 }
