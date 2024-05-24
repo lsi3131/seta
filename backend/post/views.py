@@ -344,3 +344,16 @@ def Recommend(request, post_pk, comment_pk):
     else:
         comment.recommend.remove(user)
         return Response({"message": "추천 취소"}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Image(request) :
+    data = request.data.copy()
+    message = validate_image_data(data)
+    if message :
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+    
+    name = data['name']
+    image = data['image']
+    PostImage.objects.create(name = name, picture = image)
+    return Response({"message": "이미지 업로드 성공"}, status=status.HTTP_200_OK)
