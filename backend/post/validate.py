@@ -18,3 +18,12 @@ def validate_comment_data(data):
     if not content:
         return {"error": "내용을 입력해주세요."}
     return None
+
+def validate_image_data(data):
+    name = data.get('name')
+    image = data.get('image')
+    if not name:
+        return {"error": "파일 이름이 없습니다."}
+    if not image:
+        return {"error": "선택된 파일이 없습니다."}
+    return None
