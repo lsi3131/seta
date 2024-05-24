@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, } from 'react'
 import style from './Board.module.css'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
@@ -164,6 +164,7 @@ const Board = () => {
     const [filter, setFilter] = useState('') //질문, 유머, 창작 등
     const [order, setOrder] = useState('recent') //recent, like, comment
 
+
     useEffect(() => {
         handleGetCategory()
         handlePageChange(currentPage)
@@ -212,10 +213,18 @@ const Board = () => {
             })
     }
 
+    
+
     return (
         <>
             <div>
                 <BoardTop mbti={mbti}/>
+
+                <div className={style.writeButton}>
+                <Link to={`/write/`}
+                style ={{backgroundColor:getButtonColor(mbti)}}
+                >글쓰기</Link>
+                </div>
 
                 <BoardCategory
                     filter={filter}
