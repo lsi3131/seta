@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.MessageAPIView.as_view()),
     path('<int:message_id>/', views.MessageDetailAPIView.as_view()),
+    path('delete/', views.MessageDeleteAPIView.as_view())
 ]

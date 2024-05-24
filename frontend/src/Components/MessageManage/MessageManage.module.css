@@ -102,3 +102,22 @@ td a {
 .board_message_subject a:hover {
     color: #007bff;
 }
+
+.delete_section {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+.delete_section > button {
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    background-color: #ff4141ac;
+    color: white;
+    border: none;
+}
+.delete_section > button:hover {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
