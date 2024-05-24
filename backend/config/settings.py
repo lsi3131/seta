@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     'django_seed',
+    'storages',
 
     "account.apps.AccountConfig",
     "post.apps.PostConfig",
@@ -161,3 +162,10 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
 }
 CORS_ALLOW_CREDENTIALS = True
+
+DEFAULT_FILE_STORAGE ='storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = json.load(open(BASE_DIR / "secrets.json"))["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = json.load(open(BASE_DIR / "secrets.json"))["AWS_SECRET_ACCESS_KEY"]
+AWS_STORAGE_BUCKET_NAME = 'picturebucket9856'
+AWS_QUERYSTRING_AUTH = False

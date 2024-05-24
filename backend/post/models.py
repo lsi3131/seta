@@ -24,6 +24,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+class PostImage(models.Model) :
+    name = models.CharField(max_length=30)
+    picture = models.FileField(upload_to='media/')
 
 
 class Comment(models.Model):

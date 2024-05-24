@@ -11,4 +11,5 @@ urlpatterns = [
     path("<int:post_pk>/comments/<int:comment_pk>/", views.PostCommentDetailAPIView.as_view(), name='comment_detail'),
     path("<int:post_pk>/likey/", views.LikeyPost , name='LikeyPost' ),
     path("<int:post_pk>/comments/<int:comment_pk>/recommend/", views.Recommend, name='Recommend'),
+    path("image/", views.Image, name='image'),
 ]
