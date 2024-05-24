@@ -1,57 +1,59 @@
-import style from "./ProfileTop.module.css";
-import {getImage} from "../../Utils/helpers";
-import React, {useContext, useEffect, useState} from "react";
-import {UserContext} from "../../userContext";
-import {Link, useNavigate} from "react-router-dom";
-import apiClient from "../../services/apiClient";
+import style from './ProfileTop.module.css'
+import { getImage } from '../../Utils/helpers'
+import React, { useContext, useEffect, useState } from 'react'
+import { UserContext } from '../../userContext'
+import { Link, useNavigate } from 'react-router-dom'
+import apiClient from '../../services/apiClient'
 
-const ProfileTop = ({user, onFollowUpdate}) => {
+const ProfileTop = ({ user, onFollowUpdate }) => {
     const currentUser = useContext(UserContext)
     const navigate = useNavigate()
 
-    const [isFollowing, setIsFollowing] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false)
 
     useEffect(() => {
         console.log(user)
         handleCheckFollow()
-    }, [user]);
+    }, [user])
 
     const isMyProfile = () => {
         if (currentUser === null) {
             return false
         }
 
-        return currentUser.username === user.username;
+        return currentUser.username === user.username
     }
 
     const handleCheckFollow = () => {
-        apiClient.get(`/api/accounts/${user.username}/check_follow/`)
-            .then(response => {
+        apiClient
+            .get(`/api/accounts/${user.username}/check_follow/`)
+            .then((response) => {
                 console.log(response.data)
                 setIsFollowing(response.data['follow'] === 1)
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('fail to follow/unfollow', error)
             })
     }
 
     const handleFollow = () => {
-        apiClient.post(`/api/accounts/${user.username}/follow/`, {
+        apiClient
+            .post(`/api/accounts/${user.username}/follow/`, {
                 follow: isFollowing ? 0 : 1,
             })
-            .then(response => {
+            .then((response) => {
                 console.log('success to update response', response)
                 onFollowUpdate()
                 handleCheckFollow()
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('fail to follow/unfollow', error)
             })
     }
 
     const editProfile = () => {
         //TODO : profile 수정 페이지 구현시 적용
-        // navigate(`/profile/edit/${user.username}`)
+        navigate(`/profile/update/${user.username}`)
     }
 
     return (
@@ -59,14 +61,11 @@ const ProfileTop = ({user, onFollowUpdate}) => {
             <div className={style.board_top_content}>
                 <div className={style.board_top_lift}>
                     <div className={style.board_top_text_container}>
-                        {user.mbti ?
-                            <p>{user.mbti.toUpperCase()}</p> :
-                            <p></p>
-                        }
+                        {user.mbti ? <p>{user.mbti.toUpperCase()}</p> : <p></p>}
                         <h2>{user.username}</h2>
                     </div>
                     <div>
-                        <img className={style.board_top_image} src={getImage(user.mbti)} alt=""/>
+                        <img className={style.board_top_image} src={getImage(user.mbti)} alt="" />
                     </div>
                 </div>
                 <div className={style.board_top_right}>
@@ -85,17 +84,13 @@ const ProfileTop = ({user, onFollowUpdate}) => {
                         </div>
                     </div>
                     <div className={style.board_button}>
-                        {isMyProfile() ?
-                            (
-                                <button onClick={editProfile}>프로필 편집</button>
-                            ) : (
-                                isFollowing ? (
-                                    <button onClick={handleFollow}>언팔로우</button>
-                                ) : (
-                                    <button onClick={handleFollow}>팔로우</button>
-                                )
-                            )
-                        }
+                        {isMyProfile() ? (
+                            <button onClick={editProfile}>프로필 수정</button>
+                        ) : isFollowing ? (
+                            <button onClick={handleFollow}>언팔로우</button>
+                        ) : (
+                            <button onClick={handleFollow}>팔로우</button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -103,4 +98,4 @@ const ProfileTop = ({user, onFollowUpdate}) => {
     )
 }
 
-export default ProfileTop;
+export default ProfileTop

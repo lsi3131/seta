@@ -1,0 +1,91 @@
+.board_post_right {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* MBTI 선택  */
+.mbti {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.mbti div {
+    display: flex;
+    justify-content: center;
+    flex: 0 0 12.5%;
+    text-align: center;
+    user-select: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.mbti div input[type='checkbox'] {
+    display: none;
+}
+
+.mbti div input[type='checkbox'] + label {
+    width: 100px;
+    font-weight: 400;
+    border-radius: 5px;
+    padding-top: 2px;
+}
+
+.mbti div input[type='checkbox'] + label:hover {
+    cursor: pointer;
+}
+
+.mbtibox {
+    width: 90px;
+    line-height: 30px;
+    color: #fff;
+    margin: 3px 5px;
+}
+
+.mbtibox:hover {
+    transition: 0.3s;
+    font-weight: 700;
+    transform: scale(1.1);
+}
+
+.mbti_button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mbti_button_right {
+    display: flex;
+}
+
+.mbti_button_right > button {
+    margin-left: 10px;
+}

@@ -3,8 +3,6 @@ import ProfileMBTIForm from "../ProfileMBTIForm/ProfileMBTIForm";
 import {Link, useParams} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
 import apiClient from "services/apiClient";
-import {formatDate, mbtiParams, getImage, getFontColor, getButtonColor} from "../../Utils/helpers"
-import ProfileMyPost from "Components/ProfileMyPost/ProfileMyPost";
 import ProfileTop from "./ProfileTop";
 
 
@@ -12,6 +10,10 @@ const Profile = () => {
     const {username} = useParams();
     const [users, setUsers] = useState({})
     const [error, setError] = useState(null)
+    const [showProfileMyPost, setShowProfileMyPost] = useState(false);
+
+    const [followingRanks, setFollowingRanks] = useState([])
+    const [followerRanks, setFollowerRanks] = useState([])
 
     const handleGetUserData = () => {
         apiClient.get(`api/accounts/${username}/`)
@@ -23,15 +25,27 @@ const Profile = () => {
             })
     }
 
-    useEffect(() => {
-        handleGetUserData();
-    }, [username]);
+    const handleGetRanking = () => {
+        apiClient.get(`api/accounts/${username}/ranking/`)
+            .then(response => {
+                setFollowingRanks(response.data['following'])
+                setFollowerRanks(response.data['follower'])
+            })
+            .catch(error => {
+                console.log('fail to get ranking', error)
+            })
+    }
 
-    const [showProfileMyPost, setShowProfileMyPost] = useState(false);
 
     const handleToggleShow = () => {
         setShowProfileMyPost(prevState => !prevState);
     };
+
+
+    useEffect(() => {
+        handleGetUserData();
+        handleGetRanking();
+    }, [username]);
 
 
     if (!users) {
@@ -41,15 +55,8 @@ const Profile = () => {
     return (
         <div className={style.vertical}>
             <ProfileTop user={users} onFollowUpdate={handleGetUserData}/>
-            <ProfileMBTIForm/>
-           
-            <div >
-              <button className={style.moreButton} onClick={handleToggleShow}>
-                  {showProfileMyPost ? '접기' : '더보기'}
-              </button>
-            {showProfileMyPost && <ProfileMyPost props={users} />}
-            </div>
-
+            <ProfileMBTIForm user={users} followingRanks={followingRanks} followerRanks={followerRanks}/>
+        
         </div>
     )
 }
