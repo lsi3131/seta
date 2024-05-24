@@ -24,7 +24,14 @@ const MessageManage = () => {
             }
         }
         fetchData(currentPage)
-    }, [navigate, view])
+    }, [navigate, view, currentPage])
+
+    const handleDelete = (deletedIds) => {
+        setMessages((prevMessages) => ({
+            ...prevMessages,
+            results: prevMessages.results.filter((message) => !deletedIds.includes(message.id)),
+        }))
+    }
 
     if (!messages) {
         return <div></div>
@@ -33,11 +40,22 @@ const MessageManage = () => {
     return (
         <div className={style.board_contents}>
             <div className={style.board_category}>
-                <button onClick={() => setView('received')}>받은 메세지</button>
-                <button onClick={() => setView('sent')}>보낸 메세지</button>
+                <button
+                    onClick={() => setView('received')}
+                    style={{ fontWeight: view === 'received' ? 'bold' : '200' }}
+                >
+                    받은 메세지
+                </button>
+                <button onClick={() => setView('sent')} style={{ fontWeight: view === 'sent' ? 'bold' : '200' }}>
+                    보낸 메세지
+                </button>
             </div>
             <hr />
-            {view === 'received' ? <RecivedMessages messages={messages} /> : <SentMessages messages={messages} />}
+            {view === 'received' ? (
+                <RecivedMessages messages={messages} onDelete={handleDelete} />
+            ) : (
+                <SentMessages messages={messages} onDelete={handleDelete} />
+            )}
         </div>
     )
 }
