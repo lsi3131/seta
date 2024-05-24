@@ -132,7 +132,8 @@ class PostAPIView(APIView):
 
 
 class CreatePostAPIView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         data = request.data.copy()
         message = validate_post_data(data)
@@ -143,10 +144,10 @@ class CreatePostAPIView(APIView):
         content = data['content']
         category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                                content=content, author=request.user)
+                                   content=content, author=request.user)
         mbti_types = data['mbti']
         for mbti_type in mbti_types:
-            mbti_s = get_object_or_404(Mbti, mbti_type=mbti_type)
+            mbti_s = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
             post.mbti.add(mbti_s)
 
         return Response(
@@ -184,8 +185,6 @@ class PostDetailAPIView(APIView):
             serialize = serialize_post_update(post)
             return Response(serialize, status=status.HTTP_200_OK)
 
-        post.hits += 1
-        post.save()
         serialize = serialize_post(post)
         serialize['content'] = post.content
         return Response(serialize, status=status.HTTP_200_OK)
@@ -212,7 +211,7 @@ class PostDetailAPIView(APIView):
         message = validate_post_data(data)
         if message:
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
-        
+
         post.__dict__.update(**data)
         post = post.save()
         return Response(
@@ -234,6 +233,15 @@ class PostDetailAPIView(APIView):
         )
 
 
+@api_view(['PUT'])
+def add_hit(request, post_pk):
+    post = get_object_or_404(Post, id=post_pk)
+    post.hits += 1
+    post.save()
+
+    return Response({'message': '조회수가 증가했습니다.'}, status=status.HTTP_200_OK)
+
+
 class PostCommentsAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -241,12 +249,25 @@ class PostCommentsAPIView(APIView):
         post = get_object_or_404(Post, id=post_pk)
         comments = post.comments.all()
 
-        response_data = []
+        per_page = 50
+        paginator = Paginator(comments, per_page)
+        page_number = request.GET.get("page")
+        if page_number:
+            comments = paginator.get_page(page_number)
+
+        serialized_comments = []
         for comment in comments:
             if not comment.parent:
-                response_data.append(serialize_comment(comment))
+                serialized_comments.append(serialize_comment(comment))
 
-        return Response(response_data, status=status.HTTP_200_OK)
+        paginated_response_data = {
+            'total_page': paginator.num_pages,
+            'per_page': per_page,
+            'count': comments.count(),
+            'results': serialized_comments,
+        }
+
+        return Response(paginated_response_data, status=status.HTTP_200_OK)
 
     def post(self, request, post_pk):
         data = request.data.copy()

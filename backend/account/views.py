@@ -15,6 +15,9 @@ from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
 
+from rest_framework_simplejwt.tokens import RefreshToken
+from config.serializers import CustomTokenObtainPairSerializer
+
 validator = AccountValidator()
 User = get_user_model()
 
@@ -70,8 +73,11 @@ class AccountAPIView(APIView):
 
     def delete(self, request):
         user = request.user
-        user.delete()
-        return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
+        print(request.data)
+        if request.data.get('password') and check_password(request.data.get('password'), user.password):       
+            user.delete()
+            return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AccountPasswordAPIView(APIView):
@@ -89,7 +95,7 @@ class AccountPasswordAPIView(APIView):
 
         # 이전 비밀번호 일치 체크
         if not check_password(old_password, user.password):
-            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "입력하신 비밀번호가 이전과 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         # 신규 비밀번호 유효성 체크
         if not validator.validate('password', {'data': new_password}):
@@ -170,6 +176,7 @@ def mbtiRank(request, username):
 
     following_mbti_ranking = sorted(following_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
     follower_mbti_ranking = sorted(follower_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
+
     return Response({
         "following": following_mbti_ranking,
         "follower": follower_mbti_ranking
@@ -222,8 +229,18 @@ class MbtiAPIView(APIView):
             return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         user.mbti = Mbti.objects.get(mbti_type=mbti_type)
+        user.percentIE = data.get('percentIE', 0)
+        user.percentNS = data.get('percentNS', 0)
+        user.percentFT = data.get('percentFT', 0)
+        user.percentPJ = data.get('percentPJ', 0)
         user.save()
-        return Response({"message": "MBTI가 설정되었습니다."}, status=status.HTTP_200_OK)
+
+        serialized_token = CustomTokenObtainPairSerializer.get_token(user)
+        tokens = {
+            'accessToken': str(serialized_token.access_token),
+            'refreshToken': str(serialized_token)
+        }
+        return Response(tokens, status=status.HTTP_200_OK)
 
 
 class MbtiDetailAPIView(APIView):
@@ -245,10 +262,10 @@ class MbtiDetailAPIView(APIView):
 @permission_classes([IsAuthenticated])
 def Myposts(request, username):
     user = get_object_or_404(User, username=username)
-    posts = user.post_set.all()
-    like_posts = user.like_posts.all()
+    posts = user.post_set.all().order_by('-created_at')
+    like_posts = user.like_posts.all().order_by('-created_at')
 
-    per_page = 5
+    per_page = 10
     paginator_post = Paginator(posts, per_page)
 
     page_number = request.GET.get("page")
@@ -263,13 +280,12 @@ def Myposts(request, username):
     }
 
 
-    if request.user == username:
+    if str(request.user) == username:
         paginator_like = Paginator(like_posts, per_page)
-
         if page_number:
             like_posts = paginator_like.get_page(page_number)
         response_like_posts = [serialize_post(post) for post in like_posts ]
-        
+
         paginated_like_posts = {
             'total_page': paginator_like.num_pages,
             "per_page": per_page,

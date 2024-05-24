@@ -7,3 +7,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username 
         token['mbti_type'] = user.mbti.mbti_type if user.mbti else None
         return token
+
+    @classmethod
+    def refresh_token(cls, user):
+        token = super().get_token(user)
+
+        # Refresh custom claims to the token payload
+        token['username'] = user.username
+        token['mbti_type'] = user.mbti.mbti_type if user.mbti else None
+
+        return token
