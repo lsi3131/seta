@@ -1,10 +1,36 @@
 import style from './Write.module.css'
 import { useNavigate } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import apiClient from 'services/apiClient'
 import { getFontColor } from '../../Utils/helpers'
-import CustomReactQuill from './ReactQuill'
 
+import ReactQuill, { Quill } from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import AWS from "aws-sdk";
+
+const REGION = process.env.REACT_APP_AWS_S3_BUCKET_REGION;
+const ACCESS_KEY = process.env.REACT_APP_AWS_S3_BUCKET_ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.REACT_APP_AWS_S3_BUCKET_SECRET_ACCESS_KEY;
+
+const formats = [
+    'font',
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'align',
+    'color',
+    'background',
+    'size',
+    'h1',
+    'image',
+];
 const Write = () => {
     const navigate = useNavigate()
     const [categorys, setCategorys] = useState([])
@@ -16,8 +42,88 @@ const Write = () => {
         mbti: [],
     })
 
+    const quillRef = useRef(null);
+    
+
+    const imageHandler = async () => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*");
+        input.click();
+        input.addEventListener("change", async () => {
+        //이미지를 담아 전송할 file을 만든다
+        const file = input.files[0];
+        const fileExt = file.name.split('.').pop();
+        
+        // 확장자 제한
+        if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
+            alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
+            return;
+        }
+        
+        try {
+            //업로드할 파일의 이름으로 Date 사용
+            const name = Date.now();
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('image', file);
+            const response = await apiClient.post(formData);
+    
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Image upload failed: ${errorText}`);
+            }
+
+            //생성한 s3 관련 설정들
+            AWS.config.update({
+            region: REGION,
+            accessKeyId: ACCESS_KEY,
+            secretAccessKey: SECRET_ACCESS_KEY,
+            });
+            //앞서 생성한 file을 담아 s3에 업로드하는 객체를 만든다
+            const imageData = new AWS.S3.getObject({
+                ACL: "public-read",
+                Bucket: "picturebucket9856", //버킷 이름
+                Key: `media/${name}`, 
+            });
+            //이미지 업로드 후
+            //곧바로 업로드 된 이미지 url을 가져오기
+            const IMG_URL = await imageData.promise().then((res) => res.Location);
+            //useRef를 사용해 에디터에 접근한 후
+            //에디터의 현재 커서 위치에 이미지 삽입
+            const editor = quillRef.current.getEditor();
+            const range = editor.getSelection();
+            // 가져온 위치에 이미지를 삽입한다
+            editor.insertEmbed(range.index, "image", IMG_URL);
+            } catch (error) {
+                console.log(error);
+            }
+    });
+};
+    
+    const modules = useMemo(() => {
+        return {
+            toolbar: {
+                container: 
+                [   
+                    [{ size: ['small', false, 'large', 'huge'] }],
+                    [{ align: [] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{color: [],},{ background: [] },],
+                    ['image'],
+                ],
+                handlers: {
+                    image: imageHandler,
+                }
+            },
+        };
+    }, []);
+
+
     const { title, content, category, mbti } = inputs
     const [error, setError] = useState('')
+    const [values, setValues] = useState();
 
     const [mbti_checks, setMbtiChecks] = useState([
         { id: 1, label: 'INTJ', checked: false },
@@ -78,20 +184,20 @@ const Write = () => {
                 ...inputs,
                 category: value,
             })
-        } else {
+        } else if (id === 'title') {
             setInputs({
                 ...inputs,
-                [id]: value,
-            })
-        }
+                title: value,
+            });
+        } 
     }
 
     const onSubmit = async (e) => {
         e.preventDefault()
+        const postData = {...inputs, content: values === "<p><br></p>" ? "" : values}
         try {
-            const response = await apiClient.post('/api/posts/create/', inputs)
+            const response = await apiClient.post('/api/posts/create/', postData)
             const postId = response.data.id
-
             navigate(`/detail/${postId}/?mbti=${inputs.mbti[0]}`)
         } catch (error) {
             if (!inputs.category) {
@@ -100,7 +206,7 @@ const Write = () => {
                 setError('게시될 MBTI 게시판을 선택해주세요')
             } else if (!inputs.title) {
                 setError('제목을 입력해주세요')
-            } else if (!inputs.content) {
+            } else if (!values) {
                 setError('내용을 입력해주세요')
             }
         }
@@ -166,18 +272,15 @@ const Write = () => {
                     ))}
                 </div>
 
-                {/* <div className={style.content}>
-                    <div>
-                        <textarea
-                            id="content"
-                            placeholder="뭐 욕설안돼 어쩌구 비방이 저쩌구 신고될수있으니 주의해 주세요"
-                            value={content}
-                            onChange={onChange}
-                        />
-                    </div>
-                </div> */}
-
-                <CustomReactQuill/>
+                <ReactQuill
+                    id="content"
+                    theme="snow"
+                    modules={modules}
+                    formats={formats}
+                    value = {values}
+                    onChange={setValues}
+                    placeholder={'타인을 비방하거나 커뮤니티 이용정책에 맞지 않는 게시글은 예고없이 삭제될 수 있습니다.'}
+                />
 
                 <p></p>
                 <p className={style.Error}>{error}</p>
