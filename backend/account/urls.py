@@ -13,5 +13,6 @@ urlpatterns = [
     path('validate/email/', views.validate_email),
     path('<str:username>/follow/', views.follow),
     path('<str:username>/check_follow/', views.check_follow),
-    path('<str:username>/myposts/',views.Myposts)
+    path('<str:username>/myposts/',views.Myposts),
+    path('<str:email>/activate',views.UserActivateAPIView.as_view())
 ]

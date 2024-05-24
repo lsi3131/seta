@@ -5,12 +5,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.paginator import Paginator
+from django.core.mail import EmailMessage
 
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly,AllowAny
 from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
@@ -44,8 +45,15 @@ class AccountAPIView(APIView):
                 return validator.get_response_data()
 
         get_user_model().objects.create_user(
-            username=username, password=password, email=email, introduce=introduce)
+            username=username, password=password, email=email, introduce=introduce, is_active = False)
 
+        is_active_email = EmailMessage(
+            subject=f''' '세타' 회원가입 이메일 인증''',
+            body=f"{username}회원 가입 인증",
+            to = ['bmkim766@naver.com']
+            )
+        is_active_email.send()
+        
         return Response({
             "username": username,
             "password": password,
@@ -301,3 +309,15 @@ def Myposts(request, username):
 
 
 
+class UserActivateAPIView(APIView):
+
+    def put(self, request, email):
+        user = get_object_or_404(User, email=email)
+        
+        if not user.is_active:
+            user.is_active = True
+            user.save()
+            return Response({"message": "이메일 인증 성공"})
+        else:
+            return Response({"message": "이미인증 됐습니다."})
+            
