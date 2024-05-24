@@ -50,6 +50,31 @@
     height: 150px;
 }
 
+.writeButton{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.writeButton a{
+    color: #FFFFFF;
+    margin: 15px 0;
+    border-radius: 14px;
+    border: none;
+    font-size: 20px;
+    width: 100px;
+    height: 40px;
+    padding-top: 9px; ;
+    text-align: center;
+    text-decoration: none;
+}
+
+.writeButton a:hover{
+    transform: translateY(-0.1rem);
+    box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
+    cursor: pointer;
+}
+
+
 .board_category {
     display: flex;
     justify-content: space-between;
