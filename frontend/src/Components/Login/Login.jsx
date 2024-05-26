@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
+import { Link} from 'react-router-dom'
 
 function Login() {
     const [signIn, toggle] = React.useState('true')
@@ -25,6 +26,16 @@ function Login() {
     const [emailCheckMessage, setEmailCheckMessage] = React.useState('')
     const [passwordConfirmCheckMessage, setPasswordConfirmCheckMessage] = React.useState('')
 
+    const [modalOpen, setModalOpen] = React.useState(false);
+
+    // const openModal = () => {
+    //     setModalOpen(true);
+    // }
+
+    // const closeModal = () => {
+    //     setModalOpen(false);
+    // }
+
     const [formValidateChecker, setFormValidateChecker] = React.useState({
         username: false,
         email: false,
@@ -34,13 +45,13 @@ function Login() {
 
     useEffect(() => {
         if (debounceUsernameUp === usernameUp) {
-            checkUserName().then((r) => {})
+            checkUserName().then((r) => { })
         }
     }, [usernameUp, debounceUsernameUp])
 
     useEffect(() => {
         if (debouncePasswordUp === passwordUp) {
-            checkPassword().then((r) => {})
+            checkPassword().then((r) => { })
         }
     }, [passwordUp, debouncePasswordUp])
 
@@ -52,7 +63,7 @@ function Login() {
 
     useEffect(() => {
         if (debounceEmailUp === emailUp) {
-            checkEmail().then((r) => {})
+            checkEmail().then((r) => { })
         }
     }, [emailUp, debounceEmailUp])
 
@@ -88,7 +99,7 @@ function Login() {
             await checkPassword()
             await checkPasswordCheck()
             await checkEmail()
-        } catch (error) {}
+        } catch (error) { }
         console.log(formValidateChecker)
 
         if (
@@ -100,6 +111,8 @@ function Login() {
             return
         }
 
+        setModalOpen(true)
+
         apiClient
             .post('/api/accounts/', {
                 username: usernameUp,
@@ -107,13 +120,7 @@ function Login() {
                 password: passwordUp,
                 password_confirm: passwordConfirmUp,
             })
-            .then((response) => {
-                alert(response.status)
-                if (response.status === 201) {
-                    window.location.href = '/login'
-                }
-            })
-            .catch((error) => {})
+            .catch((error) => { })
     }
 
     async function checkUserName() {
@@ -243,7 +250,14 @@ function Login() {
         }
     }
 
+    const logo_image = {
+        url: require('../../Assets/images/logo.png'),
+    }
+    // const modalBackground = React.useRef();
+
     return (
+        <div>
+            
         <Components.BodyContainer>
             <Components.Container>
                 <Components.SignUpContainer signin={signIn}>
@@ -291,7 +305,9 @@ function Login() {
                         >
                             {passwordConfirmCheckMessage}
                         </Components.Span>
-                        <Components.Button>입력완료</Components.Button>
+                            <Components.Button>
+                                입력완료
+                            </Components.Button>
                     </Components.Form>
                 </Components.SignUpContainer>
 
@@ -357,6 +373,30 @@ function Login() {
                 </Components.OverlayContainer>
             </Components.Container>
         </Components.BodyContainer>
+        {modalOpen &&
+            <Components.EmailModal>
+                <Components.ModalVartical>
+                    <Components.ModalContent>
+                        <Components.ModalH3>
+                            이메일 인증
+                        </Components.ModalH3>
+                        <Components.ModalP>
+                            '{debounceEmailUp}' 로 
+                        </Components.ModalP>
+                        <Components.ModalP>
+                        인증메일을 보냈습니다.
+                        </Components.ModalP>
+                        <Components.ModalP>
+                        이메일을 확인하세요.
+                        </Components.ModalP>
+                        <Components.ModalButton>
+                            <Link to="/">확인</Link>
+                        </Components.ModalButton>
+                    </Components.ModalContent>
+                </Components.ModalVartical>
+            </Components.EmailModal>
+        }
+        </div>
     )
 }
 

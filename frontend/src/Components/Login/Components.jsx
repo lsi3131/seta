@@ -28,7 +28,7 @@ export const SignUpContainer = styled.div`
     left: 0;
     width: 50%;
     opacity: 0;
-    z-index: 1;
+    z-index: 2;
     ${(props) =>
         props.signin !== 'true'
             ? `
@@ -46,7 +46,7 @@ export const SignInContainer = styled.div`
     transition: all 0.6s ease-in-out;
     left: 0;
     width: 50%;
-    z-index: 2;
+    z-index: 3;
     ${(props) => (props.signin !== 'true' ? `transform: translateX(100%);` : null)}
 `
 
@@ -182,3 +182,77 @@ export const ParaBox = styled.div`
 export const Span = styled.span`
     font-size: 10px;
 `
+
+
+export const EmailModal = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+`
+
+export const ModalVartical = styled.div`
+    width: 300px;
+    height: 200px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    padding: 10px;
+    background-color: #fff;
+`
+
+
+export const ModalContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+
+
+export const ModalH3 = styled.h3`
+    text-align: center;
+    padding: 15px 0px;
+    font-size: 23px;
+`
+
+export const ModalP = styled.p`
+    text-align: center;
+    padding-top: 5px;
+    font-size: 16px;
+`
+
+export const ModalButton = styled.button`
+    border-radius: 20px;
+    border: 1px solid black;
+    background-color: black;
+    color: #ffffff;
+    width: 70px;
+    height: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin-top: 15px;
+    text-decoration: none;
+
+    &:hover {
+        transform: scale(0.95);
+        cursor: pointer;
+    }
+
+    a {
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        height: 100%;
+        line-height: 30px;
+        text-align: center;
+        transition: color 0.3s;
+    }
+`;
