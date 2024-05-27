@@ -41,60 +41,41 @@ const Write = () => {
         category: '',
         mbti: [],
     })
-
+    
     const quillRef = useRef(null);
     
-
+    
     const imageHandler = async () => {
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
         input.click();
         input.addEventListener("change", async () => {
-        //이미지를 담아 전송할 file을 만든다
-        const file = input.files[0];
-        const fileExt = file.name.split('.').pop();
-        
-        // 확장자 제한
-        if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
-            alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
-            return;
-        }
-        
-        try {
-            //업로드할 파일의 이름으로 Date 사용
-            const name = Date.now();
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('image', file);
-            const response = await apiClient.post(formData);
-    
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Image upload failed: ${errorText}`);
+            //이미지를 담아 전송할 file을 만든다
+            const file = input.files[0];
+            const fileExt = file.name.split('.').pop();
+            
+            // 확장자 제한
+            if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
+                alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
+                return;
             }
-
-            //생성한 s3 관련 설정들
-            AWS.config.update({
-            region: REGION,
-            accessKeyId: ACCESS_KEY,
-            secretAccessKey: SECRET_ACCESS_KEY,
-            });
-            //앞서 생성한 file을 담아 s3에 업로드하는 객체를 만든다
-            const imageData = new AWS.S3.getObject({
-                ACL: "public-read",
-                Bucket: "picturebucket9856", //버킷 이름
-                Key: `media/${name}`, 
-            });
-            //이미지 업로드 후
-            //곧바로 업로드 된 이미지 url을 가져오기
-            const IMG_URL = await imageData.promise().then((res) => res.Location);
-            //useRef를 사용해 에디터에 접근한 후
-            //에디터의 현재 커서 위치에 이미지 삽입
+            try {
+                //업로드할 파일의 이름으로 Date 사용
+                const name = Date.now();
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('name', name);
+                const result = await apiClient.post('/api/posts/image/', formData, {
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                })
+            console.log(result)
+            const url = "https://picturebucket9856.s3.amazonaws.com/media/"+file.name
             const editor = quillRef.current.getEditor();
             const range = editor.getSelection();
-            // 가져온 위치에 이미지를 삽입한다
-            editor.insertEmbed(range.index, "image", IMG_URL);
+            editor.insertEmbed(range.index, "image", `${url}`);
             } catch (error) {
                 console.log(error);
             }
@@ -271,16 +252,17 @@ const Write = () => {
                         </div>
                     ))}
                 </div>
-
                 <ReactQuill
                     id="content"
                     theme="snow"
+                    ref={quillRef}
                     modules={modules}
                     formats={formats}
                     value = {values}
                     onChange={setValues}
                     placeholder={'타인을 비방하거나 커뮤니티 이용정책에 맞지 않는 게시글은 예고없이 삭제될 수 있습니다.'}
                 />
+                
 
                 <p></p>
                 <p className={style.Error}>{error}</p>

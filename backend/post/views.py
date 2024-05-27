@@ -465,4 +465,7 @@ def Image(request) :
     name = data['name']
     image = data['image']
     PostImage.objects.create(name = name, picture = image)
-    return Response({"message": "이미지 업로드 성공"}, status=status.HTTP_200_OK)
+    response_data = {
+        "message": "이미지 업로드 성공",
+    }
+    return Response(response_data, status=status.HTTP_200_OK)
