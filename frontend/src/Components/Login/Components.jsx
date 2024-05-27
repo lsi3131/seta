@@ -70,7 +70,7 @@ export const Input = styled.input`
     background-color: #eee;
     border: none;
     padding: 12px 18px;
-    margin: 8px 0;
+    margin: 4px 0;
     width: 100%;
     border-radius: 20px;
 `
@@ -101,10 +101,14 @@ export const GhostButton = styled(Button)`
 `
 
 export const Anchor = styled.a`
-    color: #333;
+    color: #ccc;
     font-size: 14px;
     text-decoration: none;
-    margin-top: 20px;
+    margin-top: 7px;
+    
+    &:hover{
+        color: #333;
+    }
 `
 export const OverlayContainer = styled.div`
     position: absolute;
@@ -181,6 +185,7 @@ export const ParaBox = styled.div`
 `
 export const Span = styled.span`
     font-size: 10px;
+    height: 10px;
 `
 
 

@@ -327,7 +327,7 @@ function Login() {
                             value={passwordIn}
                         />
                         <Components.Span className="error-message">{errorMessage}</Components.Span>
-                        <Components.Anchor href="#">패스워드찾기</Components.Anchor>
+                        <Components.Anchor href="#">아아디/패스워드찾기</Components.Anchor>
                         <Components.Button>로그인</Components.Button>
                     </Components.Form>
                 </Components.SignInContainer>
