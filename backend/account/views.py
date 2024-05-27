@@ -321,9 +321,8 @@ class UserActivateAPIView(APIView):
     def get(self, request, email):
         user = get_object_or_404(User, email=email)
         
-        if not user.is_active:
-            user.is_active = True
-            user.save()
-            return redirect("http://localhost:3000/login")
+        user.is_active = True
+        user.save()
+        return redirect("http://localhost:3000/login")
+    
         
-            
