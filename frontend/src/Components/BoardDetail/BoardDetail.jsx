@@ -12,6 +12,7 @@ import * as PropTypes from "prop-types";
 import BoardCommentBadgeList from "./BoardCommentBadgeList";
 import comment from "./Comment";
 
+
 const BoardTitle = ({mbti, post, commentCount}) => {
     useEffect(() => {
     }, [post, commentCount])
@@ -56,10 +57,11 @@ const BoardContent = ({post, username, onSetLike}) => {
         onSetLike(!likeOn)
     }
 
+
     return (
         <div className={style.board_content_container}>
-            <div className={style.board_content_text}>
-                <pre>{post.content}</pre>
+            <div>
+                
             </div>
 
             <div className={style.board_content_like_button}>
