@@ -17,6 +17,7 @@ import ProfileMyPosts from './Components/Profile/ProfileMyPosts'
 import FabButton from './UI/FabButton/FabButton'
 import MessageManage from 'Components/MessageManage/MessageManage'
 import MessageDetail from 'Components/MessageDetail/MessageDetail'
+import SearchResult from 'Components/Search/SearchResult'
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
                     <Route path="/profile/:username/posts" element={<ProfileMyPosts />} />
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
+                    <Route path="/search" element={<SearchResult />} />
                 </Routes>
                 <FabButton />
                 <Footer />
