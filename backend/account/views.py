@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
 
@@ -331,7 +332,7 @@ class UserActivateAPIView(APIView):
         
 
 
-class FindUserAPIView(APIView):
+class FindNameAPIView(APIView):
 
     # 아이디 찾기
     def get(self, request, email):
@@ -341,16 +342,40 @@ class FindUserAPIView(APIView):
         message = render_to_string('account/find_username.html', {'username': username,
             "email":email})
         
-        is_active_email = EmailMessage(
+        find_uaername_email = EmailMessage(
             subject,
             message,
             to = ['bmkim766@naver.com']
             )
-        is_active_email.content_subtype = "html"
-        is_active_email.send()
-        
+        find_uaername_email.content_subtype = "html"
+        find_uaername_email.send()
+
         return Response({"message":"이메일을 확인하세요"}, status=status.HTTP_200_OK)
     
-    # 비밀번호 찾기
-    def put(self, request):
-        return Response({})
+
+
+# 비밀번호 찾기
+class FindPasswordAPIView(APIView):
+    def put(self, request, email, username):
+        user = get_object_or_404(User,email=email, username=username)
+
+        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+'
+        random_password = User.objects.make_random_password(length=16, allowed_chars=allowed_chars)
+
+        user.password = make_password(random_password)
+        user.save()
+
+        subject = ''' '세타' 임시 비밀번호'''
+        message = render_to_string('account/find_password.html', {'username': username,
+            "email":email,
+            "password":random_password})
+        
+        find_password_email = EmailMessage(
+            subject,
+            message,
+            to = ['bmkim766@naver.com']
+            )
+        find_password_email.content_subtype = "html"
+        find_password_email.send()
+
+        return Response({"message":"이메일을 확인하세요"},status=status.HTTP_200_OK)

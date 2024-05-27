@@ -15,6 +15,6 @@ urlpatterns = [
     path('<str:username>/check_follow/', views.check_follow),
     path('<str:username>/myposts/',views.Myposts),
     path('<str:email>/activate/',views.UserActivateAPIView.as_view()),
-    path('<str:email>/finduser/',views.FindUserAPIView.as_view())
-
+    path('<str:email>/findname/',views.FindNameAPIView.as_view()),
+    path('<str:email>/<str:username>/findpassword/',views.FindPasswordAPIView.as_view()),
 ]
