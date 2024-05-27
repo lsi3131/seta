@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from rest_framework.views import APIView
@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
@@ -47,11 +48,16 @@ class AccountAPIView(APIView):
         get_user_model().objects.create_user(
             username=username, password=password, email=email, introduce=introduce, is_active = False)
 
+
+        subject = ''' '세타' 이메일 인증'''
+        message = render_to_string('account/email.html', {'username': username, "email":email})
+        
         is_active_email = EmailMessage(
-            subject=f''' '세타' 회원가입 이메일 인증''',
-            body=f"{username}회원 가입 인증",
+            subject,
+            message,
             to = ['bmkim766@naver.com']
             )
+        is_active_email.content_subtype = "html"
         is_active_email.send()
         
         return Response({
@@ -70,6 +76,7 @@ class AccountAPIView(APIView):
 
         if data.get('email') and not validator.validate('email', {'data': email}):
             return validator.get_response_data()
+
 
         user.email = email
         user.introduce = introduce
@@ -311,13 +318,12 @@ def Myposts(request, username):
 
 class UserActivateAPIView(APIView):
 
-    def put(self, request, email):
+    def get(self, request, email):
         user = get_object_or_404(User, email=email)
         
         if not user.is_active:
             user.is_active = True
             user.save()
-            return Response({"message": "이메일 인증 성공"})
-        else:
-            return Response({"message": "이미인증 됐습니다."})
+            return redirect("http://localhost:3000/login")
+        
             
