@@ -55,7 +55,7 @@ class AccountAPIView(APIView):
         is_active_email = EmailMessage(
             subject,
             message,
-            to = ['bmkim766@naver.com']
+            to = [email]
             )
         is_active_email.content_subtype = "html"
         is_active_email.send()

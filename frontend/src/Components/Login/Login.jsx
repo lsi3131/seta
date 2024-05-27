@@ -28,14 +28,6 @@ function Login() {
 
     const [modalOpen, setModalOpen] = React.useState(false)
 
-    // const openModal = () => {
-    //     setModalOpen(true);
-    // }
-
-    // const closeModal = () => {
-    //     setModalOpen(false);
-    // }
-
     const [formValidateChecker, setFormValidateChecker] = React.useState({
         username: false,
         email: false,
@@ -249,11 +241,6 @@ function Login() {
             }))
         }
     }
-
-    const logo_image = {
-        url: require('../../Assets/images/logo.png'),
-    }
-    // const modalBackground = React.useRef();
 
     return (
         <div>
