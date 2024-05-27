@@ -82,15 +82,18 @@ const UnauthenticatedNavbar = ({ currentUrl }) => {
     return (
         <header className={style.header}>
             <div className={style.container}>
-                <div className={style.logo}>
+                <div className={style.logo_search}>
                     <Link to="/">
-                        <img src={logo_image.url} className={style.image} />
+                        <img src={logo_image.url} className={style.image}/>
                     </Link>
+                    <div className={style.search}>
+                        <NavSearch/>
+                    </div>
                 </div>
                 <nav className={style.navbar}>
                     <Link
                         to={`/login?redirectUrl=${encodeURIComponent(currentUrl)}`}
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                     >
                         로그인
                     </Link>

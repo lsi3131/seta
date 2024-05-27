@@ -1,8 +1,12 @@
 // src/components/NavSearch.js
-import React from 'react';
+import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css'; // FontAwesome CSS를 import
 
 const NavSearch = () => {
+    const navigate = useNavigate();
+    const [keyword, setKeyword] = useState();
+
     const styles = {
         searchBarContainer: {
             display: 'flex',
@@ -35,6 +39,12 @@ const NavSearch = () => {
         }
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            navigate(`/search/?keyword=${keyword}`); // Enter 키를 눌렀을 때 "/search" 페이지로 이동
+        }
+    };
+
     return (
         <>
             <style>
@@ -47,7 +57,10 @@ const NavSearch = () => {
             <div style={styles.searchBarContainer}>
                 <div style={styles.searchBarWrapper}>
                     <i className="fas fa-search" style={styles.searchIcon}></i>
-                    <input type="text" placeholder="궁금하신게 있으신가요?" style={styles.searchBar} className="searchBar"/>
+                    <input type="text" placeholder="궁금하신게 있으신가요?" style={styles.searchBar} className="searchBar"
+                           onKeyPress={handleKeyPress} value={keyword}
+                           onChange={(e)=>setKeyword(e.target.value)}
+                    />
                 </div>
             </div>
         </>
