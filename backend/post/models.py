@@ -39,6 +39,7 @@ class Comment(models.Model):
     recommend = models.ManyToManyField(AUTH_USER_MODEL, related_name='recommend_comments', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    comment_mbti = models.ForeignKey(Mbti, on_delete=models.CASCADE, default=None, null=True)
 
     def __str__(self):
         return self.content
