@@ -7,7 +7,7 @@ import Pagination from '../Pagenation/Pagination'
 import BoardTop from '../BoardTop/BoardTop'
 import apiClient from '../../services/apiClient'
 
-const BoardPost = ({post, mbti}) => {
+const BoardPost = ({post}) => {
     const navigate = useNavigate()
 
     const handleMoveToPostMbti = (postMbti) => {
@@ -19,11 +19,11 @@ const BoardPost = ({post, mbti}) => {
             <div className={style.board_post}>
                 <div className={style.board_post_left}>
                     <div className={style.board_post_category}>
-                        <p style={{color: getFontColor(mbti)}}>{post.category}</p>
+                        <p style={{color: getFontColor(post.post_mbti)}}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
-                        <Link to={`/detail/${post.id}?mbti=${mbti}`}>{post.title}</Link>
-                        <p style={{color: getFontColor(mbti)}}>[{post.comments}]</p>
+                        <Link to={`/detail/${post.id}?mbti=${post.post_mbti}`}>{post.title}</Link>
+                        <p style={{color: getFontColor(post.post_mbti)}}>[{post.comments}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
                         <div>

@@ -15,6 +15,7 @@ def serialize_post(post):
     return {
         "id": post.id,
         "author": post.author.username,
+        "post_mbti": post.post_mbti.mbti_type,
         "category": post.category.name,
         "title": post.title,
         "hits": post.hits,
@@ -32,6 +33,7 @@ def serialize_posts_for_search(post):
         "id": post.id,
         "author": post.author.username,
         "author_mbti": author_mbti,
+        "post_mbti": post.post_mbti.mbti_type,
         "category": post.category.name,
         "title": post.title,
         "content": post.content,
@@ -70,6 +72,7 @@ def serialize_comment(comment):
         "author": comment.author.username,
         "author_mbti": author_mbti_type,
         "parent_id": parent_comment_id,
+        'comment_mbti': comment.comment_mbti.mbti_type,
         "content": comment.content,
         "recommend": recommend,
         "created_at": comment.created_at,
@@ -142,7 +145,7 @@ class PostAPIView(APIView):
 
         paginated_response_data = {
             'total_page': paginator.num_pages,
-            "per_page": per_page,
+            'per_page': per_page,
             'results': response_data,
         }
 
@@ -191,6 +194,7 @@ class SearchAPIView(APIView):
             posts = posts.annotate(comment_count=Count(
                 F('comments'))).order_by('-comment_count')
 
+        search_count = posts.count()
         # 페이지네이션 15개씩
         per_page = 15
         paginator = Paginator(posts, per_page)
@@ -204,6 +208,7 @@ class SearchAPIView(APIView):
         paginated_response_data = {
             'total_page': paginator.num_pages,
             "per_page": per_page,
+            'count': search_count,
             'results': response_data,
         }
 
