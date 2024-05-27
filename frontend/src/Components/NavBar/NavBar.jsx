@@ -17,7 +17,7 @@ const AuthenticatedNavbar = ({ currentUser }) => {
     const handleLogout = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
-        if (window.location.pathname.includes('profile')) {
+        if (window.location.pathname.includes(['/profile', '/messages'])) {
             navigate('/')
         }
         window.location.reload()
@@ -36,7 +36,6 @@ const AuthenticatedNavbar = ({ currentUser }) => {
         }
     }, [])
 
-    console.log(currentUser)
     return (
         <header className={style.header}>
             <div className={style.container}>
@@ -112,12 +111,13 @@ const Navbar = () => {
         setCurrentUrl(window.location.pathname + window.location.search)
     }, [navigate])
 
+    if (!currentUser) return null
     return (
         <div>
-            {currentUser ? (
-                <AuthenticatedNavbar currentUser={currentUser} />
-            ) : (
+            {currentUser.username === '' ? (
                 <UnauthenticatedNavbar currentUrl={currentUrl} />
+            ) : (
+                <AuthenticatedNavbar currentUser={currentUser} />
             )}
         </div>
     )
