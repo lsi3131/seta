@@ -123,7 +123,7 @@ class MessageDeleteAPIView(APIView):
         for message in messages:
             if request.user == message.sender:
                 message.sender_deleted = True
-            elif request.user == message.recipient:
+            if request.user == message.recipient:
                 message.recipient_deleted = True
             deleted_count += 1
 
