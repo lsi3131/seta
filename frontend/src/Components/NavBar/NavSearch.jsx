@@ -1,11 +1,12 @@
 // src/components/NavSearch.js
-import React, {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css'; // FontAwesome CSS를 import
 
 const NavSearch = () => {
     const navigate = useNavigate();
-    const [keyword, setKeyword] = useState();
+    const location = useLocation();
+    const [keyword, setKeyword] = useState('');
 
     const styles = {
         searchBarContainer: {
@@ -45,6 +46,13 @@ const NavSearch = () => {
         }
     };
 
+    useEffect(() => {
+        /* 검색했을 때를 제외한 다른 라우팅의 경우 이동을 진행한다. */
+        if(location.pathname !== '/search/') {
+            setKeyword('');
+        }
+    }, [location]);
+
     return (
         <>
             <style>
@@ -59,7 +67,7 @@ const NavSearch = () => {
                     <i className="fas fa-search" style={styles.searchIcon}></i>
                     <input type="text" placeholder="궁금하신게 있으신가요?" style={styles.searchBar} className="searchBar"
                            onKeyPress={handleKeyPress} value={keyword}
-                           onChange={(e)=>setKeyword(e.target.value)}
+                           onChange={(e) => setKeyword(e.target.value)}
                     />
                 </div>
             </div>

@@ -1,8 +1,7 @@
-.search_post_list_container {
-    min-height: 400px;
-
+.container {
+    padding: 10px 0;
 }
 
-.search_post_container {
-    margin: 10px 0;
+.list_container {
+    min-height: 100px;
 }
