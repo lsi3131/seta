@@ -223,11 +223,14 @@ class CreatePostAPIView(APIView):
         content = data['content']
         category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                                   content=content, author=request.user)
+                                   content=content, author=request.user,
+                                   post_mbti=request.user.mbti)
         mbti_types = data['mbti']
+
         for mbti_type in mbti_types:
             mbti_s = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
             post.mbti.add(mbti_s)
+
 
         return Response(
             {"message": "게시글이 작성되었습니다.",
@@ -361,7 +364,8 @@ class PostCommentsAPIView(APIView):
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
         post = get_object_or_404(Post, id=post_pk)
         Comment.objects.create(content=content, post=post,
-                               author=request.user, parent=parent_comment)
+                               author=request.user, comment_mbti=request.user.mbti,
+                               parent=parent_comment)
         return Response(
             {"message": "댓글이 작성되었습니다."},
             status=status.HTTP_201_CREATED
