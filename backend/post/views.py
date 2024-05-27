@@ -46,11 +46,13 @@ def serialize_comment(comment):
     recommend = [r.id for r in comment.recommend.all()]
     parent_comment_id = comment.parent.id if comment.parent else None
 
+    author_mbti_type = comment.author.mbti.mbti_type if comment.author.mbti else 'EN'
+
     return {
         "id": comment.id,
         "post": comment.post.id,
         "author": comment.author.username,
-        "author_mbti": comment.author.mbti.mbti_type,
+        "author_mbti": author_mbti_type,
         "parent_id": parent_comment_id,
         "content": comment.content,
         "recommend": recommend,
