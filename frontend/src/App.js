@@ -18,6 +18,7 @@ import FabButton from './UI/FabButton/FabButton'
 import MessageManage from 'Components/MessageManage/MessageManage'
 import MessageDetail from 'Components/MessageDetail/MessageDetail'
 import SearchResult from 'Components/Search/SearchResult'
+import FindUser from 'Components/FindUser/FindUser'
 
 function App() {
     return (
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
                     <Route path="/search" element={<SearchResult />} />
+                    <Route path="/finduser" element={<FindUser />} />
                 </Routes>
                 <FabButton />
                 <Footer />
