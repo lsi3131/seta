@@ -50,7 +50,8 @@ class AccountAPIView(APIView):
 
 
         subject = ''' '세타' 이메일 인증'''
-        message = render_to_string('account/email.html', {'username': username, "email":email})
+        message = render_to_string('account/activate_email.html', {'username': username,
+            "email":email})
         
         is_active_email = EmailMessage(
             subject,
@@ -328,4 +329,28 @@ class UserActivateAPIView(APIView):
             user.save()
             return redirect("http://localhost:3000/login")
         
+
+
+class FindUserAPIView(APIView):
+
+    # 아이디 찾기
+    def get(self, request, email):
+        username = get_object_or_404(User, email=email)
         
+        subject = ''' '세타' 아이디 찾기'''
+        message = render_to_string('account/find_username.html', {'username': username,
+            "email":email})
+        
+        is_active_email = EmailMessage(
+            subject,
+            message,
+            to = ['bmkim766@naver.com']
+            )
+        is_active_email.content_subtype = "html"
+        is_active_email.send()
+        
+        return Response({"message":"이메일을 확인하세요"}, status=status.HTTP_200_OK)
+    
+    # 비밀번호 찾기
+    def put(self, request):
+        return Response({})

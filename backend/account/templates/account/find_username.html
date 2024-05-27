@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>세타 이메일 인증</title>
+    <title>세타 아아디 찾기</title>
     <link rel="stylesheet" href="./email.css">
     
 </head>
@@ -23,22 +23,22 @@
             <h1 
             style="
             color: #fff;
-            text-align: center;">이메일 인증 </h1>
+            text-align: center;">아이디 찾기</h1>
         </div>
         <div class="content">
+            <p style=" margin: 5px 0 ;">
+                <span style="font-size: 25px;
+                color: #FFA800;">
+                세타
+                </span>에 가입하신 아이디는
+            </p>
             <p>
                 <span style="font-weight:bold;"
                 style="font-size: 25px;
                 text-align: center;">
                     {{ username }}
                 </span>
-                님
-            </p>
-            <p style=" margin: 5px 0 ;">
-                <span style="font-size: 25px;
-                color: #FFA800;">
-                세타
-                </span>에 가입해 주셔서 감사합니다.
+                입니다.
             </p>
 
         </div>
@@ -51,7 +51,7 @@
         height: 5%;
         margin: 5px 0 ;
         ">
-            <a href="http://127.0.0.1:8000/api/accounts/{{ email }}/activate/" target="_blank"
+            <a href="http://localhost:3000/login" target="_blank"
             style="
             text-decoration: none;
             background-color: #FFA800;
@@ -60,7 +60,7 @@
             padding: 7px 10px;
             border-radius: 10px;
             ">
-                계정 인증하기
+                로그인
             </a>
         </div>
     </div>
