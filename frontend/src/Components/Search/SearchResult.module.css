@@ -2,6 +2,30 @@
     padding: 10px 0;
 }
 
+
+.search_result_title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.search_result_title > h2 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.search_filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.search_result_title > p {
+    font-size: 18px;
+}
+
 .list_container {
     min-height: 100px;
 }

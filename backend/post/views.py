@@ -161,8 +161,8 @@ class SearchAPIView(APIView):
             return Response({'error': 'search is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         search_type = request.GET.get('searchType', 'title_content')
-        # if not search_type:
-        #     search_type = 'title_content'
+        if not search_type or search_type == '':
+            search_type = 'title_content'
 
         # 검색 필터링
         posts = Post.objects.all()
