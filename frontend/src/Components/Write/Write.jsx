@@ -80,8 +80,8 @@ const Write = () => {
             } catch (error) {
                 console.log(error);
             }
-    });
-};
+        });
+    };
     
     const modules = useMemo(() => {
         return {
