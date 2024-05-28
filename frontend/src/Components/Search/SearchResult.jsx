@@ -5,7 +5,6 @@ import apiClient from "../../services/apiClient";
 import SearchPost from "./SearchPost";
 import Pagination from "../Pagenation/Pagination";
 import SearchFilter from "./SearchFilter";
-import {searchTypeTable} from "./SearchCommon";
 
 
 const SearchPostList = ({posts}) => {
@@ -30,7 +29,7 @@ const SearchResult = ({}) => {
     const keyword = queryParams.get('keyword');
     const [searchPosts, setSearchPosts] = useState([]);
     const [category, setCategory] = useState('');
-    const [searchType, setSearchType] = useState('');
+    const [searchType, setSearchType] = useState('title_content');
     const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
@@ -39,7 +38,7 @@ const SearchResult = ({}) => {
 
     useEffect(() => {
         handlePageChange(1)
-    }, [keyword, searchType, order]);
+    }, [keyword, searchType, category, order]);
 
     useEffect(() => {
     }, [searchPosts]);
@@ -47,6 +46,10 @@ const SearchResult = ({}) => {
 
     const handleUpdateSearchType = (value) => {
         setSearchType(value)
+    }
+
+    const handleCategory = (value) => {
+        setCategory(value)
     }
 
     const handleUpdateOrder = (value) => {
@@ -61,6 +64,8 @@ const SearchResult = ({}) => {
         if (order !== '') {
             url += `&order=${order}`
         }
+
+        console.log(url)
 
         apiClient
             .get(url)
@@ -85,6 +90,7 @@ const SearchResult = ({}) => {
                 </div>
                 <SearchFilter keyword={keyword}
                               onUpdateSearchType={handleUpdateSearchType}
+                              onUpdateCategory={handleCategory}
                               onUpdateOrder={handleUpdateOrder}/>
                 <SearchPostList posts={searchPosts}/>
 

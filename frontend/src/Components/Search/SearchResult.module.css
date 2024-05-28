@@ -2,6 +2,11 @@
     padding: 10px 0;
 }
 
+.horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
 .search_result_title {
     display: flex;
     flex-direction: row;
