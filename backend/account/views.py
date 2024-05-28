@@ -1,16 +1,19 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.paginator import Paginator
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly,AllowAny
 from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
@@ -44,8 +47,21 @@ class AccountAPIView(APIView):
                 return validator.get_response_data()
 
         get_user_model().objects.create_user(
-            username=username, password=password, email=email, introduce=introduce)
+            username=username, password=password, email=email, introduce=introduce, is_active = False)
 
+
+        subject = ''' '세타' 이메일 인증'''
+        message = render_to_string('account/activate_email.html', {'username': username,
+            "email":email})
+        
+        is_active_email = EmailMessage(
+            subject,
+            message,
+            to = [email]
+            )
+        is_active_email.content_subtype = "html"
+        is_active_email.send()
+        
         return Response({
             "username": username,
             "password": password,
@@ -62,6 +78,7 @@ class AccountAPIView(APIView):
 
         if data.get('email') and not validator.validate('email', {'data': email}):
             return validator.get_response_data()
+
 
         user.email = email
         user.introduce = introduce
@@ -301,3 +318,64 @@ def Myposts(request, username):
 
 
 
+class UserActivateAPIView(APIView):
+
+    def get(self, request, email):
+        user = get_object_or_404(User, email=email)
+        
+        if user.is_active:
+            return redirect("http://localhost:3000/login")
+        else:
+            user.is_active = True
+            user.save()
+            return redirect("http://localhost:3000/login")
+        
+
+
+class FindNameAPIView(APIView):
+
+    # 아이디 찾기
+    def get(self, request, email):
+        username = get_object_or_404(User, email=email)
+        
+        subject = ''' '세타' 아이디 찾기'''
+        message = render_to_string('account/find_username.html', {'username': username,
+            "email":email})
+        
+        find_uaername_email = EmailMessage(
+            subject,
+            message,
+            to = ['bmkim766@naver.com']
+            )
+        find_uaername_email.content_subtype = "html"
+        find_uaername_email.send()
+
+        return Response({"message":"이메일을 확인하세요"}, status=status.HTTP_200_OK)
+    
+
+
+# 비밀번호 찾기
+class FindPasswordAPIView(APIView):
+    def put(self, request, email, username):
+        user = get_object_or_404(User,email=email, username=username)
+
+        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+'
+        random_password = User.objects.make_random_password(length=16, allowed_chars=allowed_chars)
+
+        user.password = make_password(random_password)
+        user.save()
+
+        subject = ''' '세타' 임시 비밀번호'''
+        message = render_to_string('account/find_password.html', {'username': username,
+            "email":email,
+            "password":random_password})
+        
+        find_password_email = EmailMessage(
+            subject,
+            message,
+            to = ['bmkim766@naver.com']
+            )
+        find_password_email.content_subtype = "html"
+        find_password_email.send()
+
+        return Response({"message":"이메일을 확인하세요"},status=status.HTTP_200_OK)

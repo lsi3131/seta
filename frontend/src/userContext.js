@@ -14,7 +14,16 @@ export const UserProvider = ({ children }) => {
                 setCurrentUser(decodedUser)
             } catch (error) {
                 console.error('Invalid token:', error)
+                setCurrentUser({
+                    username: '',
+                    mbti_type: '',
+                })
             }
+        } else {
+            setCurrentUser({
+                username: '',
+                mbti_type: '',
+            })
         }
     }, [])
 

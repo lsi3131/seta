@@ -66,6 +66,8 @@ class MessageAPIView(APIView):
         except KeyError:
             return Response({'error': '입력값 오류입니다'}, status=status.HTTP_400_BAD_REQUEST)
 
+    
+
 class MessageDetailAPIView(APIView):
     permission_classes = [IsAuthenticated, MessageAccessPermission]
     def get(self, request, message_id):
@@ -104,6 +106,33 @@ class MessageDetailAPIView(APIView):
         except Message.DoesNotExist:
             return Response({'error': '메세지가 삭제되었습니다'}, status=status.HTTP_404_NOT_FOUND)
 
+
+class MessageDeleteAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        ids = request.data.get('ids', [])
+        if not ids:
+            return Response({'detail': '삭제할 메세지가 선택되어 있지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        messages = Message.objects.filter(id__in=ids)
+        if not messages.exists():
+            return Response({'detail': '존재하지 않는 메세지가 존재합니다.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        deleted_count = 0
+        for message in messages:
+            if request.user == message.sender:
+                message.sender_deleted = True
+            if request.user == message.recipient:
+                message.recipient_deleted = True
+            deleted_count += 1
+
+            if message.sender_deleted and message.recipient_deleted:
+                message.delete()
+            else:
+                message.save()
+
+        return Response({'message': f'{deleted_count} 건의 메세지가 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 
