@@ -15,6 +15,8 @@ import BoardPostBox from "../Board/BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
 import Pagination from "../Pagenation/Pagination";
 import useBoardDetailAPI from "../../api/Hooks/useBoardDetailAPI";
+import useCommentAPI from "../../api/Hooks/useCommentAPI";
+import comment from "./Comment";
 
 
 const BoardTitle = ({mbti, post, commentCount}) => {
@@ -86,6 +88,9 @@ const BoardDetail = () => {
     const mbti = params.get('mbti')
     const boardMbti = params.get('boardMbti')
 
+    /* post->comment 의존성 처리를 위한 state*/
+    const [commentPostId, setCommentPostId] = useState(null);
+
     const {
         isLoading: isBoardLoading,
         posts,
@@ -97,14 +102,24 @@ const BoardDetail = () => {
     const {
         isLoading: isBoardDetailLoading,
         post,
+        handleSetLike,
+    } = useBoardDetailAPI(postId)
+
+    const {
+        isLoading: isCommentLoading,
         comments,
         commentCount,
-        handleSetLike,
         handlePostComment,
         handlePutComment,
         handleDeleteComment,
         handleAddLikeComment
-    } = useBoardDetailAPI(postId)
+    } = useCommentAPI(commentPostId)
+
+    useEffect(() => {
+        if (!isBoardDetailLoading && post && post.id) {
+            setCommentPostId(post.id);
+        }
+    }, [isBoardDetailLoading, post]);
 
     useEffect(() => {
         document.body.classList.add(style.customBodyStyle);
@@ -114,12 +129,16 @@ const BoardDetail = () => {
         };
     }, []);
 
-    if (isBoardDetailLoading) {
-        return <div>Loading...</div> // 데이터를 불러오는 동안 로딩 메시지 표시
-    }
-
     if (isBoardLoading) {
         return <div>Loading board...</div>
+    }
+
+    if (isBoardDetailLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (isCommentLoading) {
+        return <div>Loading comment...</div>
     }
 
     return (
@@ -160,7 +179,8 @@ const BoardDetail = () => {
                                 onAddComment={handlePostComment}
                                 onUpdateComment={handlePutComment}
                                 onDeleteComment={handleDeleteComment}
-                                onAddLikeComment={handleAddLikeComment}/>
+                                onAddLikeComment={handleAddLikeComment}
+                    />
 
                 </div>
             </div>

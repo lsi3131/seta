@@ -1,76 +1,30 @@
-import {useState, useEffect, useContext} from 'react';
+import {useState, useEffect } from 'react';
 import apiClient from '../../services/apiClient'
-import {useNavigate} from "react-router-dom";
-import {UserContext} from "../../userContext";
 
 
-const useBoardDetailAPI = (postId) => {
-    const currentUser = useContext(UserContext)
-    const navigate = useNavigate()
-    const [post, setPost] = useState(null)
+const useCommentAPI = (commentPostId) => {
     const [comments, setComments] = useState(null);
-    const [commentCount, setCommentCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
     const [error, setError] = useState(null); // 로딩 상태 추가
 
 
     useEffect(() => {
-        /* 게시판 정보와 조회수를 업데이트*/
-        handleGetPost()
-        handlePutHits()
-    }, [postId])
-
-    useEffect(() => {
-        if (post) {
-            /* 게시판 정보를 전부 읽어온 후 댓글 리스트를 읽어온다. */
+        if(commentPostId) {
             handleGetCommentList()
         }
-    }, [post])
+    }, [commentPostId])
 
     /* Comment를 전부 읽어오면 로딩이 완료된다.*/
     useEffect(() => {
-        if (comments) {
+        if (comments && commentCount) {
             setIsLoading(false) // 유효성 검사 후 로딩 상태 해제
         }
-    }, [comments])
+    }, [comments, commentCount])
 
-    const handlePutHits = async () => {
-        try {
-            await apiClient.put(`/api/posts/${postId}/hits/`)
-        } catch (error) {
-            console.error('Error during put hits:', error)
-        }
-    }
-
-    const handleGetPost = async () => {
-        try {
-            const response = await apiClient.get(`/api/posts/${postId}/`)
-            setPost(response.data)
-        } catch (error) {
-            console.error('Error during get post detail:', error)
-            navigate('/')
-        }
-    }
-
-    const handleSetLike = async (like_on) => {
-        if (!currentUser) {
-            return
-        }
-
-        const data = {
-            like: like_on ? 1 : 0,
-        }
-
-        try {
-            await apiClient.post(`/api/posts/${post.id}/likey/`, data)
-            await handleGetPost()
-        } catch (error) {
-            console.error('Error during add like to post:', error)
-        }
-    }
 
     const handleGetCommentList = () => {
-        apiClient.get(`/api/posts/${post.id}/comments/`)
+        apiClient.get(`/api/posts/${commentPostId}/comments/`)
             .then(response => {
                 console.log('get comments successful:', response.data);
                 setComments(response.data['results']);
@@ -88,7 +42,7 @@ const useBoardDetailAPI = (postId) => {
         if (parentId) {
             data.parent_comment_id = parentId;
         }
-        apiClient.post(`/api/posts/${post.id}/comments/`, data)
+        apiClient.post(`/api/posts/${commentPostId}/comments/`, data)
             .then(response => {
                 console.log('post comments successful:', response.data);
 
@@ -104,7 +58,7 @@ const useBoardDetailAPI = (postId) => {
         const data = {
             content: content
         };
-        apiClient.put(`/api/posts/${post.id}/comments/${commentId}/`, data)
+        apiClient.put(`/api/posts/${commentPostId}/comments/${commentId}/`, data)
             .then(response => {
                 console.log('put comments successful:', response.data);
 
@@ -117,7 +71,7 @@ const useBoardDetailAPI = (postId) => {
     }
 
     const handleDeleteComment = (commentId) => {
-        apiClient.delete(`/api/posts/${post.id}/comments/${commentId}/`)
+        apiClient.delete(`/api/posts/${commentPostId}/comments/${commentId}/`)
             .then(response => {
                 console.log('delete comments successful:', response.data);
 
@@ -134,7 +88,7 @@ const useBoardDetailAPI = (postId) => {
             recommend: isLikeOn ? 1 : 0
         };
 
-        apiClient.post(`/api/posts/${post.id}/comments/${commentId}/recommend/`, data)
+        apiClient.post(`/api/posts/${commentPostId}/comments/${commentId}/recommend/`, data)
             .then(response => {
                 console.log('post comments successful:', response.data);
 
@@ -148,10 +102,8 @@ const useBoardDetailAPI = (postId) => {
 
     return {
         isLoading,
-        post,
         comments,
         commentCount,
-        handleSetLike,
         handlePostComment,
         handlePutComment,
         handleDeleteComment,
@@ -159,4 +111,4 @@ const useBoardDetailAPI = (postId) => {
     };
 };
 
-export default useBoardDetailAPI;
+export default useCommentAPI;

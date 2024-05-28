@@ -11,6 +11,7 @@ import {UserContext} from "../../userContext";
 import {Link} from "react-router-dom";
 import PopupFilter from "./PopupFilter";
 import Report from '../Report/Report';
+import useCommentAPI from "../../api/Hooks/useCommentAPI";
 
 const CommentSubInput = ({
                              mode,
@@ -381,8 +382,9 @@ const CommentBox = ({
                         onDeleteComment,
                         onAddLikeComment,
                     }) => {
+
     useEffect(() => {
-    }, [post, commentCount, comments]);
+    }, [post]);
 
 
     return (
