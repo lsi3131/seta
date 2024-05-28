@@ -245,7 +245,11 @@ class MbtiAPIView(APIView):
         if not mbti_type:
             return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
-        user.mbti = Mbti.objects.get(mbti_type=mbti_type)
+        mbti = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
+        if not mbti:
+            return Response({"error": f"존재하지 않은 MBTI 포맷입니다.(=${mbti_type})"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.mbti = mbti
         user.percentIE = data.get('percentIE', 0)
         user.percentNS = data.get('percentNS', 0)
         user.percentFT = data.get('percentFT', 0)
@@ -332,11 +336,11 @@ class UserActivateAPIView(APIView):
         
 
 
+# 아이디 찾기
 class FindNameAPIView(APIView):
-
-    # 아이디 찾기
     def get(self, request, email):
         username = get_object_or_404(User, email=email)
+        
         
         subject = ''' '세타' 아이디 찾기'''
         message = render_to_string('account/find_username.html', {'username': username,
@@ -345,7 +349,7 @@ class FindNameAPIView(APIView):
         find_uaername_email = EmailMessage(
             subject,
             message,
-            to = ['bmkim766@naver.com']
+            to = [email]
             )
         find_uaername_email.content_subtype = "html"
         find_uaername_email.send()
@@ -359,7 +363,7 @@ class FindPasswordAPIView(APIView):
     def put(self, request, email, username):
         user = get_object_or_404(User,email=email, username=username)
 
-        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+'
+        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
         random_password = User.objects.make_random_password(length=16, allowed_chars=allowed_chars)
 
         user.password = make_password(random_password)
@@ -373,7 +377,7 @@ class FindPasswordAPIView(APIView):
         find_password_email = EmailMessage(
             subject,
             message,
-            to = ['bmkim766@naver.com']
+            to = [email]
             )
         find_password_email.content_subtype = "html"
         find_password_email.send()
