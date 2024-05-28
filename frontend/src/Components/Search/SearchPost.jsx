@@ -4,8 +4,6 @@ import {formatDateDayBefore, getButtonColor, getFontColor} from "../../Utils/hel
 import React from "react";
 
 const SearchPost = ({post}) => {
-    const navigate = useNavigate()
-
     return (
         <>
             <div className={style.post}>
