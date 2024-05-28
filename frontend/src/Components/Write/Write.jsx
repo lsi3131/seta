@@ -3,15 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import apiClient from 'services/apiClient'
 import { getFontColor } from '../../Utils/helpers'
-
 import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import AWS from "aws-sdk";
+import ImageResize from 'quill-image-resize';
 
-const REGION = process.env.REACT_APP_AWS_S3_BUCKET_REGION;
-const ACCESS_KEY = process.env.REACT_APP_AWS_S3_BUCKET_ACCESS_KEY_ID;
-const SECRET_ACCESS_KEY = process.env.REACT_APP_AWS_S3_BUCKET_SECRET_ACCESS_KEY;
-
+Quill.register('modules/ImageResize', ImageResize);
 const formats = [
     'font',
     'header',
@@ -76,6 +71,12 @@ const Write = () => {
             const editor = quillRef.current.getEditor();
             const range = editor.getSelection();
             editor.insertEmbed(range.index, "image", `${url}`);
+            // 이미지 삽입 후 줄바꿈 삽입
+            editor.setSelection(range.index + 1);
+            editor.insertText(range.index + 1, '\n');
+
+            // 커서를 새 줄로 이동
+            editor.setSelection(range.index + 2, 0);
             } catch (error) {
                 console.log(error);
             }
@@ -98,6 +99,9 @@ const Write = () => {
                     image: imageHandler,
                 }
             },
+            ImageResize: {
+                parchment: Quill.import('parchment')
+            }
         };
     }, []);
 
@@ -256,6 +260,7 @@ const Write = () => {
                     id="content"
                     theme="snow"
                     ref={quillRef}
+                    style={{height:'600px'}}
                     modules={modules}
                     formats={formats}
                     value = {values}
