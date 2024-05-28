@@ -21,6 +21,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(AUTH_USER_MODEL, related_name='like_posts', blank=True)
     mbti = models.ManyToManyField(Mbti, related_name='mbti_posts', blank=True, )
     hits = models.IntegerField(default=0)
+    post_mbti = models.ForeignKey(Mbti, on_delete=models.CASCADE, default=None, null=True)
 
     def __str__(self):
         return self.title
@@ -38,6 +39,7 @@ class Comment(models.Model):
     recommend = models.ManyToManyField(AUTH_USER_MODEL, related_name='recommend_comments', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    comment_mbti = models.ForeignKey(Mbti, on_delete=models.CASCADE, default=None, null=True)
 
     def __str__(self):
         return self.content

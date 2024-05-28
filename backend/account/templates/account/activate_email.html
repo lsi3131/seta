@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세타 이메일 인증</title>
+    <link rel="stylesheet" href="./email.css">
+    
+</head>
+<body>
+    <div class="container"
+    style="text-align: center;
+    height: 500px;
+    width: 100%;">
+        <div class="header"
+        style="background-color: #FFA800;
+            height: 30%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0 ;">
+            <h1 
+            style="
+            color: #fff;
+            text-align: center;">이메일 인증</h1>
+        </div>
+        <div class="content">
+            <p>
+                <span style="font-weight:bold;"
+                style="font-size: 25px;
+                text-align: center;">
+                    {{ username }}
+                </span>
+                님
+            </p>
+            <p style=" margin: 5px 0 ;">
+                <span style="font-size: 25px;
+                color: #FFA800;">
+                세타
+                </span>에 가입해 주셔서 감사합니다.
+            </p>
+
+        </div>
+        
+        <div style="
+        padding: 10px 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5%;
+        margin: 5px 0 ;
+        ">
+            <a href="http://127.0.0.1:8000/api/accounts/{{ email }}/activate/" target="_blank"
+            style="
+            text-decoration: none;
+            background-color: #FFA800;
+
+            color: #fff;
+            padding: 7px 10px;
+            border-radius: 10px;
+            ">
+                계정 인증하기
+            </a>
+        </div>
+    </div>
+</body>
+</html>

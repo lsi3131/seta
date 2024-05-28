@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
+import { Link } from 'react-router-dom'
 
 function Login() {
     const [signIn, toggle] = React.useState('true')
@@ -24,6 +25,8 @@ function Login() {
     const [passwordCheckMessage, setPasswordCheckMessage] = React.useState('')
     const [emailCheckMessage, setEmailCheckMessage] = React.useState('')
     const [passwordConfirmCheckMessage, setPasswordConfirmCheckMessage] = React.useState('')
+
+    const [modalOpen, setModalOpen] = React.useState(false)
 
     const [formValidateChecker, setFormValidateChecker] = React.useState({
         username: false,
@@ -76,7 +79,7 @@ function Login() {
                 window.location.href = '/'
             }
         } catch (error) {
-            const message = '아이디 또는 비밀번호를 잘못 입력했습니다.'
+            const message = error.response.data.detail
             setErrorMessage(message)
         }
     }
@@ -100,18 +103,14 @@ function Login() {
             return
         }
 
+        setModalOpen(true)
+
         apiClient
             .post('/api/accounts/', {
                 username: usernameUp,
                 email: emailUp,
                 password: passwordUp,
                 password_confirm: passwordConfirmUp,
-            })
-            .then((response) => {
-                alert(response.status)
-                if (response.status === 201) {
-                    window.location.href = '/login'
-                }
             })
             .catch((error) => {})
     }
@@ -244,119 +243,142 @@ function Login() {
     }
 
     return (
-        <Components.BodyContainer>
-            <Components.Container>
-                <Components.SignUpContainer signin={signIn}>
-                    <Components.Form onSubmit={handleSignup}>
-                        <Components.Title>회원가입</Components.Title>
+        <div>
+            <Components.BodyContainer>
+                <Components.Container>
+                    <Components.SignUpContainer signin={signIn}>
+                        <Components.Form onSubmit={handleSignup}>
+                            <Components.Title>회원가입</Components.Title>
 
-                        <Components.Input
-                            onChange={(e) => setUsernameUp(e.target.value)}
-                            type="text"
-                            placeholder="아이디"
-                            value={usernameUp}
-                        />
-                        <Components.Span className={formValidateChecker.username ? 'success-message' : 'error-message'}>
-                            {usernameCheckMessage}
-                        </Components.Span>
-
-                        <Components.Input
-                            onChange={(e) => setEmailUp(e.target.value)}
-                            type="email"
-                            placeholder="이메일"
-                            value={emailUp}
-                        />
-                        <Components.Span className={formValidateChecker.email ? 'success-message' : 'error-message'}>
-                            {emailCheckMessage}
-                        </Components.Span>
-
-                        <Components.Input
-                            onChange={(e) => setPasswordUp(e.target.value)}
-                            type="password"
-                            placeholder="패스워드"
-                            value={passwordUp}
-                        />
-                        <Components.Span className={formValidateChecker.password ? 'success-message' : 'error-message'}>
-                            {passwordCheckMessage}
-                        </Components.Span>
-
-                        <Components.Input
-                            onChange={(e) => setPasswordConfirmUp(e.target.value)}
-                            type="password"
-                            placeholder="패스워드확인"
-                            value={passwordConfirmUp}
-                        />
-                        <Components.Span
-                            className={formValidateChecker.passwordCheck ? 'success-message' : 'error-message'}
-                        >
-                            {passwordConfirmCheckMessage}
-                        </Components.Span>
-                        <Components.Button>입력완료</Components.Button>
-                    </Components.Form>
-                </Components.SignUpContainer>
-
-                <Components.SignInContainer signin={signIn}>
-                    <Components.Form onSubmit={handleLogin}>
-                        <Components.Title>로그인</Components.Title>
-                        <Components.Input
-                            onChange={(e) => setUsernameIn(e.target.value)}
-                            type="text"
-                            placeholder="아이디"
-                            value={usernameIn}
-                        />
-                        <Components.Input
-                            onChange={(e) => setPasswordIn(e.target.value)}
-                            type="password"
-                            placeholder="패스워드"
-                            value={passwordIn}
-                        />
-                        <Components.Span className="error-message">{errorMessage}</Components.Span>
-                        <Components.Anchor href="#">패스워드찾기</Components.Anchor>
-                        <Components.Button>로그인</Components.Button>
-                    </Components.Form>
-                </Components.SignInContainer>
-
-                <Components.OverlayContainer signin={signIn}>
-                    <Components.Overlay signin={signIn}>
-                        <Components.LeftOverlayPanel signin={signIn}>
-                            <Components.Title>처음오셨군요!</Components.Title>
-                            <Components.ParaBox>
-                                <Components.Paragraph>회원가입을 완료하시고</Components.Paragraph>
-                                <Components.Paragraph>다양한 유형의 사람들과 소통해볼까요?</Components.Paragraph>
-                            </Components.ParaBox>
-                            <Components.GhostButton
-                                onClick={() => {
-                                    toggle('true')
-                                    setUsernameUp('')
-                                    setEmailUp('')
-                                    setPasswordConfirmUp('')
-                                    setPasswordUp('')
-                                }}
+                            <Components.Input
+                                onChange={(e) => setUsernameUp(e.target.value)}
+                                type="text"
+                                placeholder="아이디"
+                                value={usernameUp}
+                            />
+                            <Components.Span
+                                className={formValidateChecker.username ? 'success-message' : 'error-message'}
                             >
-                                로그인
-                            </Components.GhostButton>
-                        </Components.LeftOverlayPanel>
+                                {usernameCheckMessage}
+                            </Components.Span>
 
-                        <Components.RightOverlayPanel signin={signIn}>
-                            <Components.Title>환영합니다!</Components.Title>
-                            <Components.ParaBox>
-                                <Components.Paragraph>이미 회원이신가요?</Components.Paragraph>
-                                <Components.Paragraph>로그인해주세요!</Components.Paragraph>
-                            </Components.ParaBox>
-                            <Components.GhostButton
-                                onClick={() => {
-                                    toggle('false')
-                                    setUsernameIn('')
-                                    setPasswordIn('')
-                                }}
+                            <Components.Input
+                                onChange={(e) => setEmailUp(e.target.value)}
+                                type="email"
+                                placeholder="이메일"
+                                value={emailUp}
+                            />
+                            <Components.Span
+                                className={formValidateChecker.email ? 'success-message' : 'error-message'}
                             >
-                                회원가입
-                            </Components.GhostButton>
-                        </Components.RightOverlayPanel>
-                    </Components.Overlay>
-                </Components.OverlayContainer>
-            </Components.Container>
-        </Components.BodyContainer>
+                                {emailCheckMessage}
+                            </Components.Span>
+
+                            <Components.Input
+                                onChange={(e) => setPasswordUp(e.target.value)}
+                                type="password"
+                                placeholder="패스워드"
+                                value={passwordUp}
+                            />
+                            <Components.Span
+                                className={formValidateChecker.password ? 'success-message' : 'error-message'}
+                            >
+                                {passwordCheckMessage}
+                            </Components.Span>
+
+                            <Components.Input
+                                onChange={(e) => setPasswordConfirmUp(e.target.value)}
+                                type="password"
+                                placeholder="패스워드확인"
+                                value={passwordConfirmUp}
+                            />
+                            <Components.Span
+                                className={formValidateChecker.passwordCheck ? 'success-message' : 'error-message'}
+                            >
+                                {passwordConfirmCheckMessage}
+                            </Components.Span>
+                            <Components.Button>입력완료</Components.Button>
+                        </Components.Form>
+                    </Components.SignUpContainer>
+
+                    <Components.SignInContainer signin={signIn}>
+                        <Components.Form onSubmit={handleLogin}>
+                            <Components.Title>로그인</Components.Title>
+                            <Components.Input
+                                onChange={(e) => setUsernameIn(e.target.value)}
+                                type="text"
+                                placeholder="아이디"
+                                value={usernameIn}
+                            />
+                            <Components.Input
+                                onChange={(e) => setPasswordIn(e.target.value)}
+                                type="password"
+                                placeholder="패스워드"
+                                value={passwordIn}
+                            />
+                            <Components.Span className="error-message">{errorMessage}</Components.Span>
+                            <Components.Anchor href="http://localhost:3000/finduser/">아아디/패스워드찾기</Components.Anchor>
+                            <Components.Button>로그인</Components.Button>
+                        </Components.Form>
+                    </Components.SignInContainer>
+
+                    <Components.OverlayContainer signin={signIn}>
+                        <Components.Overlay signin={signIn}>
+                            <Components.LeftOverlayPanel signin={signIn}>
+                                <Components.Title>처음오셨군요!</Components.Title>
+                                <Components.ParaBox>
+                                    <Components.Paragraph>회원가입을 완료하시고</Components.Paragraph>
+                                    <Components.Paragraph>다양한 유형의 사람들과 소통해볼까요?</Components.Paragraph>
+                                </Components.ParaBox>
+                                <Components.GhostButton
+                                    onClick={() => {
+                                        toggle('true')
+                                        setUsernameUp('')
+                                        setEmailUp('')
+                                        setPasswordConfirmUp('')
+                                        setPasswordUp('')
+                                    }}
+                                >
+                                    로그인
+                                </Components.GhostButton>
+                            </Components.LeftOverlayPanel>
+
+                            <Components.RightOverlayPanel signin={signIn}>
+                                <Components.Title>환영합니다!</Components.Title>
+                                <Components.ParaBox>
+                                    <Components.Paragraph>이미 회원이신가요?</Components.Paragraph>
+                                    <Components.Paragraph>로그인해주세요!</Components.Paragraph>
+                                </Components.ParaBox>
+                                <Components.GhostButton
+                                    onClick={() => {
+                                        toggle('false')
+                                        setUsernameIn('')
+                                        setPasswordIn('')
+                                    }}
+                                >
+                                    회원가입
+                                </Components.GhostButton>
+                            </Components.RightOverlayPanel>
+                        </Components.Overlay>
+                    </Components.OverlayContainer>
+                </Components.Container>
+            </Components.BodyContainer>
+            {modalOpen && (
+                <Components.EmailModal>
+                    <Components.ModalVartical>
+                        <Components.ModalContent>
+                            <Components.ModalH3>이메일 인증</Components.ModalH3>
+                            <Components.ModalP>'{debounceEmailUp}' 로</Components.ModalP>
+                            <Components.ModalP>인증메일을 보냈습니다.</Components.ModalP>
+                            <Components.ModalP>이메일을 확인하세요.</Components.ModalP>
+                            <Components.ModalButton>
+                                <Link to="/">확인</Link>
+                            </Components.ModalButton>
+                        </Components.ModalContent>
+                    </Components.ModalVartical>
+                </Components.EmailModal>
+            )}
+        </div>
     )
 }
 
