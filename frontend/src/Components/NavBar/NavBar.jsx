@@ -50,7 +50,8 @@ const AuthenticatedNavbar = ({ currentUser }) => {
                 <nav className={style.navbar}>
                     <div className={style.usernameWrapper} ref={dropdownRef}>
                         <a className={style.username} onClick={() => setDropdownVisible(!dropdownVisible)}>
-                            {currentUser.username}
+                            {currentUser.username}-
+                            {currentUser.mbti_type}
                         </a>
                         <div
                             style={{ backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : '#ccc' }}
