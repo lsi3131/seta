@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { formatDateDayBefore, getFontColor, getButtonColor } from '../../Utils/helpers'
 import RecivedMessages from './RecivedMessages.jsx'
 import SentMessages from './SentMessages'
+import CreateMessage from './CreateMessage'
 import { UserContext } from 'userContext'
 
 const MessageManage = () => {
@@ -24,7 +25,14 @@ const MessageManage = () => {
             }
         }
         fetchData(currentPage)
-    }, [navigate, view])
+    }, [navigate, view, currentPage])
+
+    const handleDelete = (deletedIds) => {
+        setMessages((prevMessages) => ({
+            ...prevMessages,
+            results: prevMessages.results.filter((message) => !deletedIds.includes(message.id)),
+        }))
+    }
 
     if (!messages) {
         return <div></div>
@@ -33,11 +41,27 @@ const MessageManage = () => {
     return (
         <div className={style.board_contents}>
             <div className={style.board_category}>
-                <button onClick={() => setView('received')}>받은 메세지</button>
-                <button onClick={() => setView('sent')}>보낸 메세지</button>
+                <button
+                    onClick={() => setView('received')}
+                    style={{ fontWeight: view === 'received' ? 'bold' : '200' }}
+                >
+                    받은 메세지
+                </button>
+                <button onClick={() => setView('sent')} style={{ fontWeight: view === 'sent' ? 'bold' : '200' }}>
+                    보낸 메세지
+                </button>
+                <button onClick={() => setView('create')} style={{ fontWeight: view === 'create' ? 'bold' : '200' }}>
+                    메세지작성
+                </button>
             </div>
             <hr />
-            {view === 'received' ? <RecivedMessages messages={messages} /> : <SentMessages messages={messages} />}
+            {view === 'received' ? (
+                <RecivedMessages messages={messages} onDelete={handleDelete} />
+            ) : view === 'sent' ? (
+                <SentMessages messages={messages} onDelete={handleDelete} />
+            ) : (
+                <CreateMessage></CreateMessage>
+            )}
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
 import { getMainColor } from 'Utils/helpers'
+import NavSearch from "./NavSearch";
 
 const logo_image = {
     url: require('../../Assets/images/logo.png'),
@@ -16,7 +17,7 @@ const AuthenticatedNavbar = ({ currentUser }) => {
     const handleLogout = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
-        if (window.location.pathname.includes('profile')) {
+        if (window.location.pathname.includes(['/profile', '/messages'])) {
             navigate('/')
         }
         window.location.reload()
@@ -35,14 +36,16 @@ const AuthenticatedNavbar = ({ currentUser }) => {
         }
     }, [])
 
-    console.log(currentUser)
     return (
         <header className={style.header}>
             <div className={style.container}>
-                <div className={style.logo}>
+                <div className={style.logo_search}>
                     <Link to="/">
-                        <img src={logo_image.url} className={style.image} />
+                        <img src={logo_image.url} className={style.image}/>
                     </Link>
+                    <div className={style.search}>
+                        <NavSearch/>
+                    </div>
                 </div>
                 <nav className={style.navbar}>
                     <div className={style.usernameWrapper} ref={dropdownRef}>
@@ -78,15 +81,18 @@ const UnauthenticatedNavbar = ({ currentUrl }) => {
     return (
         <header className={style.header}>
             <div className={style.container}>
-                <div className={style.logo}>
+                <div className={style.logo_search}>
                     <Link to="/">
-                        <img src={logo_image.url} className={style.image} />
+                        <img src={logo_image.url} className={style.image}/>
                     </Link>
+                    <div className={style.search}>
+                        <NavSearch/>
+                    </div>
                 </div>
                 <nav className={style.navbar}>
                     <Link
                         to={`/login?redirectUrl=${encodeURIComponent(currentUrl)}`}
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                     >
                         로그인
                     </Link>
@@ -105,12 +111,13 @@ const Navbar = () => {
         setCurrentUrl(window.location.pathname + window.location.search)
     }, [navigate])
 
+    if (!currentUser) return null
     return (
         <div>
-            {currentUser ? (
-                <AuthenticatedNavbar currentUser={currentUser} />
-            ) : (
+            {currentUser.username === '' ? (
                 <UnauthenticatedNavbar currentUrl={currentUrl} />
+            ) : (
+                <AuthenticatedNavbar currentUser={currentUser} />
             )}
         </div>
     )

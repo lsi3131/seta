@@ -137,7 +137,7 @@ const Comment = ({
                                 <p>
                                     <Link to={`/profile/${comment.author}/`}>{comment.author}
                                         <sup
-                                            style={{backgroundColor: getButtonColor(comment.author_mbti)}}>{comment.author_mbti.toUpperCase()}</sup>
+                                            style={{backgroundColor: getButtonColor(comment.comment_mbti)}}>{comment.comment_mbti.toUpperCase()}</sup>
                                     </Link>
                                 </p>
                                 <p>{getUpdateTime(comment.created_at)}</p>
@@ -229,7 +229,7 @@ const CommentList = ({
     }
 
     const isMbtiInFilter = (comment) => {
-        return filterMbtiList.length === 0 || filterMbtiList.some(e => e.toLowerCase() === comment.author_mbti.toLowerCase());
+        return filterMbtiList.length === 0 || filterMbtiList.some(e => e.toLowerCase() === comment.comment_mbti.toLowerCase());
     }
 
     const isFilterOn = () => {
@@ -325,7 +325,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     placeholder={"댓글을 등록하시려면 로그인 해주세요. 로그인 하시겠습니까?"}
                     onClick={navigateToLogin}
                     rows={4}
-                    disabled={false}
+                    disabled={true}
                 ></textarea>
             )}
             {shouldRegisterMbti() && (
@@ -334,7 +334,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     placeholder={"댓글을 등록하시려면 MBTI를 등록해주세요. MBTI를 등록 하시겠습니까?"}
                     onClick={navigateToProfile}
                     rows={4}
-                    disabled={false}
+                    disabled={true}
                 ></textarea>
             )}
             {canRegisterComment() && (
@@ -350,7 +350,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
                     placeholder={"댓글을 쓸 수 없는 타입입니다"}
                     rows={4}
-                    disabled={false}
+                    disabled={true}
                 ></textarea>
             )}
 
