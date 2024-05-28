@@ -8,11 +8,11 @@ import like from '../../Assets/images/board/like.png'
 import unlike from '../../Assets/images/board/unlike.png'
 import apiClient from '../../services/apiClient'
 import {UserContext} from '../../userContext'
-import * as PropTypes from "prop-types";
 import BoardCommentBadgeList from "./BoardCommentBadgeList";
-import comment from "./Comment";
 import 'react-quill/dist/quill.snow.css'
 import Dompurify from "dompurify"
+import BoardPostBox from "../Board/BoardPostBox";
+import useBoardAPI from "../../api/Hooks/useBoardAPI";
 
 const BoardTitle = ({mbti, post, commentCount}) => {
     useEffect(() => {
@@ -87,6 +87,8 @@ const BoardDetail = () => {
     const [commentCount, setCommentCount] = useState(0);
     const [isValid, setIsValid] = useState(true);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
+    const {loading: isBoardLoading, error, posts} = useBoardAPI(mbti);
 
     useEffect(() => {
         /* 게시판 정보와 조회수를 업데이트*/
@@ -229,6 +231,10 @@ const BoardDetail = () => {
         return null // 유효하지 않은 경우 아무것도 렌더링하지 않음
     }
 
+    if(isBoardLoading) {
+        return <div>Loading board...</div>
+    }
+
     return (
         <div className={style.vertical}>
             <BoardTop mbti={mbti}/>
@@ -263,6 +269,8 @@ const BoardDetail = () => {
                         onUpdateComment={handlePutComment}
                         onDeleteComment={handleDeleteComment}
                         onAddLikeComment={handleAddLikeComment}/>
+
+            <BoardPostBox mbti={mbti} posts={posts}/>
         </div>
     )
 }
