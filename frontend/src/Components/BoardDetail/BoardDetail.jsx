@@ -13,6 +13,8 @@ import 'react-quill/dist/quill.snow.css'
 import Dompurify from "dompurify"
 import BoardPostBox from "../Board/BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
+import Pagination from "../Pagenation/Pagination";
+
 
 const BoardTitle = ({mbti, post, commentCount}) => {
     useEffect(() => {
@@ -61,7 +63,7 @@ const BoardContent = ({post, username, onSetLike}) => {
     return (
         <div className={style.board_content_container}>
             <div>
-                <div className="view ql-editor" dangerouslySetInnerHTML={{ __html : Dompurify.sanitize(post.content) }}/>
+                <div className="view ql-editor" dangerouslySetInnerHTML={{__html: Dompurify.sanitize(post.content)}}/>
             </div>
 
             <div className={style.board_content_like_button}>
@@ -81,6 +83,8 @@ const BoardDetail = () => {
     const params = new URLSearchParams(location.search)
     const navigate = useNavigate()
     const mbti = params.get('mbti')
+    const boardMbti = params.get('boardMbti')
+    const postId = params.get('postId')
 
     const [post, setPost] = useState(null)
     const [comments, setComments] = useState(null);
@@ -88,7 +92,14 @@ const BoardDetail = () => {
     const [isValid, setIsValid] = useState(true);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
-    const {loading: isBoardLoading, error, posts} = useBoardAPI(mbti);
+    const {
+        isLoading: isBoardLoading,
+        error,
+        posts,
+        totalPage,
+        currentPage,
+        handleGetPostListPage,
+    } = useBoardAPI(boardMbti);
 
     useEffect(() => {
         /* 게시판 정보와 조회수를 업데이트*/
@@ -109,6 +120,15 @@ const BoardDetail = () => {
             setIsLoading(false) // 유효성 검사 후 로딩 상태 해제
         }
     }, [comments])
+
+
+    useEffect(() => {
+        document.body.classList.add(style.customBodyStyle);
+
+        return () => {
+            document.body.classList.remove(style.customBodyStyle);
+        };
+    }, []);
 
     const handlePutHits = async () => {
         try {
@@ -231,46 +251,64 @@ const BoardDetail = () => {
         return null // 유효하지 않은 경우 아무것도 렌더링하지 않음
     }
 
-    if(isBoardLoading) {
+    if (isBoardLoading) {
         return <div>Loading board...</div>
     }
 
     return (
-        <div className={style.vertical}>
-            <BoardTop mbti={mbti}/>
-            <BoardTitle mbti={mbti} post={post} commentCount={commentCount}/>
-            <BoardContent post={post} username={currentUser ? currentUser.username : ''} onSetLike={handleSetLike}/>
-            {currentUser && post.author === currentUser.username ? (
-                <div className={style.buttonSection}>
-                    <button
-                        onClick={() => {
-                            navigate(`/update/${post.id}?mbti=${mbti}`)
-                        }}
-                    >
-                        수정
-                    </button>
-                    <button
-                        onClick={async () => {
-                            try {
-                                await apiClient.delete(`/api/posts/${post.id}/`)
-                                navigate(`/board/${mbti}`)
-                            } catch (error) {
-                                console.error('Error during delete post:', error)
-                            }
-                        }}
-                    >
-                        삭제
-                    </button>
+        <div>
+            <div className={style.elevated_component}>
+                <div className={style.board_top_container}>
+                    <BoardTop mbti={mbti}/>
                 </div>
-            ) : null}
-            <BoardCommentBadgeList initializePost={post}/>
-            <CommentBox post={post} comments={comments} commentCount={commentCount}
-                        onAddComment={handlePostComment}
-                        onUpdateComment={handlePutComment}
-                        onDeleteComment={handleDeleteComment}
-                        onAddLikeComment={handleAddLikeComment}/>
+                <div className={style.board_detail_container}>
+                    <BoardTitle mbti={mbti} post={post} commentCount={commentCount}/>
+                    <BoardContent post={post} username={currentUser ? currentUser.username : ''}
+                                  onSetLike={handleSetLike}/>
+                    {currentUser && post.author === currentUser.username ? (
+                        <div className={style.buttonSection}>
+                            <button
+                                onClick={() => {
+                                    navigate(`/update/${post.id}?mbti=${mbti}`)
+                                }}
+                            >
+                                수정
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        await apiClient.delete(`/api/posts/${post.id}/`)
+                                        navigate(`/board/${mbti}`)
+                                    } catch (error) {
+                                        console.error('Error during delete post:', error)
+                                    }
+                                }}
+                            >
+                                삭제
+                            </button>
+                        </div>
+                    ) : null}
+                    <BoardCommentBadgeList initializePost={post}/>
+                    <CommentBox post={post} comments={comments} commentCount={commentCount}
+                                onAddComment={handlePostComment}
+                                onUpdateComment={handlePutComment}
+                                onDeleteComment={handleDeleteComment}
+                                onAddLikeComment={handleAddLikeComment}/>
 
-            <BoardPostBox mbti={mbti} posts={posts}/>
+                </div>
+            </div>
+            <div className={style.elevated_component}>
+                <div className={style.board_list_container}>
+                    <div className={style.board_list_top_container}>
+                        <BoardTop mbti={boardMbti}/>
+                    </div>
+                    <div className={style.board_list_bottom_container}>
+                        <BoardPostBox boardMbti={boardMbti} posts={posts} currentPostId={postId}/>
+                        <Pagination currentPage={currentPage} totalPages={totalPage}
+                                    onPageChange={handleGetPostListPage}/>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

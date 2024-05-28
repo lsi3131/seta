@@ -3,22 +3,52 @@ import {Link, useNavigate} from "react-router-dom";
 import style from "./Board.module.css";
 import {formatDateDayBefore, getButtonColor, getFontColor} from "../../Utils/helpers";
 
-const BoardPost = ({post}) => {
+const BoardPost = ({boardMbti, post, currentPostId = null}) => {
     const navigate = useNavigate()
 
     const handleMoveToPostMbti = (postMbti) => {
         navigate(`/board/${postMbti}/`)
     }
 
+    const getPostBackgroundStyle = () => {
+        if (currentPostId === null) {
+            return {}
+        }
+
+        if (currentPostId === post.id.toString()) {
+            return {
+                backgroundColor: "#e1e1e1"
+            }
+        } else {
+            return {}
+        }
+    }
+
+    const getTitleTextStyle = () => {
+        if (currentPostId === null) {
+            return {}
+        }
+
+        if (currentPostId === post.id.toString()) {
+            return {
+                fontWeight: "bold"
+            }
+        } else {
+            return {}
+        }
+    }
+
+
     return (
         <>
-            <div className={style.board_post}>
+            <div className={style.board_post} style={getPostBackgroundStyle()}>
                 <div className={style.board_post_left}>
                     <div className={style.board_post_category}>
                         <p style={{color: getFontColor(post.post_mbti)}}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
-                        <Link to={`/detail/${post.id}?mbti=${post.post_mbti}`}>{post.title}</Link>
+                        <Link
+                            to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${boardMbti}&postId=${post.id}`} style={getTitleTextStyle()}>{post.title}</Link>
                         <p style={{color: getFontColor(post.post_mbti)}}>[{post.comments}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
@@ -36,10 +66,10 @@ const BoardPost = ({post}) => {
                 </div>
                 <div>
                     <div className={style.board_post_right}>
-                        {post.mbti.map((m) => (
-                            <button
-                                onClick={() => handleMoveToPostMbti(m)}
-                                style={{backgroundColor: getButtonColor(m)}}
+                        {post.mbti.map((m, index) => (
+                            <button key={index}
+                                    onClick={() => handleMoveToPostMbti(m)}
+                                    style={{backgroundColor: getButtonColor(m)}}
                             >
                                 {m.toUpperCase()}
                             </button>
@@ -52,26 +82,26 @@ const BoardPost = ({post}) => {
     )
 }
 
-const BoardPostList = ({mbti, posts}) => {
+const BoardPostList = ({boardMbti, posts, currentPostId}) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [posts])
 
     return (
         <div>
-            {posts.map((post) => (
-                <>
-                    <BoardPost post={post} mbti={mbti}/>
-                </>
+            {posts.map((post, index) => (
+                <div key={index}>
+                    <BoardPost currentPostId={currentPostId} post={post} boardMbti={boardMbti}/>
+                </div>
             ))}
         </div>
     )
 }
 
-const BoardPostBox = ({mbti, posts}) => {
+const BoardPostBox = ({boardMbti, posts, currentPostId}) => {
     return (
         <>
-            <BoardPostList mbti={mbti} posts={posts}/>
+            <BoardPostList boardMbti={boardMbti} posts={posts} currentPostId={currentPostId}/>
         </>
     )
 }
