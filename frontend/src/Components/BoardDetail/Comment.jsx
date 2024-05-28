@@ -165,8 +165,8 @@ const Comment = ({
                                     <button onClick={handleDeleteComment}>삭제</button>
                                 </>
                             }
-                            <Report author={comment.author} 
-                            mbti={currentUser.mbti_type}/>
+                            <Report author={comment.author}
+                                    mbti={currentUser.mbti_type}/>
                         </div>
                     </div>
                 </div>
@@ -297,12 +297,25 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
     }
 
     const notIncludedInMbtiList = () => {
-        const include = post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
-        return currentUser && currentUser['mbti_type'] !== null && !include
+        if (currentUser === null) {
+            return false;
+        }
+        if (currentUser['mbti_type'] === null) {
+            return false;
+        }
+
+        return post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
     }
 
     const canRegisterComment = () => {
-        return !notIncludedInMbtiList()
+        if (currentUser === null) {
+            return false;
+        }
+        if (currentUser['mbti_type'] === null) {
+            return false;
+        }
+
+        return !post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
     }
 
     const isDisabled = () => {

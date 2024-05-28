@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect, useContext} from 'react'
 import styled from 'styled-components'
 import apiClient from 'services/apiClient'
+import {UpdateUserContext} from "../../userContext";
 
 const Container = styled.div`
     width: 100%;
@@ -139,6 +140,7 @@ const MbtiContainer = (props) => {
     const [mbtiCheck, setMbtiCheck] = useState(true)
     const [userMbti, setUserMbti] = useState({})
     const [mbtiMessage, setMbtiMessage] = useState('')
+    const updateCurrentUser = useContext(UpdateUserContext)
 
     const handleUpdate = () => {
         if (!mbtiCheck) {
@@ -160,6 +162,8 @@ const MbtiContainer = (props) => {
                 const refresh = response.data.refreshToken
                 localStorage.setItem('accessToken', access)
                 localStorage.setItem('refreshToken', refresh)
+
+                updateCurrentUser();
                 setMbtiMessage('MBTI 가 수정되었습니다!')
             })
             .catch((error) => {
@@ -176,10 +180,10 @@ const MbtiContainer = (props) => {
             setPjPercentage(infos.percentPJ)
 
             setUserMbti({
-                ie: infos.mbti[0],
-                ns: infos.mbti[1],
-                tf: infos.mbti[2],
-                pj: infos.mbti[3],
+                ie: infos.mbti[0].toUpperCase(),
+                ns: infos.mbti[1].toUpperCase(),
+                tf: infos.mbti[2].toUpperCase(),
+                pj: infos.mbti[3].toUpperCase(),
             })
         } else {
             setIePercentage(50)

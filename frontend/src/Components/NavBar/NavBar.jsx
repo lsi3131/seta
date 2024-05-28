@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
-import { getMainColor } from 'Utils/helpers'
+import {getButtonColor, getMainColor} from 'Utils/helpers'
 import NavSearch from "./NavSearch";
 
 const logo_image = {
@@ -51,9 +51,12 @@ const AuthenticatedNavbar = ({ currentUser }) => {
                     <div className={style.usernameWrapper} ref={dropdownRef}>
                         <a className={style.username} onClick={() => setDropdownVisible(!dropdownVisible)}>
                             {currentUser.username}
+                            {currentUser.mbti_type && (
+                                <sup style={{backgroundColor: getButtonColor(currentUser.mbti_type)}}>{currentUser.mbti_type.toUpperCase()}</sup>
+                            )}
                         </a>
                         <div
-                            style={{ backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : '#ccc' }}
+                            style={{backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : '#ccc' }}
                             className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}
                         >
                             <Link to={`/profile/${currentUser.username}/`} className={style.dropdownItem}>
