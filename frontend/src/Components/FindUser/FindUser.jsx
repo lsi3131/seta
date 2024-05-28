@@ -10,12 +10,21 @@ const FindUser = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const [errorModalOpen, setErrorModalOpen] = useState(false);
     const [modalEmail, setModalEmail] = useState("");
+    const [usernameEmailError, setUsernameEmailError] = useState("");
+    const [passwordEmailError, setPasswordEmailError] = useState("");
 
-
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
 
 
     const handleFindNameSubmit = async (e) => {
         e.preventDefault();
+        if (!validateEmail(username_email)){
+            setUsernameEmailError("올바르지 않은 이메일 주소입니다.");
+            return;
+        }
         setModalEmail(username_email)
         try {
             setModalOpen(true);
@@ -27,6 +36,10 @@ const FindUser = () => {
 
     const handleFindPasswordSubmit = async (e) => {
         e.preventDefault();
+        if (!validateEmail(password_email)){
+            setPasswordEmailError("올바르지 않은 이메일 주소입니다.");
+            return;
+        }
         setModalEmail(password_email)
         try {
             setModalOpen(true);
@@ -47,7 +60,7 @@ const FindUser = () => {
                 <div className={style.username}>
                     <h2 className={style.h2}>아이디 찾기</h2>
                     <form onSubmit={handleFindNameSubmit}
-                    className={style.form}>
+                    className={style.form} noValidate>
                         <input
                             type="email"
                             value={username_email}
@@ -56,6 +69,9 @@ const FindUser = () => {
                             required
                             className={style.input}
                         />
+                        <span
+                        className={style.span}>
+                            {usernameEmailError}</span>
                         <input type="submit" value="확인"
                         className={style.button} />
                     </form>
@@ -66,7 +82,7 @@ const FindUser = () => {
                 <div className={style.password}>
                     <h2 className={style.h2}>비밀번호 찾기</h2>
                     <form onSubmit={handleFindPasswordSubmit}
-                    className={style.form}>
+                    className={style.form} noValidate>
                         <input
                             type="text"
                             value={username}
@@ -83,6 +99,8 @@ const FindUser = () => {
                             required
                             className={style.input}
                         />
+                        <span
+                        className={style.span}>{passwordEmailError}</span>
                         <input 
                         className={style.button}
                         type="submit" value="확인" />
@@ -96,7 +114,7 @@ const FindUser = () => {
                             <h3 className={style.ModalH3}>이메일 인증</h3>
                             <p className={style.ModalP}>'{modalEmail}' 로</p>
                             <p className={style.ModalP}>
-                                메일을 보냈습니다.</p>
+                                이메일을 보냈습니다.</p>
                             <p className={style.ModalP}>이메일을 확인하세요.</p>
                                 <Link 
                                 className={style.Modalbutton}
