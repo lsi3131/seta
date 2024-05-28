@@ -1,19 +1,69 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import style from "./SearchResult.module.css"
+import searchDropdownIcon from "../../Assets/images/search/dropdown.png"
+import sortDropdownIcon from "../../Assets/images/search/sort.png"
 import apiClient from "../../services/apiClient";
 import SearchPost from "./SearchPost";
 import Pagination from "../Pagenation/Pagination";
+import {getMainColor} from "../../Utils/helpers";
 
 
-const SearchPostList = ({posts, searchCount}) => {
+const SearchPostList = ({keyword, posts, searchCount}) => {
+    const [isSearchFilterOpen, setSearchFilterOpen] = useState(false)
+    const [isSortOpen, setSortOpen] = useState(false)
+
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [posts])
 
+    const toggleSearchFilterDropdown = () => {
+        setSearchFilterOpen(!isSearchFilterOpen)
+    }
+
+    const toggleSortDropdown = () => {
+        setSortOpen(!isSortOpen)
+    }
+
+
     return (
         <div className={style.list_container}>
-            <h2>게시글 검색 결과 {searchCount}건</h2>
+            <div className={style.search_result_title}>
+                <h2>{keyword}</h2>
+                <p>검색결과</p>
+            </div>
+            <div className={style.search_filter}>
+                <div className={style.dropdown}>
+                    <div className={style.dropdown_button}>
+                        <button onClick={toggleSearchFilterDropdown}>
+                            전체보기
+                            <img src={searchDropdownIcon} alt="Dropdown Icon"/>
+                        </button>
+                    </div>
+                    {(isSearchFilterOpen &&
+                        <div className={style.dropdown_menu}>
+                            <button className={style.dropdown_item}>제목+내용</button>
+                            <button className={style.dropdown_item}>제목</button>
+                            <button className={style.dropdown_item}>내용</button>
+                        </div>
+                    )}
+                </div>
+                <div className={style.dropdown}>
+                    <div className={style.dropdown_button}>
+                        <button onClick={toggleSortDropdown}>
+                            최신순
+                            <img src={sortDropdownIcon} alt="Dropdown Icon"/>
+                        </button>
+                    </div>
+                    {(isSortOpen &&
+                        <div className={style.dropdown_menu}>
+                            <button className={style.dropdown_item}>최신순</button>
+                            <button className={style.dropdown_item}>좋아요순</button>
+                            <button className={style.dropdown_item}>댓글순</button>
+                        </div>
+                    )}
+                </div>
+            </div>
             {posts.map((post) => (
                 <>
                     <SearchPost post={post}/>
@@ -39,7 +89,6 @@ const SearchResult = ({}) => {
     }, [keyword]);
 
     const handlePageChange = (page) => {
-        console.log('handle page')
         let url = `/api/posts/search/?page=${page}&search=${keyword}`
         if (category !== '') {
             url += `&category=${category}`
@@ -66,7 +115,7 @@ const SearchResult = ({}) => {
     return (
         <>
             <div className={style.container}>
-                <SearchPostList posts={searchPosts} searchCount={searchCount}/>
+                <SearchPostList keyword={keyword} posts={searchPosts} searchCount={searchCount}/>
 
                 {/*<h2>댓글 검색 결과 {searchPosts.length}건</h2>*/}
                 <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
