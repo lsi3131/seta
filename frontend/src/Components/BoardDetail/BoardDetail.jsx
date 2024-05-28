@@ -11,7 +11,8 @@ import {UserContext} from '../../userContext'
 import * as PropTypes from "prop-types";
 import BoardCommentBadgeList from "./BoardCommentBadgeList";
 import comment from "./Comment";
-
+import 'react-quill/dist/quill.snow.css'
+import Dompurify from "dompurify"
 
 const BoardTitle = ({mbti, post, commentCount}) => {
     useEffect(() => {
@@ -57,11 +58,10 @@ const BoardContent = ({post, username, onSetLike}) => {
         onSetLike(!likeOn)
     }
 
-
     return (
         <div className={style.board_content_container}>
             <div>
-                
+                <div className="view ql-editor" dangerouslySetInnerHTML={{ __html : Dompurify.sanitize(post.content) }}/>
             </div>
 
             <div className={style.board_content_like_button}>
