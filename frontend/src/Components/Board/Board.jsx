@@ -76,7 +76,7 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
 const Board = () => {
     const {mbti} = useParams()
     const {
-        loading,
+        isLoading,
         error,
         posts,
         categories,
@@ -88,7 +88,7 @@ const Board = () => {
         handleGetPostListPage,
     } = useBoardAPI(mbti)
 
-    if (loading) {
+    if (isLoading) {
         return <>Loading...</>
     }
 
@@ -113,7 +113,7 @@ const Board = () => {
                     categories={categories}
                     onCategoryChanged={handleCategoryChanged}
                 />
-                <BoardPostBox mbti={mbti} posts={posts}/>
+                <BoardPostBox boardMbti={mbti} posts={posts}/>
 
                 <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handleGetPostListPage}/>
 

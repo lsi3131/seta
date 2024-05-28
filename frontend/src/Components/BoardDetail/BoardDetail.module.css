@@ -1,11 +1,23 @@
+.elevated_component {
+ /* 그림자 효과 추가 */
+    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.1); /* x-offset, y-offset, blur-radius, color */
+}
+
+.board_top_container {
+    background-color: #ffffff;
+}
+
+.board_detail_container {
+    background-color: #ffffff;
+    padding: 30px;
+}
+
 .board_title_container {
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
 }
 
 .board_title_category {
-
 }
 
 .board_title_category > p {
@@ -41,13 +53,13 @@
     margin-right: 15px;
 }
 
-.board_title_bottom_left > p > a{
+.board_title_bottom_left > p > a {
     text-decoration: none;
     font-weight: bold;
     color: #444444;
 }
 
-.board_title_bottom_left > p > a > sup{
+.board_title_bottom_left > p > a > sup {
     color: #ffffff;
     background-color: #0056b3;
     font-size: 10px;
@@ -57,7 +69,7 @@
     font-weight: bold;
 }
 
-.board_title_bottom_left > pre{
+.board_title_bottom_left > pre {
     color: #ffffff;
     background-color: #0056b3;
     font-size: 10px;
@@ -70,6 +82,7 @@
 .board_title_bottom_right {
     display: flex;
 }
+
 .board_title_bottom_right > p {
     font-size: 16px;
     margin-right: 10px;
@@ -109,7 +122,7 @@
     background-color: transparent;
 }
 
-.board_content_like_button > button:hover{
+.board_content_like_button > button:hover {
     cursor: pointer;
 }
 
@@ -146,4 +159,21 @@
 
 .buttonSection > button:hover {
     background-color: #00000085;
+}
+
+.customBodyStyle {
+    background-color: #f1f1f1;
+}
+
+.board_list_container {
+    margin-top: 20px;
+    background-color: #ffffff;
+}
+
+.board_list_top_container {
+
+}
+
+.board_list_bottom_container {
+    padding: 20px 20px;
 }
