@@ -28,14 +28,6 @@ function Login() {
 
     const [modalOpen, setModalOpen] = React.useState(false)
 
-    // const openModal = () => {
-    //     setModalOpen(true);
-    // }
-
-    // const closeModal = () => {
-    //     setModalOpen(false);
-    // }
-
     const [formValidateChecker, setFormValidateChecker] = React.useState({
         username: false,
         email: false,
@@ -250,11 +242,6 @@ function Login() {
         }
     }
 
-    const logo_image = {
-        url: require('../../Assets/images/logo.png'),
-    }
-    // const modalBackground = React.useRef();
-
     return (
         <div>
             <Components.BodyContainer>
@@ -330,7 +317,7 @@ function Login() {
                                 value={passwordIn}
                             />
                             <Components.Span className="error-message">{errorMessage}</Components.Span>
-                            <Components.Anchor href="#">아아디/패스워드찾기</Components.Anchor>
+                            <Components.Anchor href="http://localhost:3000/finduser/">아아디/패스워드찾기</Components.Anchor>
                             <Components.Button>로그인</Components.Button>
                         </Components.Form>
                     </Components.SignInContainer>
