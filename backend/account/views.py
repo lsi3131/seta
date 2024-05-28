@@ -245,7 +245,11 @@ class MbtiAPIView(APIView):
         if not mbti_type:
             return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
-        user.mbti = Mbti.objects.get(mbti_type=mbti_type)
+        mbti = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
+        if not mbti:
+            return Response({"error": f"존재하지 않은 MBTI 포맷입니다.(=${mbti_type})"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.mbti = mbti
         user.percentIE = data.get('percentIE', 0)
         user.percentNS = data.get('percentNS', 0)
         user.percentFT = data.get('percentFT', 0)
