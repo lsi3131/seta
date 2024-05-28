@@ -332,9 +332,8 @@ class UserActivateAPIView(APIView):
         
 
 
+# 아이디 찾기
 class FindNameAPIView(APIView):
-
-    # 아이디 찾기
     def get(self, request, email):
         username = get_object_or_404(User, email=email)
         
@@ -345,7 +344,7 @@ class FindNameAPIView(APIView):
         find_uaername_email = EmailMessage(
             subject,
             message,
-            to = ['bmkim766@naver.com']
+            to = [email]
             )
         find_uaername_email.content_subtype = "html"
         find_uaername_email.send()
@@ -359,7 +358,7 @@ class FindPasswordAPIView(APIView):
     def put(self, request, email, username):
         user = get_object_or_404(User,email=email, username=username)
 
-        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+'
+        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
         random_password = User.objects.make_random_password(length=16, allowed_chars=allowed_chars)
 
         user.password = make_password(random_password)
@@ -373,7 +372,7 @@ class FindPasswordAPIView(APIView):
         find_password_email = EmailMessage(
             subject,
             message,
-            to = ['bmkim766@naver.com']
+            to = [email]
             )
         find_password_email.content_subtype = "html"
         find_password_email.send()

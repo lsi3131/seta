@@ -93,6 +93,11 @@ export const Button = styled.button`
     &:focus {
         outline: none;
     }
+
+    &:hover {
+        transform: scale(0.95);
+        cursor: pointer;
+    }
 `
 export const GhostButton = styled(Button)`
     background-color: transparent;
@@ -204,7 +209,7 @@ export const EmailModal = styled.div`
     z-index: 1000;
 `
 
-export const ModalVartical = styled.div`
+export const ModalVertical = styled.div`
     width: 300px;
     height: 200px;
     border-radius: 4px;

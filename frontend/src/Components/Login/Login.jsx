@@ -365,7 +365,7 @@ function Login() {
             </Components.BodyContainer>
             {modalOpen && (
                 <Components.EmailModal>
-                    <Components.ModalVartical>
+                    <Components.ModalVertical>
                         <Components.ModalContent>
                             <Components.ModalH3>이메일 인증</Components.ModalH3>
                             <Components.ModalP>'{debounceEmailUp}' 로</Components.ModalP>
@@ -375,7 +375,7 @@ function Login() {
                                 <Link to="/">확인</Link>
                             </Components.ModalButton>
                         </Components.ModalContent>
-                    </Components.ModalVartical>
+                    </Components.ModalVertical>
                 </Components.EmailModal>
             )}
         </div>
