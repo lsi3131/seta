@@ -14,6 +14,7 @@ import Dompurify from "dompurify"
 import BoardPostBox from "../Board/BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
 import Pagination from "../Pagenation/Pagination";
+import useBoardDetailAPI from "../../api/Hooks/useBoardDetailAPI";
 
 
 const BoardTitle = ({mbti, post, commentCount}) => {
@@ -78,49 +79,32 @@ const BoardContent = ({post, username, onSetLike}) => {
 
 const BoardDetail = () => {
     const currentUser = useContext(UserContext)
-    const {detailId} = useParams()
+    const {detailId: postId} = useParams()
     const location = useLocation()
     const params = new URLSearchParams(location.search)
     const navigate = useNavigate()
     const mbti = params.get('mbti')
     const boardMbti = params.get('boardMbti')
-    const postId = params.get('postId')
-
-    const [post, setPost] = useState(null)
-    const [comments, setComments] = useState(null);
-    const [commentCount, setCommentCount] = useState(0);
-    const [isValid, setIsValid] = useState(true);
-    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
     const {
         isLoading: isBoardLoading,
-        error,
         posts,
         totalPage,
         currentPage,
         handleGetPostListPage,
     } = useBoardAPI(boardMbti);
 
-    useEffect(() => {
-        /* 게시판 정보와 조회수를 업데이트*/
-        handleGetPost()
-        handlePutHits()
-    }, [detailId, mbti, navigate])
-
-    useEffect(() => {
-        if (post) {
-            /* 게시판 정보를 전부 읽어온 후 댓글 리스트를 읽어온다. */
-            handleGetCommentList()
-        }
-    }, [post, mbti, navigate])
-
-    /* Comment를 전부 읽어오면 로딩이 완료된다.*/
-    useEffect(() => {
-        if (comments) {
-            setIsLoading(false) // 유효성 검사 후 로딩 상태 해제
-        }
-    }, [comments])
-
+    const {
+        isLoading: isBoardDetailLoading,
+        post,
+        comments,
+        commentCount,
+        handleSetLike,
+        handlePostComment,
+        handlePutComment,
+        handleDeleteComment,
+        handleAddLikeComment
+    } = useBoardDetailAPI(postId)
 
     useEffect(() => {
         document.body.classList.add(style.customBodyStyle);
@@ -130,125 +114,8 @@ const BoardDetail = () => {
         };
     }, []);
 
-    const handlePutHits = async () => {
-        try {
-            await apiClient.put(`/api/posts/${detailId}/hits/`)
-        } catch (error) {
-            console.error('Error during put hits:', error)
-        }
-    }
-
-    const handleGetPost = async () => {
-        try {
-            const response = await apiClient.get(`/api/posts/${detailId}/`)
-            setPost(response.data)
-        } catch (error) {
-            console.error('Error during get post detail:', error)
-            setIsValid(false)
-            navigate('/')
-        }
-    }
-
-    const handleSetLike = async (like_on) => {
-        if (!currentUser) {
-            return
-        }
-
-        const data = {
-            like: like_on ? 1 : 0,
-        }
-
-        try {
-            await apiClient.post(`/api/posts/${post.id}/likey/`, data)
-            await handleGetPost()
-        } catch (error) {
-            console.error('Error during add like to post:', error)
-        }
-    }
-
-    const handleGetCommentList = () => {
-        apiClient.get(`/api/posts/${post.id}/comments/`)
-            .then(response => {
-                console.log('get comments successful:', response.data);
-                setComments(response.data['results']);
-                setCommentCount(response.data['count']);
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    };
-
-    const handlePostComment = (content, parentId = null) => {
-        let data = {
-            content: content
-        };
-        if (parentId) {
-            data.parent_comment_id = parentId;
-        }
-        apiClient.post(`/api/posts/${post.id}/comments/`, data)
-            .then(response => {
-                console.log('post comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetCommentList();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    const handlePutComment = (commentId, content) => {
-        const data = {
-            content: content
-        };
-        apiClient.put(`/api/posts/${post.id}/comments/${commentId}/`, data)
-            .then(response => {
-                console.log('put comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetCommentList();
-            })
-            .catch(error => {
-                console.error('Error during put comments:', error.response.data.error);
-            })
-    }
-
-    const handleDeleteComment = (commentId) => {
-        apiClient.delete(`/api/posts/${post.id}/comments/${commentId}/`)
-            .then(response => {
-                console.log('delete comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetCommentList();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    const handleAddLikeComment = (commentId, isLikeOn) => {
-        const data = {
-            recommend: isLikeOn ? 1 : 0
-        };
-
-        apiClient.post(`/api/posts/${post.id}/comments/${commentId}/recommend/`, data)
-            .then(response => {
-                console.log('post comments successful:', response.data);
-
-                /* comment 정보 업데이트 */
-                handleGetCommentList();
-            })
-            .catch(error => {
-                console.error('Error during add comments:', error.response.data.error);
-            })
-    }
-
-    if (isLoading) {
+    if (isBoardDetailLoading) {
         return <div>Loading...</div> // 데이터를 불러오는 동안 로딩 메시지 표시
-    }
-
-    if (!isValid) {
-        return null // 유효하지 않은 경우 아무것도 렌더링하지 않음
     }
 
     if (isBoardLoading) {

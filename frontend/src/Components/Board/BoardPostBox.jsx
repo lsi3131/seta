@@ -17,7 +17,7 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
 
         if (currentPostId === post.id.toString()) {
             return {
-                backgroundColor: "#e1e1e1"
+                backgroundColor: "#f1f1f1"
             }
         } else {
             return {}
@@ -53,7 +53,7 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
                     </div>
                     <div className={style.board_post_bottom}>
                         <div>
-                            <p>{post.author}</p>
+                            <p>{post.author}<sup style={{backgroundColor: getButtonColor(post.post_mbti)}}>{post.post_mbti.toUpperCase()}</sup></p>
                         </div>
                         <div>
                             <p>{formatDateDayBefore(post.created_at)}</p>
