@@ -17,6 +17,11 @@
     justify-content: space-between;
 }
 
+.logo_search {
+    display: flex;
+    align-items: center;
+}
+
 .image {
     width: 171px;
     height: 36px;

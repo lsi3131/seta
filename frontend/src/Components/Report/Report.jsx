@@ -16,12 +16,13 @@ const Report = (e) => {
     }
 
     return (
-        <div>
+        <div >
             <button className={style.button} onClick={openModal}  >신고</button>
+            <div className={style.vertical}>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
-                className = {style.vertica}>
+                className = {style.modal}>
                 <div className={style.content} >
                     <h3>!</h3>
                     <h2>신고</h2>
@@ -33,6 +34,7 @@ const Report = (e) => {
                     <button onClick={closeModal}>네</button>
                 </div>
             </Modal>
+            </div>
         </div>
     )
 }

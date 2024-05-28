@@ -1,6 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.db.models import Count, F
 from django.core.paginator import Paginator
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,18 +10,35 @@ from .models import *
 from .validate import *
 from rest_framework.decorators import api_view, permission_classes
 
-
 def serialize_post(post):
-    # 추천사용자 이름을 체크하기 위해 사용
     like_usernames = [user.username for user in post.likes.all()]
     return {
         "id": post.id,
         "author": post.author.username,
+        "post_mbti": post.post_mbti.mbti_type,
         "category": post.category.name,
         "title": post.title,
         "hits": post.hits,
         "likes": post.likes.count(),
         "like_usernames": like_usernames,
+        "comments": post.comments.count(),
+        "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
+        "created_at": post.created_at,
+        "updated_at": post.updated_at,
+    }
+
+def serialize_posts_for_search(post):
+    author_mbti = post.author.mbti.mbti_type if post.author.mbti else None
+    return {
+        "id": post.id,
+        "author": post.author.username,
+        "author_mbti": author_mbti,
+        "post_mbti": post.post_mbti.mbti_type,
+        "category": post.category.name,
+        "title": post.title,
+        "content": post.content,
+        "hits": post.hits,
+        "likes": post.likes.count(),
         "comments": post.comments.count(),
         "mbti": [mbti.mbti_type for mbti in post.mbti.all()],
         "created_at": post.created_at,
@@ -46,12 +64,15 @@ def serialize_comment(comment):
     recommend = [r.id for r in comment.recommend.all()]
     parent_comment_id = comment.parent.id if comment.parent else None
 
+    author_mbti_type = comment.author.mbti.mbti_type if comment.author.mbti else 'EN'
+
     return {
         "id": comment.id,
         "post": comment.post.id,
         "author": comment.author.username,
-        "author_mbti": comment.author.mbti.mbti_type,
+        "author_mbti": author_mbti_type,
         "parent_id": parent_comment_id,
+        'comment_mbti': comment.comment_mbti.mbti_type,
         "content": comment.content,
         "recommend": recommend,
         "created_at": comment.created_at,
@@ -124,7 +145,70 @@ class PostAPIView(APIView):
 
         paginated_response_data = {
             'total_page': paginator.num_pages,
+            'per_page': per_page,
+            'results': response_data,
+        }
+
+        return Response(paginated_response_data, status=status.HTTP_200_OK)
+
+
+class SearchAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        search = request.GET.get("search")
+        if not search:
+            return Response({'error': 'search is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        search_type = request.GET.get('searchType', 'title_content')
+        if not search_type or search_type == '':
+            search_type = 'title_content'
+
+        # 검색 필터링
+        posts = Post.objects.all()
+        if search_type == 'title':
+            posts = posts.filter(title__contains=search)
+        elif search_type == 'content':
+            posts = posts.filter(content__contains=search)
+        elif search_type == 'title_content':
+            posts = posts.filter(Q(title__contains=search) | Q(content__contains=search))
+        elif search_type == 'author':
+            posts = posts.filter(author__username__contains=search)
+
+        # MBTI 필터링
+        # TODO
+
+        # # 카테고리 필터링
+        category = request.GET.get('category')
+        if category:
+            posts = posts.filter(category__name=category)
+
+        # # 정렬 [좋아요순 / 최근순 / 댓글순]
+        order = request.GET.get("order", 'recent')
+        if order == 'like':
+            posts = posts.annotate(like_count=Count(
+                F('likes'))).order_by('-like_count')
+        elif order == 'recent':
+            posts = posts.order_by('-created_at')
+        elif order == 'comment':
+            posts = posts.annotate(comment_count=Count(
+                F('comments'))).order_by('-comment_count')
+
+        search_count = posts.count()
+        # 페이지네이션 15개씩
+        per_page = 15
+        paginator = Paginator(posts, per_page)
+        page_number = request.GET.get("page")
+        if page_number:
+            posts = paginator.get_page(page_number)
+        response_data = []
+        for post in posts:
+            response_data.append(serialize_posts_for_search(post))
+
+        paginated_response_data = {
+            'total_page': paginator.num_pages,
             "per_page": per_page,
+            'count': search_count,
             'results': response_data,
         }
 
@@ -144,11 +228,14 @@ class CreatePostAPIView(APIView):
         content = data['content']
         category = PostCategory.objects.get(name=data['category'])
         post = Post.objects.create(title=title, category=category,
-                                   content=content, author=request.user)
+                                   content=content, author=request.user,
+                                   post_mbti=request.user.mbti)
         mbti_types = data['mbti']
+
         for mbti_type in mbti_types:
             mbti_s = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
             post.mbti.add(mbti_s)
+
 
         return Response(
             {"message": "게시글이 작성되었습니다.",
@@ -282,7 +369,8 @@ class PostCommentsAPIView(APIView):
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
         post = get_object_or_404(Post, id=post_pk)
         Comment.objects.create(content=content, post=post,
-                               author=request.user, parent=parent_comment)
+                               author=request.user, comment_mbti=request.user.mbti,
+                               parent=parent_comment)
         return Response(
             {"message": "댓글이 작성되었습니다."},
             status=status.HTTP_201_CREATED

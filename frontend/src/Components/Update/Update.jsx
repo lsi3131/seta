@@ -1,14 +1,38 @@
 import style from './Update.module.css'
 import { useParams, useNavigate } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import apiClient from 'services/apiClient'
 import { getFontColor } from 'Utils/helpers'
+import ReactQuill, { Quill } from 'react-quill';
+import ImageResize from 'quill-image-resize';
+
+Quill.register('modules/ImageResize', ImageResize);
+const formats = [
+    'font',
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'align',
+    'color',
+    'background',
+    'size',
+    'h1',
+    'image',
+];
 
 const Update = () => {
     const { detailId } = useParams()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
     const [categorys, setCategorys] = useState('')
+    const [values, setValues] = useState('');
     const [inputs, setInputs] = useState({
         id: '',
         title: '',
@@ -16,7 +40,77 @@ const Update = () => {
         category: '',
         mbti: [],
     })
+    
+    const quillRef = useRef(null);
+    
+    const imageHandler = async () => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*");
+        input.click();
+        input.addEventListener("change", async () => {
+            //이미지를 담아 전송할 file을 만든다
+            const file = input.files[0];
+            const fileExt = file.name.split('.').pop();
+            
+            // 확장자 제한
+            if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
+                alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
+                return;
+            }
+            try {
+                //업로드할 파일의 이름으로 Date 사용
+                const name = Date.now();
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('name', name);
+                const result = await apiClient.post('/api/posts/image/', formData, {
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                })
+            console.log(result)
+            const url = "https://picturebucket9856.s3.amazonaws.com/media/"+file.name
+            const editor = quillRef.current.getEditor();
+            const range = editor.getSelection();
+            editor.insertEmbed(range.index, "image", `${url}`);
+            // 이미지 삽입 후 줄바꿈 삽입
+            editor.setSelection(range.index + 1);
+            editor.insertText(range.index + 1, '\n');
+
+            // 커서를 새 줄로 이동
+            editor.setSelection(range.index + 2, 0);
+            } catch (error) {
+                console.log(error);
+            }
+        });
+    };
+
+    const modules = useMemo(() => {
+        return {
+            toolbar: {
+                container: 
+                [   
+                    [{ size: ['small', false, 'large', 'huge'] }],
+                    [{ align: [] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{color: [],},{ background: [] },],
+                    ['image'],
+                ],
+                handlers: {
+                    image: imageHandler,
+                }
+            },
+            ImageResize: {
+                parchment: Quill.import('parchment')
+            }
+        };
+    }, []);
+
+    
     const [Error, setError] = useState(' ')
+    
     const [mbti_checks, setMbtiChecks] = useState([
         { id: 1, label: 'ISTJ', checked: false },
         { id: 2, label: 'ISFJ', checked: false },
@@ -53,6 +147,7 @@ const Update = () => {
                     category: post.category,
                     mbti: post.mbti,
                 })
+                setValues(post.content); 
                 setMbtiChecks((prevChecks) =>
                     prevChecks.map((check) => (post.mbti.includes(check.label) ? { ...check, checked: true } : check)),
                 )
@@ -61,6 +156,7 @@ const Update = () => {
                 navigate(-1)
             }
         }
+        
         fetchPost()
     }, [])
 
@@ -75,6 +171,7 @@ const Update = () => {
             }
         })
     })
+    
 
     const handleCheckboxChange = (id) => {
         const updatedCheckboxes = mbti_checks.map((check) =>
@@ -104,11 +201,12 @@ const Update = () => {
         }
     }
 
+
     const onSubmit = async (e) => {
         e.preventDefault()
+        const postData = {...inputs, content: values === "<p><br></p>" ? "" : values}
         try {
-            const response = await apiClient.put(`/api/posts/${detailId}/`, inputs)
-            console.log(inputs)
+            const response = await apiClient.put(`/api/posts/${detailId}/`, postData)
             navigate(`/detail/${detailId}?mbti=${inputs.mbti[0]}`)
             console.log('Server response:', response.data)
         } catch (error) {
@@ -118,7 +216,7 @@ const Update = () => {
                 setError('MBTI를 선택하세요')
             } else if (!inputs.title) {
                 setError('제목을 입력하세요')
-            } else if (!inputs.content) {
+            } else if (!values) {
                 setError('내용을 입력하세요')
             }
         }
@@ -179,16 +277,17 @@ const Update = () => {
                     ))}
                 </div>
 
-                <div className={style.content}>
-                    <div>
-                        <textarea
-                            id="content"
-                            placeholder="뭐 욕설안돼 어쩌구 비방이 저쩌구 신고될수있으니 주의해 주세요"
-                            value={inputs.content}
-                            onChange={onChange}
-                        />
-                    </div>
-                </div>
+                <ReactQuill
+                    id="content"
+                    theme="snow"
+                    ref={quillRef}
+                    style={{height:'600px'}}
+                    modules={modules}
+                    formats={formats}
+                    value = {values}
+                    onChange={setValues}
+                    placeholder={'타인을 비방하거나 커뮤니티 이용정책에 맞지 않는 게시글은 예고없이 삭제될 수 있습니다.'}
+                />
 
                 <p></p>
                 <p className={style.Error}>{Error}</p>

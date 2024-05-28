@@ -1,0 +1,73 @@
+
+.post {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 10px;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+}
+
+.right {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.right > button {
+    color: #FFFFFF;
+    margin: 3px;
+    border-radius: 14px;
+    border: none;
+    font-size: 12px;
+    width: 60px;
+    height: 25px;
+}
+
+.right > button:hover {
+    transform: translateY(-0.1rem);
+    box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
+    cursor: pointer;
+}
+
+.category {
+    display: flex;
+}
+
+.title {
+    display: flex;
+    margin: 7px 0;
+    align-items: center;
+}
+
+.title > a {
+    color: #000000;
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: 25px;
+}
+
+.title > a:hover {
+    color: red;
+}
+
+.left_bottom {
+    display: flex;
+}
+
+.left_bottom > div {
+    color: #8F8F8F;
+    margin-right: 10px;
+    /*font-size: 10px;*/
+}
+
+.like {
+    display: flex;
+}
+
+.like > p {
+    margin-right: 5px;
+}
+
