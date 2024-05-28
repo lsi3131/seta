@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 import style from "./SearchResult.module.css"
 import apiClient from "../../services/apiClient";
 import SearchPost from "./SearchPost";
@@ -23,7 +23,7 @@ const SearchPostList = ({posts}) => {
     )
 }
 
-const SearchResult = ({}) => {
+const SearchResult = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const keyword = queryParams.get('keyword');

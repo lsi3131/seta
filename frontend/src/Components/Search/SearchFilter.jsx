@@ -1,4 +1,4 @@
-import style from "./SearchResult.module.css";
+import style from "./SearchFilter.module.css"
 import searchDropdownIcon from "../../Assets/images/search/dropdown.png";
 import sortDropdownIcon from "../../Assets/images/search/sort.png";
 import React, {useEffect, useRef, useState} from "react";
