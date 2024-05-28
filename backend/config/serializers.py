@@ -12,13 +12,17 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     
     def validate(self, attrs):
         username = attrs['username']
-        password = attrs['password'] 
-        user = get_object_or_404(User, username=username)
-
+        password = attrs['password']
+        try:
+            user = User.objects.get(username=username)
+        except:
+            raise ValidationError({"detail":"아이디가 틀렸습니다"})
+        
+        if not check_password(password, user.password):
+            raise ValidationError({"detail":"비밀번호가 틀렸습니다."})
+        
         if not user.is_active:
             raise ValidationError({"detail":"이메일 인증을 해주세요"})
-        elif not check_password(password, user.password):
-            raise ValidationError({"detail":"아이디 또는 비밀번호가 틀렸습니다."})
         
         return super().validate(attrs)
 

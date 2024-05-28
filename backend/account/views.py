@@ -337,6 +337,7 @@ class FindNameAPIView(APIView):
     def get(self, request, email):
         username = get_object_or_404(User, email=email)
         
+        
         subject = ''' '세타' 아이디 찾기'''
         message = render_to_string('account/find_username.html', {'username': username,
             "email":email})
