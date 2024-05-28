@@ -90,7 +90,6 @@ const BoardDetail = () => {
 
     useEffect(() => {
         /* 게시판 정보와 조회수를 업데이트*/
-        console.log('mbti:', mbti)
         handleGetPost()
         handlePutHits()
     }, [detailId, mbti, navigate])

@@ -180,10 +180,10 @@ const MbtiContainer = (props) => {
             setPjPercentage(infos.percentPJ)
 
             setUserMbti({
-                ie: infos.mbti[0],
-                ns: infos.mbti[1],
-                tf: infos.mbti[2],
-                pj: infos.mbti[3],
+                ie: infos.mbti[0].toUpperCase(),
+                ns: infos.mbti[1].toUpperCase(),
+                tf: infos.mbti[2].toUpperCase(),
+                pj: infos.mbti[3].toUpperCase(),
             })
         } else {
             setIePercentage(50)
