@@ -304,7 +304,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
             return false;
         }
 
-        return post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
+        return !post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
     }
 
     const canRegisterComment = () => {
@@ -315,7 +315,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
             return false;
         }
 
-        return !post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
+        return post.mbti.some(e => e.toLowerCase() === currentUser['mbti_type'].toLowerCase())
     }
 
     const isDisabled = () => {
