@@ -35,7 +35,7 @@ const BoardTitle = ({mbti, post, commentCount}) => {
                 <div className={style.board_title_bottom_left}>
                     <p>
                         <Link to={`/profile/${post.author}/`}>{post.author}
-                            <sup style={{backgroundColor: getButtonColor(mbti)}}>{mbti}</sup>
+                            <sup style={{backgroundColor: getButtonColor(mbti)}}>{mbti.toUpperCase()}</sup>
                         </Link>
                     </p>
 
