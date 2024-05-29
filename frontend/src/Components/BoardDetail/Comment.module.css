@@ -39,7 +39,7 @@
     margin: 5px;
 }
 
-.comment_list_info_right > button > img{
+.comment_list_info_right > button > img {
     width: 30px;
     height: 30px;
 }
@@ -105,17 +105,17 @@
     margin-right: 10px;
 }
 
-.comment_left_bottom_1_1_like > button{
+.comment_left_bottom_1_1_like > button {
     border: none;
     background-color: transparent;
     margin-right: 8px;
 }
 
-.comment_left_bottom_1_1_like > button:hover{
+.comment_left_bottom_1_1_like > button:hover {
     cursor: pointer;
 }
 
-.comment_left_bottom_1_1_like > button > img{
+.comment_left_bottom_1_1_like > button > img {
     width: 20px;
     height: 20px;
 }
@@ -232,12 +232,13 @@
     margin-bottom: 5px;
     border-radius: 10px;
     width: 100%;
-    padding-top: 10px;
-    padding-left: 10px;
+    padding: 10px;
     font-size: 15px;
     outline: none;
     background-color: #ffffff;
     border: 2px solid #00000029;
+    overflow: hidden;
+    resize: none;
 }
 
 .comment_input_container > textarea:focus {
@@ -275,7 +276,7 @@
     color: #444444;
 }
 
-.comment_input_user > p > sup{
+.comment_input_user > p > sup {
     color: #ffffff;
     background-color: #0056b3;
     font-size: 10px;
@@ -366,12 +367,13 @@
     margin-bottom: 5px;
     border-radius: 10px;
     width: 100%;
-    padding-top: 10px;
-    padding-left: 10px;
+    padding: 10px;
     font-size: 15px;
     outline: none;
     background-color: #ffffff;
     border: 2px solid #00000029;
+    overflow: hidden;
+    resize: none;
 }
 
 .comment_sub_input_2 > button {

@@ -21,9 +21,37 @@ const CommentSubInput = ({
                              onUpdateComment,
                          }) => {
     const [content, setContent] = useState(initialContent)
+    const [isComposing, setIsComposing] = useState(false);
+    const [rows, setRows] = useState(1);
 
     useEffect(() => {
     }, []);
+
+    useEffect(() => {
+        const lineCount = content.split('\n').length;
+        setRows(lineCount);
+    }, [content]);
+
+
+    const handleCompositionStart = () => {
+        setIsComposing(true);
+    };
+
+    const handleCompositionEnd = () => {
+        setIsComposing(false);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' && !isComposing) {
+            if (event.shiftKey) {
+                // Shift + Enter: 줄 바꿈
+            } else {
+                // Enter : 제출
+                event.preventDefault()
+                handleRegisterComment()
+            }
+        }
+    };
 
     const getModeText = () => {
         let text = '댓글 등록';
@@ -58,7 +86,10 @@ const CommentSubInput = ({
                         placeholder="댓글을 입력하세요"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        rows={4}/>
+                        onKeyDown={handleKeyDown}
+                        onCompositionStart={handleCompositionStart}
+                        onCompositionEnd={handleCompositionEnd}
+                        rows={rows}/>
                     <button onClick={handleRegisterComment}>댓글 등록</button>
                 </div>
 
@@ -270,12 +301,43 @@ const CommentList = ({
 const CommentInput = ({post, onAddComment, parentCommentId}) => {
     const currentUser = useContext(UserContext)
     const [content, setContent] = useState('');
+    const [isComposing, setIsComposing] = useState(false);
+    const [rows, setRows] = useState(1);
 
     useEffect(() => {
     }, []);
 
-    const handleAddComment = async (e) => {
-        e.preventDefault();
+    useEffect(() => {
+        const lineCount = content.split('\n').length;
+        setRows(lineCount);
+    }, [content]);
+
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !isComposing) {
+            if (e.shiftKey) {
+                // Shift + Enter: 줄 바꿈
+                // setContent(content + '\n');
+            } else {
+                // Enter : 제출
+                e.preventDefault()
+                console.log('content', content, e)
+                handleAddComment(e)
+            }
+        }
+    };
+
+    const handleCompositionStart = () => {
+        setIsComposing(true);
+    };
+
+    const handleCompositionEnd = () => {
+        setIsComposing(false);
+    };
+
+
+    const handleAddComment = () => {
+        // e.preventDefault();
         onAddComment(content, parentCommentId)
         setContent('');
     };
@@ -337,7 +399,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
                     placeholder={"댓글을 등록하시려면 로그인 해주세요. 로그인 하시겠습니까?"}
                     onClick={navigateToLogin}
-                    rows={4}
+                    rows={rows}
                     disabled={true}
                 ></textarea>
             )}
@@ -346,7 +408,7 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
                     placeholder={"댓글을 등록하시려면 MBTI를 등록해주세요. MBTI를 등록 하시겠습니까?"}
                     onClick={navigateToProfile}
-                    rows={4}
+                    rows={rows}
                     disabled={true}
                 ></textarea>
             )}
@@ -355,14 +417,17 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     placeholder={"댓글을 입력하세요"}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    rows={4}
+                    rows={rows}
+                    onKeyDown={handleKeyDown}
+                    onCompositionStart={handleCompositionStart}
+                    onCompositionEnd={handleCompositionEnd}
                 ></textarea>
             )}
             {notIncludedInMbtiList() && (
                 <textarea
                     style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
                     placeholder={"댓글을 쓸 수 없는 타입입니다"}
-                    rows={4}
+                    rows={rows}
                     disabled={true}
                 ></textarea>
             )}
