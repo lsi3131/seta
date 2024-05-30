@@ -50,7 +50,7 @@ const ProfileTop = ({ user, onFollowUpdate }) => {
                 console.error('fail to follow/unfollow', error)
             })
     }
-
+    
     const editProfile = () => {
         //TODO : profile 수정 페이지 구현시 적용
         navigate(`/profile/update/${user.username}`)
@@ -65,7 +65,7 @@ const ProfileTop = ({ user, onFollowUpdate }) => {
                         <h2>{user.username}</h2>
                     </div>
                     <div>
-                        {currentUser && currentUser.mbti_type ? 
+                        {user && user.mbti_type ? 
                         <img className={style.board_top_image} src={getImage(user.mbti)} alt="" /> : 
                         <div className={style.board_top_none_mbti}>
                             <h2>?</h2>
