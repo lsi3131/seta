@@ -69,6 +69,7 @@ const SentMessages = ({ messages, onDelete }) => {
                                 </p>
                             </td>
                             <td className={style.board_message_subject}>
+                                <sup>{message.parent && <span className={style.replyMessageBadge}>답장</span>}</sup>
                                 <Link to={`/message/${message.id}`}>{message.subject}</Link>
                             </td>
                             <td className={style.board_message_timestamp}>
