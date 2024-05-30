@@ -48,7 +48,6 @@ const RecivedMessages = ({ messages, onDelete }) => {
                         <th className={style.board_header_item}>보낸사람</th>
                         <th className={style.board_header_item}>제목</th>
                         <th className={style.board_header_item}>날짜</th>
-                        <th className={style.board_header_item}>차단</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,6 +66,7 @@ const RecivedMessages = ({ messages, onDelete }) => {
                                 </p>
                             </td>
                             <td className={style.board_message_subject}>
+                                <sup>{message.parent && <span className={style.replyMessageBadge}>답장</span>}</sup>
                                 <Link to={`/message/${message.id}`}>{message.subject}</Link>
                             </td>
                             <td className={style.board_message_timestamp}>
@@ -74,9 +74,6 @@ const RecivedMessages = ({ messages, onDelete }) => {
                                 <span className={style.board_message_timestamp_small}>
                                     ({formatDateDayBefore(message.timestamp)})
                                 </span>
-                            </td>
-                            <td className={style.board_message_body}>
-                                <p>차단</p>
                             </td>
                         </tr>
                     ))}
