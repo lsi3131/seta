@@ -139,7 +139,9 @@ const Comment = ({
     }
 
     const handleSetLike = () => {
-        onAddLikeComment(comment.id, !isLikeOn(comment))
+        if(!isLikeOn(comment)) {
+            onAddLikeComment(comment.id, true)
+        }
     }
 
     const handleInputMode = (modeType) => {
