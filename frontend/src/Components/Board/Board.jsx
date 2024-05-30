@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import style from './Board.module.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
 import { formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor } from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
 import BoardTop from '../BoardTop/BoardTop'
