@@ -291,7 +291,7 @@ class PostDetailAPIView(APIView):
         if data["mbti"]:
             mbti_set = []
             for mbti in data["mbti"]:
-                mbti = get_object_or_404(Mbti, mbti_type=mbti)
+                mbti = Mbti.objects.filter(mbti_type__icontains=mbti).first()
                 mbti_set.append(mbti)
             post.mbti.set(mbti_set)
 
