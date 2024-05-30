@@ -49,34 +49,39 @@ const Write = () => {
             //이미지를 담아 전송할 file을 만든다
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
+            const name = Date.now();
+            const renamedFile = new File([file], name, { type: file.type });
             
             // 확장자 제한
             if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
                 alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
                 return;
             }
+
+            const editor = quillRef.current.getEditor();
+            const range = editor.getSelection();
+            editor.insertEmbed(range.index, "image", require("../../Assets/images/loading.gif"));
+
             try {
                 //업로드할 파일의 이름으로 Date 사용
-                const name = Date.now();
                 const formData = new FormData();
-                formData.append('image', file);
+                formData.append('image', renamedFile);
                 formData.append('name', name);
                 const result = await apiClient.post('/api/posts/image/', formData, {
                     headers: {
                         'Content-Type' : 'multipart/form-data'
                     }
                 })
-            console.log(result)
-            const url = "https://picturebucket9856.s3.amazonaws.com/media/"+file.name
-            const editor = quillRef.current.getEditor();
-            const range = editor.getSelection();
-            editor.insertEmbed(range.index, "image", `${url}`);
-            // 이미지 삽입 후 줄바꿈 삽입
-            editor.setSelection(range.index + 1);
-            editor.insertText(range.index + 1, '\n');
+                console.log(result)
+                const url = "https://picturebucket9856.s3.amazonaws.com/media/"+renamedFile.name
+                editor.deleteText(range.index, 1);
+                editor.insertEmbed(range.index, "image", `${url}`);
+                // 이미지 삽입 후 줄바꿈 삽입
+                editor.setSelection(range.index + 1);
+                editor.insertText(range.index + 1, '\n');
 
-            // 커서를 새 줄로 이동
-            editor.setSelection(range.index + 2, 0);
+                // 커서를 새 줄로 이동
+                editor.setSelection(range.index + 2, 0);
             } catch (error) {
                 console.log(error);
             }

@@ -93,7 +93,7 @@ const SearchResult = () => {
                               onUpdateCategory={handleCategory}
                               onUpdateOrder={handleUpdateOrder}/>
                 <SearchPostList posts={searchPosts}/>
-
+                
                 {/*<h2>댓글 검색 결과 {searchPosts.length}건</h2>*/}
                 <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
             </div>

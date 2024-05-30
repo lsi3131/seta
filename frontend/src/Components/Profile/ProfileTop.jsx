@@ -65,7 +65,14 @@ const ProfileTop = ({ user, onFollowUpdate }) => {
                         <h2>{user.username}</h2>
                     </div>
                     <div>
-                        <img className={style.board_top_image} src={getImage(user.mbti)} alt="" />
+                        {currentUser && currentUser.mbti_type ? 
+                        <img className={style.board_top_image} src={getImage(user.mbti)} alt="" /> : 
+                        <div className={style.board_top_none_mbti}>
+                            <h2>?</h2>
+                            <p>해당 유저의</p>
+                            <p>MBTI가 없습니다</p>
+                        </div>
+                    }
                     </div>
                 </div>
                 <div className={style.board_top_right}>
