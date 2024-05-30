@@ -185,19 +185,7 @@ const MbtiRanking = ({ranking}) => {
 }
 
 const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
-    const introduce = `난 너를 믿었던만큼 난 내 친구도 믿었기에
-    난 아무런 부담없이 널 내 친구에게 소개시켜 줬고
-    그런 만남이 있은 후부터 우리는 자주 함께 만나며
-    즐거운 시간을 보내며 함께 어울렸던 것뿐인데 그런 만남이 어디부터 잘못됐는지
-    난 알 수 없는 예감에 조금씩 빠져들고 있을때쯤
-    넌 나보다 내 친구에게 관심을 더 보이며
-    날 조금씩 멀리하던 그 어느 날 너와 내가 심하게 다툰 그 날 이후로
-    너와 내 친구는 연락도 없고 날 피하는 것 같아
-    그제서야 난 느낀거야 모든 것이 잘못돼 있는걸
-    너와 내 친구는 어느새 다정한 연인이 돼 있었지`
-
     useEffect(() => {
-
     }, [user, followingRanks, followerRanks])
 
     const getRankText = (ranks, rankNum /* 1~3*/) => {
@@ -229,14 +217,20 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
         <div style={{display: "flex", justifyContent: "space-around"}}>
             <div>
                 <div className={style.container}>
-                    <h3 className={style.title}>자기소개</h3>
+                    <h3 className={style.title}>소개</h3>
                     <div className={style.introduce}>
-                        <div>{introduce}</div>
+                        {user.introduce ? (
+                            <div>{user.introduce}</div>
+                        ) : (
+                            <div className={style.emptyIntroduce}>
+                                <p>[자기소개 글을 작성하여 본인을 소개해주세요]</p>
+                            </div>
+                        )}
                     </div>
 
                 </div>
                 <div className={style.container}>
-                    <h3 className={style.title}>내 mbti 성향</h3>
+                <h3 className={style.title}>내 mbti 성향</h3>
                     {isMbtiExists(user) ? (
                         <MbtiRatio user={user}/>
                     ) : (

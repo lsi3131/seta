@@ -1,8 +1,6 @@
 .board_top {
     display: flex;
     align-items: center;
-    margin: 10px 0;
-    /*height: 200px;*/
     padding: 25px 40px;
     width: 1200px;
     /*background-color: #E1FFDC;*/

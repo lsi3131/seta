@@ -12,6 +12,13 @@
     margin: 1rem auto;
 }
 
+.mbti_checkbox {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    align-items: center;
+}
 /* MBTI 선택  */
 .mbti {
     display: flex;
@@ -19,8 +26,6 @@
     height: 80px;
     align-items: center;
     justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 10px;
 }
 
 .mbti div input[type='checkbox'] {
@@ -35,6 +40,7 @@
 .mbti div input[type='checkbox'] + label:hover {
     cursor: pointer;
 }
+
 
 .mbtibox {
     width: 90px;
@@ -134,4 +140,15 @@
     background-color: rgba(170, 170, 170, 79%);
     transition: 0.2s;
     cursor: pointer;
+}
+
+.toggleSwitchContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.toggleSwitchContainer > h3 {
+    margin-right: 5px;
 }
