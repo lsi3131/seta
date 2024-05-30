@@ -6,7 +6,7 @@ import apiClient from "services/apiClient";
 import ProfileTop from "./ProfileTop";
 
 
-const Profile = (myname) => {
+const Profile = () => {
     const {username} = useParams();
     const [users, setUsers] = useState({})
     const [error, setError] = useState(null)
