@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react'
+import React, {useContext, useEffect, useState,} from 'react'
 import style from './Board.module.css'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
@@ -8,6 +8,7 @@ import BoardTop from '../BoardTop/BoardTop'
 import apiClient from '../../services/apiClient'
 import BoardPostBox from "./BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
+import {UserContext} from "../../userContext";
 
 
 const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
@@ -76,6 +77,7 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
 }
 
 const Board = () => {
+    const currentUser = useContext(UserContext);
 
     const {mbti} = useParams()
     const {
@@ -110,42 +112,44 @@ const Board = () => {
     return (
         <>
             <div className={style.elevated_component}>
-                {mbti == 'hot' ? null : (
-                    <>
-                        <BoardTop mbti={mbti}></BoardTop>
-                        <div className={style.writeButton}>
-                            <Link
-                                to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
-                                style={{
-                                    backgroundColor:
-                                        currentUser && currentUser.mbti_type
-                                            ? getButtonColor(currentUser.mbti_type)
-                                            : '#ccc',
-                                }}
-                            >
-                                글쓰기
-                            </Link>
-                        </div>
-                    </>
-                )}
-            
-                <div>
-                    <BoardCategory
-                        filter={filter}
-                        order={order}
-                        categories={categories}
-                        onCategoryChanged={handleCategoryChanged}
-                    />
-                    <BoardPostBox mbti={mbti} posts={posts} />
+                <div className={style.container}>
+                    {mbti === 'hot' ? (
+                        <></>
+                    ) : (
+                        <>
+                            <BoardTop mbti={mbti}></BoardTop>
+                            <div className={style.writeButton}>
+                                <Link
+                                    to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
+                                    style={{
+                                        backgroundColor:
+                                            currentUser && currentUser.mbti_type
+                                                ? getButtonColor(currentUser.mbti_type)
+                                                : '#ccc',
+                                    }}
+                                >
+                                    글쓰기
+                                </Link>
+                            </div>
+                        </>
+                    )}
+
+                    <div className={style.container_content}>
+                        <BoardCategory
+                            filter={filter}
+                            order={order}
+                            categories={categories}
+                            onCategoryChanged={handleCategoryChanged}
+                        />
+                        <BoardPostBox boardMbti={mbti} posts={posts}/>
 
 
-                    <Pagination currentPage={currentPage} totalPages={totalPage}
-                                onPageChange={handleGetPostListPage}/>
+                        <Pagination currentPage={currentPage} totalPages={totalPage}
+                                    onPageChange={handleGetPostListPage}/>
 
-                    {/*<BoardSearch />*/}
+                        {/*<BoardSearch />*/}
+                    </div>
                 </div>
-
-                
             </div>
         </>
     )
