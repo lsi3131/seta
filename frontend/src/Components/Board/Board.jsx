@@ -88,6 +88,14 @@ const Board = () => {
         handleGetPostListPage,
     } = useBoardAPI(mbti)
 
+    useEffect(() => {
+        document.body.classList.add(style.customBodyStyle);
+
+        return () => {
+            document.body.classList.remove(style.customBodyStyle);
+        };
+    }, []);
+
     if (isLoading) {
         return <>Loading...</>
     }
@@ -98,26 +106,32 @@ const Board = () => {
 
     return (
         <>
-            <div>
-                <BoardTop mbti={mbti}/>
+            <div className={style.elevated_component}>
+                <div className={style.container}>
+                    <BoardTop mbti={mbti}/>
 
-                <div className={style.writeButton}>
-                    <Link to={`/write/`}
-                          style={{backgroundColor: getButtonColor(mbti)}}
-                    >글쓰기</Link>
+                    <div className={style.container_content}>
+                        <div className={style.writeButton}>
+                            <Link to={`/write/`}
+                                  style={{backgroundColor: getButtonColor(mbti)}}
+                            >글쓰기</Link>
+                        </div>
+
+                        <BoardCategory
+                            filter={filter}
+                            order={order}
+                            categories={categories}
+                            onCategoryChanged={handleCategoryChanged}
+                        />
+                        <BoardPostBox boardMbti={mbti} posts={posts}/>
+
+                        <Pagination currentPage={currentPage} totalPages={totalPage}
+                                    onPageChange={handleGetPostListPage}/>
+
+                        {/*<BoardSearch />*/}
+                    </div>
+
                 </div>
-
-                <BoardCategory
-                    filter={filter}
-                    order={order}
-                    categories={categories}
-                    onCategoryChanged={handleCategoryChanged}
-                />
-                <BoardPostBox boardMbti={mbti} posts={posts}/>
-
-                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handleGetPostListPage}/>
-
-                {/*<BoardSearch />*/}
             </div>
         </>
     )

@@ -1,18 +1,17 @@
-/*.button {*/
-/*  background-color: #007bff;*/
-/*  color: #ffffff;*/
-/*  padding: 10px 20px;*/
-/*  border: none;*/
-/*  border-radius: 5px;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.button:hover {*/
-/*  background-color: #0056b3;*/
-/*}*/
-
 .div {
     margin-top: 10px;
+}
+
+.container {
+    background-color: #ffffff;
+}
+
+.container_content {
+    padding: 20px 20px;
+}
+
+.elevated_component {
+    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.1); /* x-offset, y-offset, blur-radius, color */
 }
 
 .board_top {
@@ -248,4 +247,8 @@
 
 .thick_line {
     border: 2px solid black;
+}
+
+.customBodyStyle {
+    background-color: #f1f1f1;
 }
