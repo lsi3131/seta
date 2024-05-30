@@ -60,7 +60,9 @@ const BoardContent = ({post, username, onSetLike}) => {
     }, [post, username])
 
     const handleLikeOn = () => {
-        onSetLike(!likeOn)
+        if(!likeOn) {
+            onSetLike(true)
+        }
     }
 
     return (
