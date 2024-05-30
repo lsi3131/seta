@@ -12,7 +12,7 @@ const SearchPost = ({post}) => {
                         <p style={{color: getFontColor(post.post_mbti)}}>{post.post_mbti.toUpperCase()}</p>
                     </div>
                     <div className={style.title}>
-                        <Link to={`/detail/${post.id}?mbti=${post.post_mbti}`}>{post.title}</Link>
+                        <Link to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${post.post_mbti}`}>{post.title}</Link>
                         <p style={{color: getFontColor(post.post_mbti)}}>[{post.comments}]</p>
                     </div>
                     <div className={style.left_bottom}>

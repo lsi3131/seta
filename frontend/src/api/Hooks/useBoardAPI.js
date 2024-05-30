@@ -14,7 +14,9 @@ const useBoardAPI = (mbti) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        handleGetPostListPage(currentPage)
+        if(mbti) {
+            handleGetPostListPage(currentPage)
+        }
     }, [mbti, currentPage, order, filter])
 
     useEffect(() => {
