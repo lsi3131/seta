@@ -265,7 +265,7 @@ const Write = () => {
                     id="content"
                     theme="snow"
                     ref={quillRef}
-                    style={{height:'600px'}}
+                    style={{height:'600px', marginBottom:'40px'}}
                     modules={modules}
                     formats={formats}
                     value = {values}
