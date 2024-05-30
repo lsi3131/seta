@@ -6,7 +6,7 @@ import { formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainCol
 import Pagination from '../Pagenation/Pagination'
 import BoardTop from '../BoardTop/BoardTop'
 import apiClient from '../../services/apiClient'
-import { UserContext } from "userContext";
+import { UserContext } from 'userContext'
 
 const BoardPost = ({ post }) => {
     const navigate = useNavigate()
@@ -148,8 +148,7 @@ const BoardPostBox = ({ mbti, posts }) => {
 const BoardSearch = ({ onSearch }) => {
     return (
         <div className={style.board_search}>
-            <select>
-            </select>
+            <select></select>
             <input />
             <button>검색</button>
         </div>
@@ -165,7 +164,6 @@ const Board = () => {
     const [filter, setFilter] = useState('') //질문, 유머, 창작 등
     const [order, setOrder] = useState('recent') //recent, like, comment
     const currentUser = useContext(UserContext)
-
 
     useEffect(() => {
         handleGetCategory()
@@ -216,22 +214,29 @@ const Board = () => {
             })
     }
 
-
-
     return (
         <>
+            <div className={style.containerHeader}>
+                {mbti == 'hot' ? null : (
+                    <>
+                        <BoardTop mbti={mbti}></BoardTop>
+                        <div className={style.writeButton}>
+                            <Link
+                                to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
+                                style={{
+                                    backgroundColor:
+                                        currentUser && currentUser.mbti_type
+                                            ? getButtonColor(currentUser.mbti_type)
+                                            : '#ccc',
+                                }}
+                            >
+                                글쓰기
+                            </Link>
+                        </div>
+                    </>
+                )}
+            </div>
             <div>
-                <BoardTop mbti={mbti} />
-
-                <div className={style.writeButton}>
-                    <Link
-                        to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
-                        style={{ backgroundColor: currentUser && currentUser.mbti_type ? getButtonColor(currentUser.mbti_type) : '#ccc' }}
-                    >
-                        글쓰기
-                    </Link>
-                </div>
-
                 <BoardCategory
                     filter={filter}
                     order={order}
