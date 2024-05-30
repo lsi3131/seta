@@ -49,6 +49,8 @@ const Write = () => {
             //이미지를 담아 전송할 file을 만든다
             const file = input.files[0];
             const fileExt = file.name.split('.').pop();
+            const name = Date.now();
+            const renamedFile = new File([file], name, { type: file.type });
             
             // 확장자 제한
             if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
@@ -57,9 +59,8 @@ const Write = () => {
             }
             try {
                 //업로드할 파일의 이름으로 Date 사용
-                const name = Date.now();
                 const formData = new FormData();
-                formData.append('image', file);
+                formData.append('image', renamedFile);
                 formData.append('name', name);
                 const result = await apiClient.post('/api/posts/image/', formData, {
                     headers: {
@@ -67,7 +68,7 @@ const Write = () => {
                     }
                 })
             console.log(result)
-            const url = "https://picturebucket9856.s3.amazonaws.com/media/"+file.name
+            const url = "https://picturebucket9856.s3.amazonaws.com/media/"+renamedFile.name
             const editor = quillRef.current.getEditor();
             const range = editor.getSelection();
             editor.insertEmbed(range.index, "image", `${url}`);
