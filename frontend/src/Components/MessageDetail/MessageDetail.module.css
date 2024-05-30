@@ -1,6 +1,7 @@
 .container {
     width: 100%;
     max-width: 800px;
+    margin-top: 100px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -48,7 +49,7 @@
     padding: 10px 30px;
     border: none;
     border-radius: 4px;
-    margin-right: 20px;
+    margin-left: 30px;
     cursor: pointer;
     text-decoration: none;
     text-align: center;
@@ -63,4 +64,146 @@
 .deleteButton {
     background-color: #f44336c1;
     color: #fff;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modalContent {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    top: 50%;
+    left: 50%;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modalHeader h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.modalHeader span {
+    font-size: 30px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.closeButton {
+    color: #33333366;
+    background-color: transparent;
+    border: none;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeButton:hover,
+.closeButton:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modalBody {
+    padding: 20px 0;
+}
+
+.modalBody label {
+    margin: 0;
+    font-size: 20px;
+}
+
+.modalBody input,
+.modalBody textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+}
+
+.modalBody textarea:focus {
+    border-color: #333;
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: end;
+    padding-top: 20px;
+}
+
+.modalFooter button {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    margin-left: 30px;
+}
+
+.modalFooter button:hover {
+    opacity: 0.8;
+}
+
+.cancelButton {
+    background-color: #f44336c1;
+    color: #fff;
+}
+
+.submitButton {
+    background-color: #616161dd;
+    color: #fff;
+}
+
+.backButton {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    background-color: #7a7b7add;
+    color: #fff;
+    left: 0;
+}
+
+p > a {
+    text-decoration: none;
+    color: #333;
+}
+
+p > a:hover {
+    text-decoration: underline;
+}
+
+.originalMessage {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }

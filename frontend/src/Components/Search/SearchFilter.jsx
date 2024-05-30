@@ -116,57 +116,60 @@ const SearchFilter = ({keyword, onUpdateSearchType, onUpdateCategory, onUpdateOr
     }
 
     return (
-        <div className={style.search_filter}>
-            <div className={style.horizontal}>
-                <div className={style.dropdown} ref={dropdownSearchRef}>
-                    <div className={style.dropdown_button}>
-                        <button onClick={toggleSearchFilterDropdown}>
-                            {searchTypeTable[searchIndex].name}
-                            <img src={searchDropdownIcon} alt="Dropdown Icon"/>
-                        </button>
-                    </div>
-                    {(isSearchTypeOpen &&
-                        <div className={style.dropdown_menu}>
-                            {searchTypeTable.map((searchType, index) => (
-                                <button key={index}
-                                        onClick={() => handleSetSearchType(index)}>{searchType.name}</button>)
-                            )}
+        <div>
+            <div className={style.search_filter}>
+                <div className={style.horizontal}>
+                    <div className={style.dropdown} ref={dropdownSearchRef}>
+                        <div className={style.dropdown_button}>
+                            <button onClick={toggleSearchFilterDropdown}>
+                                {searchTypeTable[searchIndex].name}
+                                <img src={searchDropdownIcon} alt="Dropdown Icon"/>
+                            </button>
                         </div>
-                    )}
-                </div>
-                <div className={style.dropdown} ref={dropdownCategoryRef}>
-                    <div className={style.dropdown_button}>
-                        <button onClick={toggleCategoryDropdown}>
-                            {categoryTable[categoryIndex].name}
-                            <img src={searchDropdownIcon} alt="Dropdown Icon"/>
-                        </button>
-                    </div>
-                    {(isCategoryOpen &&
-                        <div className={style.dropdown_menu}>
-                            {categoryTable.map((category, index) => (
-                                <button key={index}
-                                        onClick={() => handleSetCategory(index)}>{category.name}</button>)
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
-            <div className={style.dropdown} ref={dropdownSortRef}>
-                <div className={style.dropdown_button}>
-                    <button onClick={toggleSortDropdown}>
-                        {sortTypeTable[orderIndex].name}
-                        <img src={sortDropdownIcon} alt="Dropdown Icon"/>
-                    </button>
-                </div>
-                {(isOrderOpen &&
-                    <div className={style.dropdown_menu}>
-                        {sortTypeTable.map((sortType, index) => (
-                            <button key={index}
-                                    onClick={() => handleSetSortType(index)}>{sortType.name}</button>)
+                        {(isSearchTypeOpen &&
+                            <div className={style.dropdown_menu}>
+                                {searchTypeTable.map((searchType, index) => (
+                                    <button key={index}
+                                            onClick={() => handleSetSearchType(index)}>{searchType.name}</button>)
+                                )}
+                            </div>
                         )}
                     </div>
-                )}
+                    <div className={style.dropdown} ref={dropdownCategoryRef}>
+                        <div className={style.dropdown_button}>
+                            <button onClick={toggleCategoryDropdown}>
+                                {categoryTable[categoryIndex].name}
+                                <img src={searchDropdownIcon} alt="Dropdown Icon"/>
+                            </button>
+                        </div>
+                        {(isCategoryOpen &&
+                            <div className={style.dropdown_menu}>
+                                {categoryTable.map((category, index) => (
+                                    <button key={index}
+                                            onClick={() => handleSetCategory(index)}>{category.name}</button>)
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className={style.dropdown} ref={dropdownSortRef}>
+                    <div className={style.dropdown_button}>
+                        <button onClick={toggleSortDropdown}>
+                            {sortTypeTable[orderIndex].name}
+                            <img src={sortDropdownIcon} alt="Dropdown Icon"/>
+                        </button>
+                    </div>
+                    {(isOrderOpen &&
+                        <div className={style.dropdown_menu}>
+                            {sortTypeTable.map((sortType, index) => (
+                                <button key={index}
+                                        onClick={() => handleSetSortType(index)}>{sortType.name}</button>)
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
+            <hr className={style.thick_line}/>
         </div>
     )
 }

@@ -17,13 +17,15 @@ class MessageAPIView(APIView):
         user = request.user
         message_type = request.query_params.get('type', 'received')
         page = request.query_params.get('page', 1)
-        per_page = 20
+        per_page = 10
 
         if message_type == 'sent':
             messages = Message.objects.filter(sender=user, sender_deleted=False).values('id', 'recipient__username', 'subject', 'parent', 'timestamp', 'is_read')
         else:
             messages = Message.objects.filter(recipient=user, recipient_deleted=False).values('id', 'sender__username', 'subject', 'parent', 'timestamp', 'is_read')
         
+        messages = messages.order_by('-timestamp')
+
         paginator = Paginator(messages, per_page)
         messages = paginator.get_page(page)
         results = []
@@ -51,12 +53,18 @@ class MessageAPIView(APIView):
             recipient = get_user_model().objects.get(username=data['recipient'])
             subject = data['subject']
             body = data['body']
+            parent_id = data.get('parent_message', None)
+            if parent_id:
+                parent = Message.objects.get(id=parent_id)
+            else:
+                parent = None
 
             Message.objects.create(
                 sender=request.user,
                 recipient=recipient,
                 subject=subject,
-                body=body
+                body=body,
+                parent=parent
             )
             return Response({
                 "message": "메세지가 성공적으로 전송되었습니다"
@@ -77,11 +85,21 @@ class MessageDetailAPIView(APIView):
             if message.is_read == False and request.user == message.recipient:
                 message.is_read = True
                 message.save()
+
+            if message.parent:
+                parent = {
+                    'id': message.parent.id,
+                    'subject': message.parent.subject,
+                }
+            else:
+                parent = None
+
             return Response({
                 'id': message.id,
                 'sender': message.sender.username,
                 'recipient': message.recipient.username,
                 'subject': message.subject,
+                'parent': parent,
                 'body': message.body,
                 'timestamp': message.timestamp,
                 'is_read': message.is_read
