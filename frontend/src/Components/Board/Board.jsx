@@ -1,13 +1,14 @@
-import React, {useEffect, useState, } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import style from './Board.module.css'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
+import { formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor } from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
 import BoardTop from '../BoardTop/BoardTop'
 import apiClient from '../../services/apiClient'
+import { UserContext } from "userContext";
 
-const BoardPost = ({post}) => {
+const BoardPost = ({ post }) => {
     const navigate = useNavigate()
 
     const handleMoveToPostMbti = (postMbti) => {
@@ -19,11 +20,11 @@ const BoardPost = ({post}) => {
             <div className={style.board_post}>
                 <div className={style.board_post_left}>
                     <div className={style.board_post_category}>
-                        <p style={{color: getFontColor(post.post_mbti)}}>{post.category}</p>
+                        <p style={{ color: getFontColor(post.post_mbti) }}>{post.category}</p>
                     </div>
                     <div className={style.board_post_title}>
                         <Link to={`/detail/${post.id}?mbti=${post.post_mbti}`}>{post.title}</Link>
-                        <p style={{color: getFontColor(post.post_mbti)}}>[{post.comments}]</p>
+                        <p style={{ color: getFontColor(post.post_mbti) }}>[{post.comments}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
                         <div>
@@ -43,7 +44,7 @@ const BoardPost = ({post}) => {
                         {post.mbti.map((m) => (
                             <button
                                 onClick={() => handleMoveToPostMbti(m)}
-                                style={{backgroundColor: getButtonColor(m)}}
+                                style={{ backgroundColor: getButtonColor(m) }}
                             >
                                 {m.toUpperCase()}
                             </button>
@@ -51,12 +52,12 @@ const BoardPost = ({post}) => {
                     </div>
                 </div>
             </div>
-            <hr/>
+            <hr />
         </>
     )
 }
 
-const BoardPostList = ({mbti, posts}) => {
+const BoardPostList = ({ mbti, posts }) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [posts])
@@ -65,14 +66,14 @@ const BoardPostList = ({mbti, posts}) => {
         <div>
             {posts.map((post) => (
                 <>
-                    <BoardPost post={post} mbti={mbti}/>
+                    <BoardPost post={post} mbti={mbti} />
                 </>
             ))}
         </div>
     )
 }
 
-const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
+const BoardCategory = ({ filter, order, categories, onCategoryChanged }) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [filter, order, categories])
@@ -131,43 +132,45 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
                     </button>
                 </div>
             </div>
-            <hr className={style.thick_line}/>
+            <hr className={style.thick_line} />
         </div>
     )
 }
 
-const BoardPostBox = ({mbti, posts}) => {
+const BoardPostBox = ({ mbti, posts }) => {
     return (
         <>
-            <BoardPostList mbti={mbti} posts={posts}/>
+            <BoardPostList mbti={mbti} posts={posts} />
         </>
     )
 }
 
-const BoardSearch = ({onSearch}) => {
+const BoardSearch = ({ onSearch }) => {
     return (
         <div className={style.board_search}>
             <select>
             </select>
-            <input/>
+            <input />
             <button>검색</button>
         </div>
     )
 }
 
 const Board = () => {
-    const {mbti} = useParams()
+    const { mbti } = useParams()
     const [posts, setPosts] = useState([])
     const [categories, setCategories] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [filter, setFilter] = useState('') //질문, 유머, 창작 등
     const [order, setOrder] = useState('recent') //recent, like, comment
+    const currentUser = useContext(UserContext)
 
 
     useEffect(() => {
         handleGetCategory()
         handlePageChange(currentPage)
+        console.log(currentUser)
     }, [mbti, currentPage, order, filter])
 
     const handleCategoryChanged = (type, data) => {
@@ -213,17 +216,20 @@ const Board = () => {
             })
     }
 
-    
+
 
     return (
         <>
             <div>
-                <BoardTop mbti={mbti}/>
+                <BoardTop mbti={mbti} />
 
                 <div className={style.writeButton}>
-                <Link to={`/write/`}
-                style ={{backgroundColor:getButtonColor(mbti)}}
-                >글쓰기</Link>
+                    <Link
+                        to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
+                        style={{ backgroundColor: currentUser && currentUser.mbti_type ? getButtonColor(currentUser.mbti_type) : '#ccc' }}
+                    >
+                        글쓰기
+                    </Link>
                 </div>
 
                 <BoardCategory
@@ -232,9 +238,9 @@ const Board = () => {
                     categories={categories}
                     onCategoryChanged={handleCategoryChanged}
                 />
-                <BoardPostBox mbti={mbti} posts={posts}/>
+                <BoardPostBox mbti={mbti} posts={posts} />
 
-                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange} />
 
                 {/*<BoardSearch />*/}
             </div>
