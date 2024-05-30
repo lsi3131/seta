@@ -7,6 +7,7 @@ import ReactQuill, {Quill} from 'react-quill';
 import ImageResize from 'quill-image-resize';
 import ToggleSwitch from "./ToggleSwtich";
 import {UserContext} from "../../userContext";
+import useCategoryAPI from "../../api/Hooks/useCategoryAPI";
 
 Quill.register('modules/ImageResize', ImageResize);
 const formats = [
@@ -31,8 +32,7 @@ const formats = [
 const Write = () => {
     const currentUser = useContext(UserContext)
     const navigate = useNavigate()
-    const [categorys, setCategorys] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const {isLoading: isCategoryLoading, categorys} = useCategoryAPI()
     const [inputs, setInputs] = useState({
         title: '',
         content: '',
@@ -138,26 +138,6 @@ const Write = () => {
     ])
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await apiClient.get('/api/posts/category/')
-                console.log(response.data)
-                setCategorys(response.data)
-            } catch (error) {
-                console.error('카테고리 데이터를 불러오는 중에 오류가 발생했습니다:', error)
-            }
-        }
-
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        if (categorys.length > 0) {
-            setIsLoading(false)
-        }
-    }, [categorys])
-
-    useEffect(() => {
     }, [mbtiChecks]);
 
     const handleCheckboxChange = (id) => {
@@ -219,7 +199,7 @@ const Write = () => {
         })
     }
 
-    if (isLoading) {
+    if (isCategoryLoading) {
         return <div>loading...</div>
     }
 
