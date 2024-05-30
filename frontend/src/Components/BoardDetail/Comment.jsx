@@ -101,6 +101,7 @@ const CommentSubInput = ({
 
 const Comment = ({
                      comment,
+                     postMbtiList,
                      onAddComment,
                      onUpdateComment,
                      onDeleteComment,
@@ -138,8 +139,12 @@ const Comment = ({
         return comment.recommend.includes(currentUser['user_id'])
     }
 
+    const isMbtiInPostMbtiList = (comment) => {
+        return postMbtiList.length > 0 && postMbtiList.some(e => e.toLowerCase() === comment.comment_mbti.toLowerCase());
+    }
+
     const handleSetLike = () => {
-        if(!isLikeOn(comment)) {
+        if (!isLikeOn(comment)) {
             onAddLikeComment(comment.id, true)
         }
     }
@@ -162,48 +167,55 @@ const Comment = ({
     return (
         <div>
             <div key={comment.id}>
-                <div className={style.comment}>
-                    <div className={style.comment_left_1}>
-                        {isChild && <img src={reply} alt=""/>}
+                {isMbtiInPostMbtiList(comment) ? (
+                        <div className={style.comment}>
+                            <div className={style.comment_left_1}>
+                                {isChild && <img src={reply} alt=""/>}
 
-                        <div className={style.comment_left_1_1}>
-                            <div className={style.comment_left_1_1_author}>
-                                <p>
-                                    <Link to={`/profile/${comment.author}/`}>{comment.author}
-                                        <sup
-                                            style={{backgroundColor: getButtonColor(comment.comment_mbti)}}>{comment.comment_mbti.toUpperCase()}</sup>
-                                    </Link>
-                                </p>
-                                <p>{getUpdateTime(comment.created_at)}</p>
+                                <div className={style.comment_left_1_1}>
+                                    <div className={style.comment_left_1_1_author}>
+                                        <p>
+                                            <Link to={`/profile/${comment.author}/`}>{comment.author}
+                                                <sup
+                                                    style={{backgroundColor: getButtonColor(comment.comment_mbti)}}>{comment.comment_mbti.toUpperCase()}</sup>
+                                            </Link>
+                                        </p>
+                                        <p>{getUpdateTime(comment.created_at)}</p>
+                                    </div>
+                                    <pre>{comment.content}</pre>
+                                </div>
                             </div>
-                            <pre>{comment.content}</pre>
-                        </div>
-                    </div>
-                    <div className={style.comment_right}>
-                        <div className={style.comment_right_button}>
-                            <div className={style.comment_left_bottom_1_1_like}>
-                                <button onClick={handleSetLike} disabled={shouldLogin()}>
-                                    {isLikeOn(comment) ?
-                                        <img src={like} alt=""/> :
-                                        <img src={unlike} alt=""/>
+                            <div className={style.comment_right}>
+                                <div className={style.comment_right_button}>
+                                    <div className={style.comment_left_bottom_1_1_like}>
+                                        <button onClick={handleSetLike} disabled={shouldLogin()}>
+                                            {isLikeOn(comment) ?
+                                                <img src={like} alt=""/> :
+                                                <img src={unlike} alt=""/>
+                                            }
+                                        </button>
+                                        <p>{comment.recommend.length}</p>
+                                    </div>
+                                    {!isChild && canReply() &&
+                                        <button onClick={() => handleInputMode('reply')}>댓글</button>
                                     }
-                                </button>
-                                <p>{comment.recommend.length}</p>
+                                    {isSameUser(comment) &&
+                                        <>
+                                            <button onClick={() => handleInputMode('update')}>수정</button>
+                                            <button onClick={handleDeleteComment}>삭제</button>
+                                        </>
+                                    }
+                                    <Report author={comment.author}
+                                            mbti={currentUser.mbti_type}/>
+                                </div>
                             </div>
-                            {!isChild && canReply() &&
-                                <button onClick={() => handleInputMode('reply')}>댓글</button>
-                            }
-                            {isSameUser(comment) &&
-                                <>
-                                    <button onClick={() => handleInputMode('update')}>수정</button>
-                                    <button onClick={handleDeleteComment}>삭제</button>
-                                </>
-                            }
-                            <Report author={comment.author}
-                                    mbti={currentUser.mbti_type}/>
                         </div>
-                    </div>
-                </div>
+                    ) :
+                    (
+                        <div className={style.not_included_comment_mbti_container}>
+                            <p>[더 이상 허용되지 않은 MBTI 타입의 댓글입니다.]</p>
+                        </div>
+                    )}
                 {inputModeType === 'reply' &&
                     <CommentSubInput mode={inputModeType} initialContent="" parentId={comment.id}
                                      onAddComment={onAddComment}/>
@@ -219,6 +231,7 @@ const Comment = ({
                     <hr/>
                     <Comment
                         key={child.id}
+                        postMbtiList={postMbtiList}
                         onAddComment={onAddComment}
                         onDeleteComment={onDeleteComment}
                         onAddLikeComment={onAddLikeComment}
@@ -235,6 +248,7 @@ const Comment = ({
 
 const CommentList = ({
                          comments,
+                         postMbtiList,
                          commentCount,
                          onAddComment,
                          onUpdateComment,
@@ -266,6 +280,7 @@ const CommentList = ({
         return filterMbtiList.length === 0 || filterMbtiList.some(e => e.toLowerCase() === comment.comment_mbti.toLowerCase());
     }
 
+
     const isFilterOn = () => {
         return filterMbtiList.length > 0;
     }
@@ -289,10 +304,12 @@ const CommentList = ({
                         <>
                             <hr/>
                             <Comment key={index} comment={comment}
+                                     postMbtiList={postMbtiList}
                                      onAddComment={onAddComment}
                                      onUpdateComment={onUpdateComment}
                                      onDeleteComment={onDeleteComment}
                                      onAddLikeComment={onAddLikeComment}/>
+
                         </>
                     )}
                 </div>
@@ -457,11 +474,13 @@ const CommentBox = ({
     return (
         <div className={style.comment_box}>
             <CommentList comments={comments}
+                         postMbtiList={post.mbti}
                          commentCount={commentCount}
                          onAddComment={onAddComment}
                          onUpdateComment={onUpdateComment}
                          onDeleteComment={onDeleteComment}
-                         onAddLikeComment={onAddLikeComment}/>
+                         onAddLikeComment={onAddLikeComment}
+            />
             <hr/>
             <CommentInput post={post} onAddComment={onAddComment}/>
         </div>

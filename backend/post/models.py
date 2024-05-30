@@ -22,6 +22,8 @@ class Post(models.Model):
     mbti = models.ManyToManyField(Mbti, related_name='mbti_posts', blank=True, )
     hits = models.IntegerField(default=0)
     post_mbti = models.ForeignKey(Mbti, on_delete=models.CASCADE, default=None, null=True)
+    hot_post = models.BooleanField(default=False)
+    hoted_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.title
