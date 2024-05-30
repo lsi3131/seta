@@ -115,22 +115,22 @@ const Update = () => {
     const [Error, setError] = useState(' ')
 
     const [mbtiChecks, setMbtiChecks] = useState([
-        {id: 1, label: 'ISTJ', checked: false},
-        {id: 2, label: 'ISFJ', checked: false},
-        {id: 3, label: 'INFJ', checked: false},
-        {id: 4, label: 'INTJ', checked: false},
-        {id: 5, label: 'ISTP', checked: false},
-        {id: 6, label: 'ISFP', checked: false},
-        {id: 7, label: 'INFP', checked: false},
-        {id: 8, label: 'INTP', checked: false},
-        {id: 9, label: 'ESTP', checked: false},
-        {id: 10, label: 'ESFP', checked: false},
-        {id: 11, label: 'ENFP', checked: false},
-        {id: 12, label: 'ENTP', checked: false},
-        {id: 13, label: 'ESTJ', checked: false},
-        {id: 14, label: 'ESFJ', checked: false},
-        {id: 15, label: 'ENFJ', checked: false},
-        {id: 16, label: 'ENTJ', checked: false},
+        {id: 1, label: 'INTJ', checked: false},
+        {id: 2, label: 'INTP', checked: false},
+        {id: 3, label: 'ENTP', checked: false},
+        {id: 4, label: 'ENTJ', checked: false},
+        {id: 5, label: 'INFJ', checked: false},
+        {id: 6, label: 'INFP', checked: false},
+        {id: 7, label: 'ENFJ', checked: false},
+        {id: 8, label: 'ENFP', checked: false},
+        {id: 9, label: 'ISTJ', checked: false},
+        {id: 10, label: 'ISFJ', checked: false},
+        {id: 11, label: 'ESTJ', checked: false},
+        {id: 12, label: 'ESFJ', checked: false},
+        {id: 13, label: 'ISTP', checked: false},
+        {id: 14, label: 'ISFP', checked: false},
+        {id: 15, label: 'ESTP', checked: false},
+        {id: 16, label: 'ESFP', checked: false},
     ])
 
     useEffect(() => {
@@ -152,8 +152,12 @@ const Update = () => {
                 })
                 setValues(post.content);
                 setMbtiChecks((prevChecks) =>
-                    prevChecks.map((check) => (post.mbti.includes(check.label) ? {...check, checked: true} : check)),
-                )
+                    prevChecks.map((check) =>
+                        post.mbti.some((mbti) => mbti.toLowerCase() === check.label.toLowerCase())
+                            ? {...check, checked: true}
+                            : check
+                    )
+                );
                 setLoading(false)
             } catch (error) {
                 navigate(-1)
@@ -162,6 +166,9 @@ const Update = () => {
 
         fetchPost()
     }, [])
+
+    useEffect(() => {
+    }, [mbtiChecks]);
 
     const handleCheckAll = (isCheck) => {
         const updatedChecks = mbtiChecks.map(item => ({...item, checked: isCheck}))

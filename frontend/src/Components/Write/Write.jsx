@@ -154,12 +154,10 @@ const Write = () => {
     useEffect(() => {
         if (categorys.length > 0) {
             setIsLoading(false)
-            console.log(categorys)
         }
     }, [categorys])
 
     useEffect(() => {
-        console.log('update')
     }, [mbtiChecks]);
 
     const handleCheckboxChange = (id) => {
