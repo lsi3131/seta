@@ -14,7 +14,9 @@
 
 .badge_list {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    width: 100%;
 }
 
 .badge_list > button {
