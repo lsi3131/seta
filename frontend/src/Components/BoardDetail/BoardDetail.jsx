@@ -145,7 +145,7 @@ const BoardDetail = () => {
         <div>
             <div className={style.elevated_component}>
                 <div className={style.board_top_container}>
-                    <BoardTop mbti={mbti}/>
+                    <BoardTop mbti={boardMbti}/>
                 </div>
                 <div className={style.board_detail_container}>
                     <BoardTitle mbti={mbti} post={post} commentCount={commentCount}/>
@@ -186,9 +186,6 @@ const BoardDetail = () => {
             </div>
             <div className={style.elevated_component}>
                 <div className={style.board_list_container}>
-                    <div className={style.board_list_top_container}>
-                        <BoardTop mbti={boardMbti}/>
-                    </div>
                     <div className={style.board_list_bottom_container}>
                         <BoardPostBox boardMbti={boardMbti} posts={posts} currentPostId={postId}/>
                         <Pagination currentPage={currentPage} totalPages={totalPage}
