@@ -48,7 +48,7 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
                     </div>
                     <div className={style.board_post_title}>
                         <Link
-                            to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${boardMbti}&postId=${post.id}`} style={getTitleTextStyle()}>{post.title}</Link>
+                            to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${boardMbti}`} style={getTitleTextStyle()}>{post.title}</Link>
                         <p style={{color: getFontColor(post.post_mbti)}}>[{post.comments}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
