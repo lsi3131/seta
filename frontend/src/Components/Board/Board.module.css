@@ -49,37 +49,34 @@
     height: 150px;
 }
 
-.writeButton{
+.writeButton {
     display: flex;
     justify-content: flex-end;
 }
 
-
-
-.writeButton a{
-    color: #FFFFFF;
+.writeButton a {
+    color: #ffffff;
     margin: 15px 0;
     border-radius: 14px;
     border: none;
     font-size: 20px;
     width: 100px;
     height: 40px;
-    padding-top: 9px; ;
+    padding-top: 9px;
     text-align: center;
     text-decoration: none;
 }
 
-.writeButton a:hover{
+.writeButton a:hover {
     transform: translateY(-0.1rem);
     box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
     cursor: pointer;
 }
 
-
 .board_category {
     display: flex;
     justify-content: space-between;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .board_category > p {
@@ -105,7 +102,7 @@
 }
 
 .board_post_right > button {
-    color: #FFFFFF;
+    color: #ffffff;
     margin: 3px;
     border-radius: 14px;
     border: none;
@@ -146,7 +143,7 @@
 }
 
 .board_post_bottom > div {
-    color: #8F8F8F;
+    color: #8f8f8f;
     margin-right: 10px;
     /*font-size: 10px;*/
 }
@@ -186,7 +183,7 @@
     padding-right: 20px;
     padding-bottom: 10px;
     font-size: 18px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border: 0;
 }
 
@@ -210,16 +207,16 @@
 }
 
 .board_button_container > a {
-    color: #FFFFFF;
+    color: #ffffff;
     border: 0;
     text-decoration: none;
 }
 
 .board_button_container > a > button {
-    color: #FFFFFF;
+    color: #ffffff;
     padding: 15px 30px;
     border-radius: 10px;
-    border: 0
+    border: 0;
 }
 
 .board_search {
@@ -229,15 +226,8 @@
     margin-top: 20px;
 }
 
-.board_search > select {
-}
-
 .board_search > input {
     margin: 5px;
-}
-
-.board_search > button {
-
 }
 
 .div-image {
