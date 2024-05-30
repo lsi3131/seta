@@ -1,30 +1,30 @@
 .container {
-    width : 35rem;
+    width: 35rem;
     margin: 2rem 0;
 }
 
 .title {
-    color : #444444;
+    color: #444444;
 }
 
 .noContentWarning {
     position: absolute;
     text-align: center;
-    width:100%;
+    width: 100%;
     top: 0;
     left: 0;
     margin-top: 6.8rem
 }
 
-.warningText{
-    color : #6B6B6B;
+.warningText {
+    color: #6B6B6B;
     font-size: 1.7rem;
     font-weight: 700;
     margin-bottom: 1rem;
 }
 
-.warningTextDetail{
-    color : #969696;
+.warningTextDetail {
+    color: #969696;
     font-size: 1rem;
     font-weight: 500;
 }
@@ -40,7 +40,19 @@
 }
 
 .introduce {
-    
+
+}
+
+.emptyIntroduce {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.emptyIntroduce > p {
+    font-size: 1rem;
+    color: #969696;
+    font-weight: 500;
 }
 
 .mbtiRatio {
