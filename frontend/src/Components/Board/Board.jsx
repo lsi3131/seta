@@ -1,4 +1,4 @@
-import React, {useEffect, useState,} from 'react'
+import React, {useContext, useEffect, useState,} from 'react'
 import style from './Board.module.css'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
@@ -8,6 +8,8 @@ import BoardTop from '../BoardTop/BoardTop'
 import apiClient from '../../services/apiClient'
 import BoardPostBox from "./BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
+import {UserContext} from "../../userContext";
+
 
 const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
     useEffect(() => {
@@ -68,12 +70,15 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
                     </button>
                 </div>
             </div>
+
             <hr className={style.thick_line}/>
         </div>
     )
 }
 
 const Board = () => {
+    const currentUser = useContext(UserContext);
+
     const {mbti} = useParams()
     const {
         isLoading,
@@ -99,7 +104,7 @@ const Board = () => {
     if (isLoading) {
         return <>Loading...</>
     }
-
+  
     if (error) {
         return <>{error}</>
     }
@@ -108,15 +113,28 @@ const Board = () => {
         <>
             <div className={style.elevated_component}>
                 <div className={style.container}>
-                    <BoardTop mbti={mbti}/>
+                    {mbti === 'hot' ? (
+                        <></>
+                    ) : (
+                        <>
+                            <BoardTop mbti={mbti}></BoardTop>
+                            <div className={style.writeButton}>
+                                <Link
+                                    to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
+                                    style={{
+                                        backgroundColor:
+                                            currentUser && currentUser.mbti_type
+                                                ? getButtonColor(currentUser.mbti_type)
+                                                : '#ccc',
+                                    }}
+                                >
+                                    글쓰기
+                                </Link>
+                            </div>
+                        </>
+                    )}
 
                     <div className={style.container_content}>
-                        <div className={style.writeButton}>
-                            <Link to={`/write/`}
-                                  style={{backgroundColor: getButtonColor(mbti)}}
-                            >글쓰기</Link>
-                        </div>
-
                         <BoardCategory
                             filter={filter}
                             order={order}
@@ -125,12 +143,12 @@ const Board = () => {
                         />
                         <BoardPostBox boardMbti={mbti} posts={posts}/>
 
+
                         <Pagination currentPage={currentPage} totalPages={totalPage}
                                     onPageChange={handleGetPostListPage}/>
 
                         {/*<BoardSearch />*/}
                     </div>
-
                 </div>
             </div>
         </>

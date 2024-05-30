@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from .models import *
 from .validate import *
+from datetime import datetime
 from rest_framework.decorators import api_view, permission_classes
 
 def serialize_post(post):
@@ -103,7 +104,11 @@ class PostAPIView(APIView):
         return posts
 
     def get(self, request, mbti):
-        posts = self.mbti_board_filter(mbti)
+        if mbti == 'hot':
+            posts = Post.objects.filter(hot_post=True)
+            posts = posts.order_by('-hoted_at')
+        else:
+            posts = self.mbti_board_filter(mbti)
 
         # 카테고리 필터링
         category = request.GET.get('category')
@@ -121,6 +126,7 @@ class PostAPIView(APIView):
         elif search_type == 'author':
             search = request.GET.get("search")
             posts = posts.filter(author__username__contains=search)
+        
 
         # 정렬 [좋아요순 / 최근순 / 댓글순]
         order = request.GET.get("order")
@@ -432,10 +438,12 @@ def LikeyPost(request, post_pk):
 
     if like:
         post.likes.add(user)
-        return Response({'message': '좋아요'}, status=status.HTTP_200_OK)
-    else:
-        post.likes.remove(user)
-        return Response({'message': '좋아요 취소'}, status=status.HTTP_200_OK)
+        if post.likes.count() >= 10:
+            post.hot_post = True
+            post.hoted_at = datetime.now()
+            post.save()
+    return Response({'message': '좋아요'}, status=status.HTTP_200_OK)
+    
 
 
 @api_view(['POST'])
@@ -450,10 +458,7 @@ def Recommend(request, post_pk, comment_pk):
     if Reco:
         comment.recommend.add(user)
         return Response({"message": "추천"}, status=status.HTTP_200_OK)
-    else:
-        comment.recommend.remove(user)
-        return Response({"message": "추천 취소"}, status=status.HTTP_200_OK)
-
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def Image(request) :
@@ -468,4 +473,14 @@ def Image(request) :
     response_data = {
         "message": "이미지 업로드 성공",
     }
+    return Response(response_data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def HotPost(request):
+    limit = request.GET.get('limit', 100)
+    posts = Post.objects.filter(hot_post=True)
+    response_data = []
+    posts = posts.order_by('-hoted_at')
+    for post in posts[:int(limit)]:
+        response_data.append(serialize_post(post))
     return Response(response_data, status=status.HTTP_200_OK)

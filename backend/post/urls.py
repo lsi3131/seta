@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path("mbti/<str:mbti>/", views.PostAPIView.as_view(), name="post"),
+    path("hot/", views.HotPost, name='hot'),
     path("search/", views.SearchAPIView.as_view(), name="search"),
     path("create/", views.CreatePostAPIView.as_view()),
     path("category/", views.PostCategoryAPIView.as_view(), name='Category'),
