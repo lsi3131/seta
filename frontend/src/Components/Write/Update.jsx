@@ -6,7 +6,7 @@ import {getFontColor} from 'Utils/helpers'
 import ReactQuill, {Quill} from 'react-quill';
 import ImageResize from 'quill-image-resize';
 import {UserContext} from "../../userContext";
-import ToggleSwitch from "../Write/ToggleSwtich";
+import ToggleSwitch from "./ToggleSwtich";
 
 Quill.register('modules/ImageResize', ImageResize);
 const formats = [
