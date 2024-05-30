@@ -4,7 +4,7 @@ import apiClient from '../../services/apiClient'
 
 const useCommentAPI = (commentPostId) => {
     const [comments, setComments] = useState(null);
-    const [commentCount, setCommentCount] = useState(null);
+    const [commentCount, setCommentCount] = useState(-1);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
     const [error, setError] = useState(null); // 로딩 상태 추가
 
@@ -17,7 +17,7 @@ const useCommentAPI = (commentPostId) => {
 
     /* Comment를 전부 읽어오면 로딩이 완료된다.*/
     useEffect(() => {
-        if (comments && commentCount) {
+        if (comments && commentCount !== -1) {
             setIsLoading(false) // 유효성 검사 후 로딩 상태 해제
         }
     }, [comments, commentCount])
