@@ -9,6 +9,7 @@ import apiClient from '../../services/apiClient'
 import BoardPostBox from "./BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
 
+
 const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
@@ -68,12 +69,14 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
                     </button>
                 </div>
             </div>
+
             <hr className={style.thick_line}/>
         </div>
     )
 }
 
 const Board = () => {
+
     const {mbti} = useParams()
     const {
         isLoading,
@@ -99,7 +102,7 @@ const Board = () => {
     if (isLoading) {
         return <>Loading...</>
     }
-
+  
     if (error) {
         return <>{error}</>
     }
@@ -107,31 +110,42 @@ const Board = () => {
     return (
         <>
             <div className={style.elevated_component}>
-                <div className={style.container}>
-                    <BoardTop mbti={mbti}/>
-
-                    <div className={style.container_content}>
+                {mbti == 'hot' ? null : (
+                    <>
+                        <BoardTop mbti={mbti}></BoardTop>
                         <div className={style.writeButton}>
-                            <Link to={`/write/`}
-                                  style={{backgroundColor: getButtonColor(mbti)}}
-                            >글쓰기</Link>
+                            <Link
+                                to={currentUser && currentUser.mbti_type ? `/write/` : '#'}
+                                style={{
+                                    backgroundColor:
+                                        currentUser && currentUser.mbti_type
+                                            ? getButtonColor(currentUser.mbti_type)
+                                            : '#ccc',
+                                }}
+                            >
+                                글쓰기
+                            </Link>
                         </div>
+                    </>
+                )}
+            
+                <div>
+                    <BoardCategory
+                        filter={filter}
+                        order={order}
+                        categories={categories}
+                        onCategoryChanged={handleCategoryChanged}
+                    />
+                    <BoardPostBox mbti={mbti} posts={posts} />
 
-                        <BoardCategory
-                            filter={filter}
-                            order={order}
-                            categories={categories}
-                            onCategoryChanged={handleCategoryChanged}
-                        />
-                        <BoardPostBox boardMbti={mbti} posts={posts}/>
 
-                        <Pagination currentPage={currentPage} totalPages={totalPage}
-                                    onPageChange={handleGetPostListPage}/>
+                    <Pagination currentPage={currentPage} totalPages={totalPage}
+                                onPageChange={handleGetPostListPage}/>
 
-                        {/*<BoardSearch />*/}
-                    </div>
-
+                    {/*<BoardSearch />*/}
                 </div>
+
+                
             </div>
         </>
     )
