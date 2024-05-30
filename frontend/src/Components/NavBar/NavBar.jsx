@@ -65,7 +65,7 @@ const AuthenticatedNavbar = ({ currentUser }) => {
                             <Link to="/messages/" className={style.dropdownItem}>
                                 메세지 관리
                             </Link>
-                            <Link to={`/profile/${currentUser.username}/posts`} className={style.dropdownItem}>
+                            <Link to={`/myposts/${currentUser.username}/`} className={style.dropdownItem}>
                                 작성한 글 관리
                             </Link>
                             <hr></hr>

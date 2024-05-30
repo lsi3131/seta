@@ -13,7 +13,7 @@ import Update from './Components/Update/Update'
 import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 import ProfileUpdate from './Components/ProfileUpdate/ProfileUpdate'
-import ProfileMyPosts from './Components/Profile/ProfileMyPosts'
+import MyPosts from './Components/MyPosts/MyPosts'
 import FabButton from './UI/FabButton/FabButton'
 import MessageManage from 'Components/MessageManage/MessageManage'
 import MessageDetail from 'Components/MessageDetail/MessageDetail'
@@ -35,7 +35,7 @@ function App() {
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/profile/update/:username" element={<ProfileUpdate />} />
                     <Route path="/update/:detailId" element={<Update />} />
-                    <Route path="/profile/:username/posts" element={<ProfileMyPosts />} />
+                    <Route path="/myposts/:username" element={<MyPosts />} />
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
                     <Route path="/search" element={<SearchResult />} />
