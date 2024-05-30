@@ -57,6 +57,11 @@ const Write = () => {
                 alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
                 return;
             }
+
+            const editor = quillRef.current.getEditor();
+            const range = editor.getSelection();
+            editor.insertEmbed(range.index, "image", require("../../Assets/images/loading.gif"));
+
             try {
                 //업로드할 파일의 이름으로 Date 사용
                 const formData = new FormData();
@@ -67,17 +72,16 @@ const Write = () => {
                         'Content-Type' : 'multipart/form-data'
                     }
                 })
-            console.log(result)
-            const url = "https://picturebucket9856.s3.amazonaws.com/media/"+renamedFile.name
-            const editor = quillRef.current.getEditor();
-            const range = editor.getSelection();
-            editor.insertEmbed(range.index, "image", `${url}`);
-            // 이미지 삽입 후 줄바꿈 삽입
-            editor.setSelection(range.index + 1);
-            editor.insertText(range.index + 1, '\n');
+                console.log(result)
+                const url = "https://picturebucket9856.s3.amazonaws.com/media/"+renamedFile.name
+                editor.deleteText(range.index, 1);
+                editor.insertEmbed(range.index, "image", `${url}`);
+                // 이미지 삽입 후 줄바꿈 삽입
+                editor.setSelection(range.index + 1);
+                editor.insertText(range.index + 1, '\n');
 
-            // 커서를 새 줄로 이동
-            editor.setSelection(range.index + 2, 0);
+                // 커서를 새 줄로 이동
+                editor.setSelection(range.index + 2, 0);
             } catch (error) {
                 console.log(error);
             }
