@@ -147,12 +147,20 @@ const BoardDetail = () => {
         <div>
             <div className={style.elevated_component}>
                 <div className={style.board_top_container}>
-                    <BoardTop mbti={boardMbti}/>
+                {boardMbti === 'hot' ? 
+                    <div className={style.container_content_category}>
+                            <h1 style={{fontSize:"35px", paddingBottom:"20px", paddingTop:"80px"}}>인기글</h1>
+                            <h3 style={{fontSize:"18px", color:"#6B6B6B", fontWeight:"400", paddingBottom:"20px"}}>좋아요 10개 이상의 글을 모아볼 수 있습니다.</h3>
+                            <hr className={style.thick_line}/>
+                    </div>
+                    : <BoardTop mbti={boardMbti}/>
+                }
+                    
                 </div>
                 <div className={style.board_detail_container}>
                     <BoardTitle mbti={mbti} post={post} commentCount={commentCount}/>
                     <BoardContent post={post} username={currentUser ? currentUser.username : ''}
-                                  onSetLike={handleSetLike}/>
+                                onSetLike={handleSetLike}/>
                     {currentUser && post.author === currentUser.username ? (
                         <div className={style.buttonSection}>
                             <button
