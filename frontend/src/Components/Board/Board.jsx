@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState,} from 'react'
 import style from './Board.module.css'
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import {Link, useNavigate, useParams,} from 'react-router-dom'
 import axios from 'axios'
 import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
@@ -9,6 +9,7 @@ import apiClient from '../../services/apiClient'
 import BoardPostBox from "./BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
 import {UserContext} from "../../userContext";
+
 
 
 const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
@@ -77,7 +78,9 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
 }
 
 const Board = () => {
+
     const currentUser = useContext(UserContext);
+
 
     const {mbti} = useParams()
     const {
