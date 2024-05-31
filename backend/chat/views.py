@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework import status
+
 from django.contrib.auth import get_user_model
 from .models import ChatRoom, ChatMessage, ChatRoomCategory
 
@@ -30,6 +31,7 @@ class ChatRoomAPIView(APIView):
         chatrooms = ChatRoom.objects.filter(room_category=roomCate)
         data = [serialize_chatroom(chatroom) for chatroom in chatrooms]
         return Response(data, status=status.HTTP_200_OK)
+
 
     def put(self, request, chatroom_pk):
         return Response({'todo': 'todo'}, status=status.HTTP_200_OK)
