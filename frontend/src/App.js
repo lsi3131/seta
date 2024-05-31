@@ -1,6 +1,5 @@
 import './App.css'
-import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Cursor from './Components/Cursor/Cursor'
 import NavBar from './Components/NavBar/NavBar'
 import Board from './Components/Board/Board'
@@ -9,7 +8,6 @@ import Login from './Components/Login/Login'
 import BoardDetail from './Components/BoardDetail/BoardDetail'
 import Write from './Components/Write/Write'
 import Profile from './Components/Profile/Profile'
-import Update from './Components/Write/Update'
 import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 import ProfileUpdate from './Components/ProfileUpdate/ProfileUpdate'
@@ -34,7 +32,7 @@ function App() {
                     <Route path="/write" element={<Write />} />
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/profile/update/:username" element={<ProfileUpdate />} />
-                    <Route path="/update/:detailId" element={<Update />} />
+                    <Route path="/update/:detailId" element={<Write />} />
                     <Route path="/profile/:username/posts" element={<ProfileMyPosts />} />
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
