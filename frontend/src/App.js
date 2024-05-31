@@ -34,7 +34,6 @@ function App() {
                     <Route path="/profile/update/:username" element={<ProfileUpdate />} />
                     <Route path="/myposts/:username" element={<MyPosts />} />
                     <Route path="/update/:detailId" element={<Write />} />
-                    <Route path="/profile/:username/posts" element={<ProfileMyPosts />} />
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
                     <Route path="/search" element={<SearchResult />} />
