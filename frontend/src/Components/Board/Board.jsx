@@ -99,6 +99,9 @@ const Board = () => {
         handleGetPostListPage,
     } = useBoardAPI(mbti, filter, order, page);
 
+//     console.log(
+//         handleGetPostListPage,
+// )
     useEffect(() => {
         document.body.classList.add(style.customBodyStyle);
 
@@ -109,7 +112,9 @@ const Board = () => {
 
     const updateQuery = (newParams) => {
         const currentParams = queryString.parse(location.search);
+        console.log(currentParams)
         const updatedParams = { ...currentParams, ...newParams };
+        console.log(updatedParams)
         navigate(`?${queryString.stringify(updatedParams)}`, { replace: true });
     };
 
@@ -152,10 +157,8 @@ const Board = () => {
                                     style={{
                                         backgroundColor:
                                             currentUser && currentUser.mbti_type
-                                                ? getButtonColor(currentUser.mbti_type)
-                                                : '#ccc',
-                                    }}
-                                >
+                                                ? getButtonColor(mbti)
+                                                : '#ccc',}}>
                                     글쓰기
                                 </Link>
                             </div>
@@ -164,7 +167,7 @@ const Board = () => {
                                     filter={filter}
                                     order={order}
                                     categories={categories}
-                                    onCategoryChanged={handleCategoryChanged}
+                                    onCategoryChanged={handleCategoryChange}
                                 />
                             </div>
                         </>
@@ -172,12 +175,6 @@ const Board = () => {
 
                     <div className={style.container_content}>
 
-                        <BoardCategory
-                            filter={filter}
-                            order={order}
-                            categories={categories}
-                            onCategoryChanged={handleCategoryChange}
-                        />
                         <BoardPostBox boardMbti={mbti} posts={posts}/>
                         <Pagination currentPage={currentPage} totalPages={totalPage}
                                     onPageChange={handlePageChange}/>
