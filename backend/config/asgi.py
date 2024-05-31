@@ -24,13 +24,3 @@ application = ProtocolTypeRouter({
         )
     ),
 })
-
-# application = ProtocolTypeRouter({
-#     'http': get_asgi_application(),
-#     # (http->django views is added by default)
-#     # 만약에 websocket protocol 이라면, AuthMiddlewareStack
-#     'websocket': AllowedHostsOriginValidator(
-#         AuthMiddlewareStack(URLRouter(chat.routing.websocket_urlpatterns))
-#         # URLRouter 로 연결, 소비자의 라우트 연결 HTTP path를 조사
-#     ),
-# })
