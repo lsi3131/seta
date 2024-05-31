@@ -39,8 +39,6 @@ const HotList = () => {
                             </div>
                         </div>
                     ))}
-
-                <div className={style.moreDot}>...</div>
             </div>
         </div>
     )

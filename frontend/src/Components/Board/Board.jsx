@@ -117,7 +117,13 @@ const Board = () => {
             <div className={style.elevated_component}>
                 <div className={style.container}>
                     {mbti === 'hot' ? (
-                        <></>
+                        <>
+                            <div className={style.container_content_category}>
+                                <h1 style={{fontSize:"35px", paddingBottom:"20px", paddingTop:"80px"}}>인기글</h1>
+                                <h3 style={{fontSize:"18px", color:"#6B6B6B", fontWeight:"400", paddingBottom:"20px"}}>좋아요 10개 이상의 글을 모아볼 수 있습니다.</h3>
+                                <hr className={style.thick_line}/>
+                            </div>
+                        </>
                     ) : (
                         <>
                             <BoardTop mbti={mbti}></BoardTop>
@@ -134,19 +140,19 @@ const Board = () => {
                                     글쓰기
                                 </Link>
                             </div>
+                            <div className={style.container_content_category}>
+                                <BoardCategory
+                                    filter={filter}
+                                    order={order}
+                                    categories={categories}
+                                    onCategoryChanged={handleCategoryChanged}
+                                />
+                            </div>
                         </>
                     )}
 
                     <div className={style.container_content}>
-                        <BoardCategory
-                            filter={filter}
-                            order={order}
-                            categories={categories}
-                            onCategoryChanged={handleCategoryChanged}
-                        />
                         <BoardPostBox boardMbti={mbti} posts={posts}/>
-
-
                         <Pagination currentPage={currentPage} totalPages={totalPage}
                                     onPageChange={handleGetPostListPage}/>
 
