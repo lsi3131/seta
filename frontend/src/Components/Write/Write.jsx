@@ -1,5 +1,5 @@
 import style from './Write.module.css'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import React, {useState, useEffect, useRef, useMemo, useContext} from 'react'
 import apiClient from 'services/apiClient'
 import {getFontColor} from '../../Utils/helpers'
@@ -7,6 +7,8 @@ import ReactQuill, {Quill} from 'react-quill';
 import ImageResize from 'quill-image-resize';
 import ToggleSwitch from "./ToggleSwtich";
 import {UserContext} from "../../userContext";
+import useCategoryAPI from "../../api/Hooks/useCategoryAPI";
+import useBoardCreateAPI from "../../api/Hooks/useBoardCreateAPI";
 
 Quill.register('modules/ImageResize', ImageResize);
 const formats = [
@@ -29,21 +31,80 @@ const formats = [
     'image',
 ];
 const Write = () => {
+    const {detailId: postId = null} = useParams()
     const currentUser = useContext(UserContext)
     const navigate = useNavigate()
-    const [categorys, setCategorys] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const {isLoading: isCategoryLoading, categorys} = useCategoryAPI()
+    const {postCreate, putCreate, getUpdatePost, error} = useBoardCreateAPI();
     const [inputs, setInputs] = useState({
+        id: '',
         title: '',
         content: '',
         category: '',
         mbti: [],
     })
-
+    const {title} = inputs
+    const [values, setValues] = useState('');
     const quillRef = useRef(null);
 
+    const [mbtiChecks, setMbtiChecks] = useState([
+        {id: 1, label: 'INTJ', checked: false},
+        {id: 2, label: 'INTP', checked: false},
+        {id: 3, label: 'ENTP', checked: false},
+        {id: 4, label: 'ENTJ', checked: false},
+        {id: 5, label: 'INFJ', checked: false},
+        {id: 6, label: 'INFP', checked: false},
+        {id: 7, label: 'ENFJ', checked: false},
+        {id: 8, label: 'ENFP', checked: false},
+        {id: 9, label: 'ISTJ', checked: false},
+        {id: 10, label: 'ISFJ', checked: false},
+        {id: 11, label: 'ESTJ', checked: false},
+        {id: 12, label: 'ESFJ', checked: false},
+        {id: 13, label: 'ISTP', checked: false},
+        {id: 14, label: 'ISFP', checked: false},
+        {id: 15, label: 'ESTP', checked: false},
+        {id: 16, label: 'ESFP', checked: false},
+    ])
 
-    const imageHandler = async () => {
+    useEffect(() => {
+        if (isUpdateMode()) {
+            const fetchPost = async () => {
+                try {
+                    const response = await apiClient.get(`/api/posts/${postId}/?purpose=update`)
+                    const post = response.data
+
+                    setInputs({
+                        id: post.id,
+                        title: post.title,
+                        content: post.content,
+                        category: post.category,
+                        mbti: post.mbti,
+                    })
+                    setValues(post.content);
+                    setMbtiChecks((prevChecks) =>
+                        prevChecks.map((check) =>
+                            post.mbti.some((mbti) => mbti.toLowerCase() === check.label.toLowerCase())
+                                ? {...check, checked: true}
+                                : check
+                        )
+                    );
+                } catch (error) {
+                    navigate(-1)
+                }
+            }
+
+            fetchPost()
+        }
+    }, []);
+
+    useEffect(() => {
+    }, [mbtiChecks, error]);
+
+    const isUpdateMode = () => {
+        return postId !== null;
+    }
+
+    const imageHandlerCreate = async () => {
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
@@ -91,7 +152,58 @@ const Write = () => {
         });
     };
 
+    const imageHandlerUpdate = async () => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*");
+        input.click();
+        input.addEventListener("change", async () => {
+            //이미지를 담아 전송할 file을 만든다
+            const file = input.files[0];
+            const fileExt = file.name.split('.').pop();
+
+            // 확장자 제한
+            if (!['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
+                alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
+                return;
+            }
+            try {
+                //업로드할 파일의 이름으로 Date 사용
+                const name = Date.now();
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('name', name);
+                const result = await apiClient.post('/api/posts/image/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                console.log(result)
+                const url = "https://picturebucket9856.s3.amazonaws.com/media/" + file.name
+                const editor = quillRef.current.getEditor();
+                const range = editor.getSelection();
+                editor.insertEmbed(range.index, "image", `${url}`);
+                // 이미지 삽입 후 줄바꿈 삽입
+                editor.setSelection(range.index + 1);
+                editor.insertText(range.index + 1, '\n');
+
+                // 커서를 새 줄로 이동
+                editor.setSelection(range.index + 2, 0);
+            } catch (error) {
+                console.log(error);
+            }
+        });
+    };
+
+
     const modules = useMemo(() => {
+        let imageHandler = null;
+        if (isUpdateMode()) {
+            imageHandler = imageHandlerUpdate;
+        } else {
+            imageHandler = imageHandlerCreate;
+        }
+
         return {
             toolbar: {
                 container:
@@ -114,52 +226,6 @@ const Write = () => {
     }, []);
 
 
-    const {title, content, category, mbti} = inputs
-    const [error, setError] = useState('')
-    const [values, setValues] = useState();
-
-    const [mbtiChecks, setMbtiChecks] = useState([
-        {id: 1, label: 'INTJ', checked: false},
-        {id: 2, label: 'INTP', checked: false},
-        {id: 3, label: 'ENTP', checked: false},
-        {id: 4, label: 'ENTJ', checked: false},
-        {id: 5, label: 'INFJ', checked: false},
-        {id: 6, label: 'INFP', checked: false},
-        {id: 7, label: 'ENFJ', checked: false},
-        {id: 8, label: 'ENFP', checked: false},
-        {id: 9, label: 'ISTJ', checked: false},
-        {id: 10, label: 'ISFJ', checked: false},
-        {id: 11, label: 'ESTJ', checked: false},
-        {id: 12, label: 'ESFJ', checked: false},
-        {id: 13, label: 'ISTP', checked: false},
-        {id: 14, label: 'ISFP', checked: false},
-        {id: 15, label: 'ESTP', checked: false},
-        {id: 16, label: 'ESFP', checked: false},
-    ])
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await apiClient.get('/api/posts/category/')
-                console.log(response.data)
-                setCategorys(response.data)
-            } catch (error) {
-                console.error('카테고리 데이터를 불러오는 중에 오류가 발생했습니다:', error)
-            }
-        }
-
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        if (categorys.length > 0) {
-            setIsLoading(false)
-        }
-    }, [categorys])
-
-    useEffect(() => {
-    }, [mbtiChecks]);
-
     const handleCheckboxChange = (id) => {
         const updatedCheckboxes = mbtiChecks.map((check) =>
             check.id === id ? {...check, checked: !check.checked} : check,
@@ -174,40 +240,41 @@ const Write = () => {
     }
 
     const onChange = (e) => {
-        const {value, id, name} = e.target
+       const {value, id, name} = e.target
         if (name === 'category' && id === 'category') {
             setInputs({
                 ...inputs,
                 category: value,
             })
-        } else if (id === 'title') {
+        } else {
             setInputs({
                 ...inputs,
-                title: value,
-            });
+                [id]: value,
+            })
         }
     }
 
-    const onSubmit = async (e) => {
+    const onCreate = async (e) => {
         e.preventDefault()
-        const postData = {...inputs, content: values === "<p><br></p>" ? "" : values}
         try {
-            const response = await apiClient.post('/api/posts/create/', postData)
-            const postId = response.data.id
-            // navigate(`/detail/${postId}/?mbti=${inputs.mbti[0]}`)
+            const data = await postCreate(inputs, values)
+            const postId = data['postId']
             navigate(`/detail/${postId}/?mbti=${currentUser.mbti_type}&boardMbti=${inputs.mbti[0]}`)
         } catch (error) {
-            if (!inputs.category) {
-                setError('카테고리를 선택해주세요')
-            } else if (inputs.mbti.length === 0) {
-                setError('게시될 MBTI 게시판을 선택해주세요')
-            } else if (!inputs.title) {
-                setError('제목을 입력해주세요')
-            } else if (!values) {
-                setError('내용을 입력해주세요')
-            }
+            console.log(error)
         }
     }
+
+    const onUpdate = async (e) => {
+        e.preventDefault()
+        try {
+            await putCreate(inputs, values, postId)
+            navigate(`/detail/${postId}/?mbti=${currentUser.mbti_type}&boardMbti=${inputs.mbti[0]}`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     const handleCheckAll = (isCheck) => {
         const updatedChecks = mbtiChecks.map(item => ({...item, checked: isCheck}))
@@ -219,7 +286,7 @@ const Write = () => {
         })
     }
 
-    if (isLoading) {
+    if (isCategoryLoading) {
         return <div>loading...</div>
     }
 
@@ -228,7 +295,7 @@ const Write = () => {
             <div className={style.board_top}>
                 <h2>게시물 작성</h2>
             </div>
-            <form className={style.form} onSubmit={onSubmit}>
+            <form className={style.form}>
                 <div className={style.title}>
                     <div>
                         <select
@@ -288,7 +355,7 @@ const Write = () => {
                     id="content"
                     theme="snow"
                     ref={quillRef}
-                    style={{height: '600px'}}
+                    style={{height:'600px', marginBottom:'40px'}}
                     modules={modules}
                     formats={formats}
                     value={values}
@@ -299,9 +366,16 @@ const Write = () => {
 
                 <p></p>
                 <p className={style.Error}>{error}</p>
-                <button className={style.button} type="submit">
-                    등록
-                </button>
+
+                {isUpdateMode() ? (
+                    <button className={style.button} onClick={onUpdate}>
+                        수정 완료
+                    </button>
+                ) : (
+                    <button className={style.button} onClick={onCreate}>
+                        등록
+                    </button>
+                )}
             </form>
         </div>
     )

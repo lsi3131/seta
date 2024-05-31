@@ -177,3 +177,11 @@
 .board_list_bottom_container {
     padding: 20px 20px;
 }
+
+.container_content, .container_content_category {
+    padding: 0 20px;
+}
+
+.container_content {
+    padding-bottom: 20px;
+}
