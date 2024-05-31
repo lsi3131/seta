@@ -1,5 +1,6 @@
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
 import Cursor from './Components/Cursor/Cursor'
 import NavBar from './Components/NavBar/NavBar'
 import Board from './Components/Board/Board'
@@ -17,7 +18,7 @@ import MessageManage from 'Components/MessageManage/MessageManage'
 import MessageDetail from 'Components/MessageDetail/MessageDetail'
 import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
-import Chat from "./Components/Chat/Chat";
+import Chat from 'Components/Chat/Chat'
 
 function App() {
     return (
@@ -33,8 +34,8 @@ function App() {
                     <Route path="/write" element={<Write />} />
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/profile/update/:username" element={<ProfileUpdate />} />
-                    <Route path="/myposts/:username" element={<MyPosts />} />
                     <Route path="/update/:detailId" element={<Write />} />
+                    <Route path="/myposts/:username" element={<MyPosts />} />
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
                     <Route path="/search" element={<SearchResult />} />

@@ -1,72 +1,74 @@
 // App.js
-import React, {useState, useEffect, useContext} from 'react';
-import {UserContext} from "../../userContext";
+import { useEffect, useState, useContext } from 'react'
+import style from './Chat.module.css'
+import apiClient from '../../services/apiClient'
+import { UserContext } from '../../userContext'
+import ChatList from './ChatList'
+import GameList from './GameList'
+import Pagination from '../Pagenation/Pagination'
 
-function ChatInner() {
-    const [messages, setMessages] = useState([]);
-    const [message, setMessage] = useState('');
-    const [socket, setSocket] = useState(null);
-    const currentUser = useContext(UserContext);
-    // const {sendMessage} = useWebSocket();
+const Chat = () => {
+    const currentUser = useContext(UserContext)
+    const [view, setView] = useState('chat')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [posts, setPosts] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        // WebSocket을 통해 메시지를 받는 부분
-        const handleMessage = (event) => {
-            const newMessage = JSON.parse(event.data);
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-        };
-
-        // WebSocket 연결
-        const socket = new WebSocket('ws://127.0.0.1:8000/ws/chat/room/'); // Django Channels 웹 소켓 URL에 맞게 수
-        socket.addEventListener('message', handleMessage);
-
-        setSocket(socket)
-
-        // 컴포넌트 언마운트 시 WebSocket 연결 해제
-        return () => {
-            socket.removeEventListener('message', handleMessage);
-            socket.close();
-        };
-    }, []);
-
-    const handleMessageSend = () => {
-        const sendData = {
-            message: message,
-            username: currentUser.username
+        async function fetchData() {
+            try {
+                const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
+                setPosts(response.data)
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
         }
+        fetchData()
+    }, [view, currentPage])
 
-        sendMessage(sendData);
-        setMessage('');
-    };
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
 
-    const sendMessage = (message) => {
-        if (socket.readyState === WebSocket.OPEN) {
-            const jsonMessage = JSON.stringify({message})
-            socket.send(jsonMessage);
-        }
-    };
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
+    }
 
+    const handleViewChange = (view) => {
+        setView(view)
+    }
 
     return (
-        <div>
-            <h1>채팅 애플리케이션</h1>
-            <div>
-                {messages.map((msg, index) => (
-                    <div key={index}>{msg.username} : {msg.message}</div>
-                ))}
+        <div className={style.chat_container}>
+            <div className={style.chat_header}>
+                <button>새로고침</button>
+                <button>방만들기</button>
             </div>
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-            />
-            <button onClick={handleMessageSend}>전송</button>
+
+            <div className={style.chat_category}>
+                <button
+                    style={{ fontWeight: view === 'chat' ? 'bold' : '200' }}
+                    onClick={() => handleViewChange('chat')}
+                >
+                    채팅
+                </button>
+                <button
+                    style={{ fontWeight: view === 'game' ? 'bold' : '200' }}
+                    onClick={() => handleViewChange('game')}
+                >
+                    게임
+                </button>
+                <hr />
+                {view === 'chat' ? (
+                    <ChatList posts={posts} user={currentUser} />
+                ) : (
+                    <GameList posts={posts} user={currentUser} />
+                )}
+            </div>
+            <div className={style.chat_footer}></div>
         </div>
-    );
+    )
 }
 
-const Chat = () => (
-    <ChatInner/>
-);
-
-export default Chat;
+export default Chat
