@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/accounts/", include("account.urls")),
     path("api/posts/", include("post.urls")),
     path("api/messages/", include("message.urls")),
+    path("api/chats/", include("chat.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [

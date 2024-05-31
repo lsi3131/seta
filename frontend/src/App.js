@@ -9,7 +9,6 @@ import Login from './Components/Login/Login'
 import BoardDetail from './Components/BoardDetail/BoardDetail'
 import Write from './Components/Write/Write'
 import Profile from './Components/Profile/Profile'
-import Update from './Components/Update/Update'
 import Footer from './Components/Footer/Footer'
 import { UserProvider } from 'userContext'
 import ProfileUpdate from './Components/ProfileUpdate/ProfileUpdate'
@@ -19,6 +18,7 @@ import MessageManage from 'Components/MessageManage/MessageManage'
 import MessageDetail from 'Components/MessageDetail/MessageDetail'
 import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
+import Chat from 'Components/Chat/Chat'
 
 function App() {
     return (
@@ -34,12 +34,13 @@ function App() {
                     <Route path="/write" element={<Write />} />
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/profile/update/:username" element={<ProfileUpdate />} />
-                    <Route path="/update/:detailId" element={<Update />} />
+                    <Route path="/update/:detailId" element={<Write />} />
                     <Route path="/myposts/:username" element={<MyPosts />} />
                     <Route path="/messages/" element={<MessageManage />} />
                     <Route path="/message/:messageId" element={<MessageDetail />} />
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/finduser" element={<FindUser />} />
+                    <Route path="/chat" element={<Chat />} />
                 </Routes>
                 <FabButton />
                 <Footer />

@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -53,7 +54,16 @@ INSTALLED_APPS = [
     "account.apps.AccountConfig",
     "post.apps.PostConfig",
     'message.apps.MessageConfig',
+
+    'channels',
+    'chat',
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer', # 또는 Redis를 사용할 수 있습니다.
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -85,7 +95,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-
+ASGI_APPLICATION = "config.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -178,3 +188,25 @@ AWS_ACCESS_KEY_ID = json.load(open(BASE_DIR / "secrets.json"))["AWS_ACCESS_KEY_I
 AWS_SECRET_ACCESS_KEY = json.load(open(BASE_DIR / "secrets.json"))["AWS_SECRET_ACCESS_KEY"]
 AWS_STORAGE_BUCKET_NAME = 'picturebucket9856'
 AWS_QUERYSTRING_AUTH = False
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+# Redis를 사용하기 위해 필요
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
+
+APPEND_SLASH = False
