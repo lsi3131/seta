@@ -17,6 +17,7 @@ import MessageManage from 'Components/MessageManage/MessageManage'
 import MessageDetail from 'Components/MessageDetail/MessageDetail'
 import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
+import Chat from "./Components/Chat/Chat";
 
 function App() {
     return (
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/message/:messageId" element={<MessageDetail />} />
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/finduser" element={<FindUser />} />
+                    <Route path="/chat" element={<Chat />} />
                 </Routes>
                 <FabButton />
                 <Footer />
