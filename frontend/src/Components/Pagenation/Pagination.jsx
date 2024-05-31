@@ -34,11 +34,11 @@ const Pagination = ({currentPage, totalPages, onPageChange}) => {
             ))}
 
             <button onClick={() => handlePageChange(currentPage + 1)}>
-                >
+                {'>'}
             </button>
 
             <button onClick={() => handlePageChange(totalPages)}>
-                >>
+                {'>>'}
             </button>
         </div>
     )
