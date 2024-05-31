@@ -38,7 +38,7 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
         }
     }
 
-
+    console.log(post)
     return (
         <>
             <div className={style.board_post} style={getPostBackgroundStyle()}>

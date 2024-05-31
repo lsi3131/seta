@@ -7,7 +7,7 @@ const useBoardAPI = (mbti, initialFilter, initialOrder, initialPage) => {
     const [posts, setPosts] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [categories, setCategories] = useState([])
-    const [currentPage, setCurrentPage] = useState(initialPage);
+    const [currentPage, setCurrentPage] = useState(initialPage ? parseInt(initialPage) : 1);
     const [filter, setFilter] = useState(initialFilter);
     const [order, setOrder] = useState(initialOrder);
     const [isLoading, setLoading] = useState(true);
