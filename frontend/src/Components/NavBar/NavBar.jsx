@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import style from './NavBar.module.css'
 import { UserContext } from 'userContext'
-import {getButtonColor, getMainColor} from 'Utils/helpers'
-import NavSearch from "./NavSearch";
+import { getButtonColor, getMainColor } from 'Utils/helpers'
+import NavSearch from './NavSearch'
 
 const logo_image = {
     url: require('../../Assets/images/logo.png'),
@@ -41,22 +41,30 @@ const AuthenticatedNavbar = ({ currentUser }) => {
             <div className={style.container}>
                 <div className={style.logo_search}>
                     <Link to="/">
-                        <img src={logo_image.url} className={style.image}/>
+                        <img src={logo_image.url} className={style.image} />
                     </Link>
                     <div className={style.search}>
-                        <NavSearch/>
+                        <NavSearch />
                     </div>
                 </div>
                 <nav className={style.navbar}>
-                    <div className={style.usernameWrapper} ref={dropdownRef}>
+                    <div className={style.navmenu}>
+                        <a href="/">게시판</a>
+                    </div>
+                    <div className={style.navmenu}>
+                        <a href="/chat">채팅방</a>
+                    </div>
+                    <div className={style.navmenu} ref={dropdownRef}>
                         <a className={style.username} onClick={() => setDropdownVisible(!dropdownVisible)}>
                             {currentUser.username}
                             {currentUser.mbti_type && (
-                                <sup style={{backgroundColor: getButtonColor(currentUser.mbti_type)}}>{currentUser.mbti_type.toUpperCase()}</sup>
+                                <sup style={{ backgroundColor: getButtonColor(currentUser.mbti_type) }}>
+                                    {currentUser.mbti_type.toUpperCase()}
+                                </sup>
                             )}
                         </a>
                         <div
-                            style={{backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : '#ccc' }}
+                            style={{ backgroundColor: currentUser ? getMainColor(currentUser.mbti_type) : '#ccc' }}
                             className={`${style.dropdownMenu} ${dropdownVisible ? style.show : ''}`}
                         >
                             <Link to={`/profile/${currentUser.username}/`} className={style.dropdownItem}>
@@ -86,16 +94,16 @@ const UnauthenticatedNavbar = ({ currentUrl }) => {
             <div className={style.container}>
                 <div className={style.logo_search}>
                     <Link to="/">
-                        <img src={logo_image.url} className={style.image}/>
+                        <img src={logo_image.url} className={style.image} />
                     </Link>
                     <div className={style.search}>
-                        <NavSearch/>
+                        <NavSearch />
                     </div>
                 </div>
                 <nav className={style.navbar}>
                     <Link
                         to={`/login?redirectUrl=${encodeURIComponent(currentUrl)}`}
-                        style={{textDecoration: 'none'}}
+                        style={{ textDecoration: 'none' }}
                     >
                         로그인
                     </Link>
