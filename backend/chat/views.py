@@ -1,9 +1,9 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.decorators import api_view
-
 from django.contrib.auth import get_user_model
 from .models import ChatRoom, ChatMessage, ChatRoomCategory
 from .validate import validate_chatroom_data
@@ -41,13 +41,17 @@ class ChatRoomAPIView(APIView):
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
         name = data.get('name')
-        category_id = data.get('category_id')
+        category_name = data.get('category')
+        category = get_object_or_404(ChatRoomCategory, name=category_name)
         member_count = data.get('member_count')
         is_secret = data.get('is_secret')
+        password = data.get('password')
+        chat_room = ChatRoom.objects.create(name=name, room_category=category, max_members=member_count,
+                                            is_secret=is_secret, host_user=host_user, password=password)
 
-        ChatRoom.objects.create(name=name, category_id=category_id, member_count=member_count)
+        chat_room.members.add(request.user)
 
-        return Response({'todo': 'todo'}, status=status.HTTP_200_OK)
+        return Response({'chatroom_id': chat_room.id}, status=status.HTTP_200_OK)
 
     def get(self, request):
         cate = request.GET.get('category', 'chat')
