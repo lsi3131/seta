@@ -1,6 +1,6 @@
 import React from "react"
 import style from './ChatDetail.module.css'
-const ChatDetail = () => {
+const ChatDetail = (roomName) => {
 
     return (
         <div className={style.container}>
