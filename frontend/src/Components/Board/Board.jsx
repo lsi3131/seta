@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState,} from 'react'
 import style from './Board.module.css'
-import {Link, useNavigate, useParams,} from 'react-router-dom'
+import {Link, useNavigate, useParams, useLocation,} from 'react-router-dom'
 import axios from 'axios'
 import {formatDateDayBefore, getButtonColor, getFontColor, getImage, getMainColor} from '../../Utils/helpers'
 import Pagination from '../Pagenation/Pagination'
@@ -10,6 +10,7 @@ import BoardPostBox from "./BoardPostBox";
 import useBoardAPI from "../../api/Hooks/useBoardAPI";
 import {UserContext} from "../../userContext";
 
+import queryString from 'query-string';
 
 
 const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
@@ -80,6 +81,10 @@ const BoardCategory = ({filter, order, categories, onCategoryChanged}) => {
 const Board = () => {
 
     const currentUser = useContext(UserContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const { filter = '', order = 'recent', page = 1 } = queryString.parse(location.search);
 
 
     const {mbti} = useParams()
@@ -90,12 +95,13 @@ const Board = () => {
         categories,
         totalPage,
         currentPage,
-        order,
-        filter,
         handleCategoryChanged,
         handleGetPostListPage,
-    } = useBoardAPI(mbti)
+    } = useBoardAPI(mbti, filter, order, page);
 
+//     console.log(
+//         handleGetPostListPage,
+// )
     useEffect(() => {
         document.body.classList.add(style.customBodyStyle);
 
@@ -103,6 +109,24 @@ const Board = () => {
             document.body.classList.remove(style.customBodyStyle);
         };
     }, []);
+
+    const updateQuery = (newParams) => {
+        const currentParams = queryString.parse(location.search);
+        console.log(currentParams)
+        const updatedParams = { ...currentParams, ...newParams };
+        console.log(updatedParams)
+        navigate(`?${queryString.stringify(updatedParams)}`, { replace: true });
+    };
+
+    const handleCategoryChange = (type, value) => {
+        handleCategoryChanged(type, value);
+        updateQuery({ [type]: value, page: 1 });
+    };
+
+    const handlePageChange = (page) => {
+        handleGetPostListPage(page);
+        updateQuery({ page });
+    }
 
     if (isLoading) {
         return <>Loading...</>
@@ -133,10 +157,8 @@ const Board = () => {
                                     style={{
                                         backgroundColor:
                                             currentUser && currentUser.mbti_type
-                                                ? getButtonColor(currentUser.mbti_type)
-                                                : '#ccc',
-                                    }}
-                                >
+                                                ? getButtonColor(mbti)
+                                                : '#ccc',}}>
                                     글쓰기
                                 </Link>
                             </div>
@@ -145,16 +167,17 @@ const Board = () => {
                                     filter={filter}
                                     order={order}
                                     categories={categories}
-                                    onCategoryChanged={handleCategoryChanged}
+                                    onCategoryChanged={handleCategoryChange}
                                 />
                             </div>
                         </>
                     )}
 
                     <div className={style.container_content}>
+
                         <BoardPostBox boardMbti={mbti} posts={posts}/>
                         <Pagination currentPage={currentPage} totalPages={totalPage}
-                                    onPageChange={handleGetPostListPage}/>
+                                    onPageChange={handlePageChange}/>
 
                         {/*<BoardSearch />*/}
                     </div>
@@ -163,4 +186,5 @@ const Board = () => {
         </>
     )
 }
+
 export default Board

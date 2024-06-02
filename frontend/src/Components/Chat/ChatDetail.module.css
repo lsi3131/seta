@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10vh;
+}
+
+.leftContainer, .rightTopContainer, .rightBottomContainer {
+    border: 2px solid rgba(175, 175, 175, 0.651);
+    border-radius: 1rem;
+    margin-right: 2vh;
+    margin-bottom: 2vh;
+}
+
+.leftContainer {
+    width: 35vh;
+    height: 73vh;
+}
+
+.rightContainer {
+    width: 100vh;
+}
+
+.rightTopContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 13vh;
+}
+
+.rightBottomContainer {
+    height: 58vh;
+}
