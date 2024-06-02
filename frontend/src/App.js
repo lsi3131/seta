@@ -41,6 +41,7 @@ function App() {
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/finduser" element={<FindUser />} />
                     <Route path="/chat" element={<Chat />} />
+
                 </Routes>
                 <FabButton />
                 <Footer />
