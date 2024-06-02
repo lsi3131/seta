@@ -3,13 +3,13 @@ import {useState, useEffect} from 'react';
 import apiClient from '../../services/apiClient'
 
 
-const useBoardAPI = (mbti) => {
+const useBoardAPI = (mbti, initialFilter, initialOrder, initialPage) => {
     const [posts, setPosts] = useState([])
     const [totalPage, setTotalPage] = useState(0)
     const [categories, setCategories] = useState([])
-    const [currentPage, setCurrentPage] = useState(1)
-    const [filter, setFilter] = useState('') //질문, 유머, 창작 등
-    const [order, setOrder] = useState('recent') //recent, like, comment
+    const [currentPage, setCurrentPage] = useState(initialPage ? parseInt(initialPage) : 1);
+    const [filter, setFilter] = useState(initialFilter);
+    const [order, setOrder] = useState(initialOrder);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 

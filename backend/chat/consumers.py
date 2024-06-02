@@ -6,8 +6,7 @@ from .models import *
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = 'chat_room'
-        self.room_group_name = self.get_group_name(self.room_name)
-        # self.room_group_name = f'chat_{self.room_name}'
+        self.room_group_name = f'chat_{self.room_name}'
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -30,7 +29,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         room = await self.get_or_create_room(username)
         self.room_id = str(room.id)
-        group_name = self.get_group_name(self.room_id)
 
         await self.save_message(room, username, message)
 
@@ -51,12 +49,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': message,
             'username': username
         }))
-        
-    @staticmethod
-    def get_group_name(room_id):
-        # 방 ID를 사용하여 고유한 그룹 이름을 구성합니다.
-        return f"chat_room_{room_id}"
-
     
     @database_sync_to_async
     def save_message(self, room, sender, message_text):

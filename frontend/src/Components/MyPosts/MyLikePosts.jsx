@@ -11,6 +11,7 @@ const MyLikePosts = (e) => {
     const posts = e.posts.results
     const user = e.user
 
+    console.log(posts)
     return (
 
         <div key={posts.id} className={style.board_posts}>
@@ -19,11 +20,11 @@ const MyLikePosts = (e) => {
                     <div key={post.id} className={style.board_post}>
                         <div className={style.board_post_left}>
                             <div className={style.board_post_category}>
-                                <p style={{ color: getFontColor(user.mbti_type) }}>{post.category}</p>
+                                <p style={{ color: getFontColor(post.post_mbti) }}>{post.category}</p>
                             </div>
                             <div key={post.id} className={style.board_post_title}>
-                                <Link to={`/detail/${post.id}?mbti=${post.mbti[0]}`}>{post.title}</Link>
-                                <p style={{ color: getFontColor(user.mbti_type) }}>[{post.comments}]</p>
+                                <Link to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${post.post_mbti}`}>{post.title}</Link>
+                                <p style={{ color: getFontColor(post.post_mbti) }}>[{post.comments}]</p>
                             </div>
                             <div className={style.board_post_bottom}>
                                 <div>

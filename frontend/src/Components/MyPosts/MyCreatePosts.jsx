@@ -9,6 +9,7 @@ const MyCreatePosts = (e) => {
     const posts = e.posts.results
     const user = e.user
 
+
     return (
         <div key={posts.id} className={style.board_posts}>
             {posts && posts.map((post) => (
@@ -19,7 +20,7 @@ const MyCreatePosts = (e) => {
                                 <p style={{ color: getFontColor(user.mbti_type) }}>{post.category}</p>
                             </div>
                             <div key={post.id} className={style.board_post_title}>
-                                <Link to={`/detail/${post.id}?mbti=${post.mbti[0]}`}>{post.title}</Link>
+                                <Link to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${post.post_mbti}`}>{post.title}</Link>
                                 <p style={{ color: getFontColor(user.mbti_type) }}>[{post.comments}]</p>
                             </div>
                             <div className={style.board_post_bottom}>
