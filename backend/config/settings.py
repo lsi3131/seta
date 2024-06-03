@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django_seed',
     'storages',
 
-    "account.apps.AccountConfig",
+    "acc.apps.AccountConfig",
     "post.apps.PostConfig",
     'message.apps.MessageConfig',
 
