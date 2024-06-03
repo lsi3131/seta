@@ -1,5 +1,6 @@
 import style from './ChatRoomCreateModal.module.css'
 import React, {useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom'
 import './ChatRoomCreateModal.module.css'
 import apiClient from "../../services/apiClient";
 
@@ -15,6 +16,7 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
 
     const [categories, setCategories] = useState([])
     const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     useEffect(() => {
         handleGetCategories();
@@ -54,34 +56,40 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
         }
     }
 
-    const handleSubmit = () => {
-        const data = {
-            name: inputs.roomName,
-            category: inputs.category,
-            member_count: inputs.memberCount,
-            is_secret: inputs.isSecret,
-            password: inputs.password,
-        }
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        try{
+            const data = {
+                name: inputs.roomName,
+                category: inputs.category,
+                member_count: inputs.memberCount,
+                is_secret: inputs.isSecret,
+                password: inputs.password,
+            }
 
-        apiClient.post(`/api/chats/`, data)
-            .then(response => {
-                console.log('success to create chatroom ', response.data)
-                const chatroomId = response.data['chatroom_id']
-                onCreate(chatroomId);
-            }).catch(error => {
-                console.log(error)
-                setError(error.response.data['error'])
-            // if (!inputs.category) {
-            //     setError('카테고리를 선택해주세요')
-            // } else if (inputs.memberCount === null) {
-            //     setError('인원을 선택해주세요')
-            // } else if (!inputs.title) {
-            //     setError('방제목을 입력해주세요')
-            // } else if (inputs.password) {
-            //     setError('방제목을 입력해주세요')
-            // }
+            apiClient.post(`/api/chats/`, data)
+                .then(response => {
+                    console.log('success to create chatroom ', response.data)
+                    const chatroomId = response.data['chatroom_id']
+                    onCreate(chatroomId);
+                }).catch(error => {
+                    console.log(error)
+                    setError(error.response.data['error'])
+                // if (!inputs.category) {
+                //     setError('카테고리를 선택해주세요')
+                // } else if (inputs.memberCount === null) {
+                //     setError('인원을 선택해주세요')
+                // } else if (!inputs.title) {
+                //     setError('방제목을 입력해주세요')
+                // } else if (inputs.password) {
+                //     setError('방제목을 입력해주세요')
+                // }
+            })
+            navigate(`/chatroom/${inputs.roomName}`)
+        } catch (error) {
             console.error('fail to post categories', error)
-        })
+        }
+        
     }
 
     const handleGetCategories = () => {
