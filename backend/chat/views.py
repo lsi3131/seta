@@ -94,3 +94,17 @@ def get_category(request):
     serialized_datas = [serialize_chatroom_category(cate) for cate in categories]
 
     return Response(serialized_datas, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def check_room_password(request):
+    room_id = request.data['id']
+    password = request.data['password']
+
+    room = ChatRoom.objects.get(id=room_id)
+    if room.is_secret and room.password != password:
+        return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'message': '비밀번호가 일치합니다.'}, status=status.HTTP_200_OK)
+
+

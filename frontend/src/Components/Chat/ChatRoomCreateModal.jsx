@@ -71,21 +71,13 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
                 .then(response => {
                     console.log('success to create chatroom ', response.data)
                     const chatroomId = response.data['chatroom_id']
-                    onCreate(chatroomId);
+                    // onCreate(chatroomId);
+                    navigate(`/chatroom/${chatroomId}`, {state: {password: inputs.password}})
+
                 }).catch(error => {
                     console.log(error)
                     setError(error.response.data['error'])
-                // if (!inputs.category) {
-                //     setError('카테고리를 선택해주세요')
-                // } else if (inputs.memberCount === null) {
-                //     setError('인원을 선택해주세요')
-                // } else if (!inputs.title) {
-                //     setError('방제목을 입력해주세요')
-                // } else if (inputs.password) {
-                //     setError('방제목을 입력해주세요')
-                // }
             })
-            navigate(`/chatroom/${inputs.roomName}`)
         } catch (error) {
             console.error('fail to post categories', error)
         }

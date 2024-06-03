@@ -12,7 +12,7 @@ def validate_chatroom_data(data):
         return {"error": "최대 인원수를 선택해주세요."}
     if is_secret is None:
         return {"error": "비밀글 여부를 선택해주세요."}
-    if is_secret is not None and not password:
+    if is_secret and not password:
         return {"error": "비밀번호를 입력해주세요"}
     return None
 
