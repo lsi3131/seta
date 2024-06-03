@@ -19,7 +19,7 @@ import MessageDetail from 'Components/MessageDetail/MessageDetail'
 import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
 import Chat from 'Components/Chat/Chat'
-import ChatRoom from 'Components/Chat/ChatRoom'
+import ChatRoom from 'Components/ChattingRoom/ChattingRoom'
 
 function App() {
     return (
