@@ -2,12 +2,14 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 import json
 from .models import *
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = 'chat_room'
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
-
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -23,24 +25,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        data = data['message']
+        message_type = data['type']
         message = data['message']
         username = data['username']
 
-        # room = await self.get_or_create_room(username)
-        # self.room_id = str(room.id)
-        #
-        # await self.save_message(room, username, message)
-
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'username': username,
-            }
-        )
-
+        if message_type == 'message':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message,
+                    'username': username,
+                }
+            )
+        elif message_type == 'enter':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': f'{username}님이 입장하셨습니다.',
+                    'username': username,
+                }
+            )
+            await self.enter_room(self.room_name, username)
+        
+        elif message_type == 'leave':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': f'{username}님이 퇴장하셨습니다.',
+                    'username': username,
+                }
+            )
+            await self.leave_room(self.room_name, username)
+            
     async def chat_message(self, event):
         message = event['message']
         username = event['username']
@@ -60,3 +79,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # timestamp 필드는 auto_now_add=True 속성 때문에 자동으로 현재 시간이 저장됩니다.
         ChatMessage.objects.create(room=room, sender = sender, content=message_text)
 
+    @database_sync_to_async
+    def enter_room(self, roomid, username):
+        user = User.objects.get(username=username)
+        room = ChatRoom.objects.get(id=int(roomid))
+        room.members.add(user)
+        return room
+    
+    @database_sync_to_async
+    def leave_room(self, roomid, username):
+        user = User.objects.get(username=username)
+        room = ChatRoom.objects.get(id=int(roomid))
+        room.members.remove(user)
+        if room.members.count() == 0:
+            room.delete()
+        return room
