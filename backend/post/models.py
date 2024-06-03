@@ -1,6 +1,6 @@
 from django.db import models
 from config.settings import AUTH_USER_MODEL
-from account.models import Mbti
+from acc.models import Mbti
 
 
 class PostCategory(models.Model):

@@ -7,7 +7,7 @@ django.setup()
 from faker import Faker
 from post.models import Post, PostCategory, Comment
 from django.contrib.auth import get_user_model
-from account.models import Mbti
+from acc.models import Mbti
 
 
 
