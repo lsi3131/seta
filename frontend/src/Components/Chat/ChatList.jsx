@@ -20,7 +20,7 @@ const ChatList = ({ posts }) => {
                         <tr key={post.id}>
                             <td className={style.chat_list_title}>{post.room_category}</td>
                             <td className={style.chat_list_title}>
-                                <a href={`/chat/${post.id}`}>
+                                <a href={`/chatroom/${post.id}`}>
                                     {post.name.length > 20 ? post.name.slice(0, 20) + '...' : post.name}
                                 </a>
                                 {post.is_secret ? <span className={style.secret}>🔒</span> : null}
