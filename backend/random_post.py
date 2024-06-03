@@ -23,13 +23,15 @@ def generate_random_posts(total_posts):
     for _ in range(total_posts):
         author = get_random_user()
         category = PostCategory.objects.order_by('?').first()
+        mbti = get_random_mbti()
 
         post = Post(
             author=author,
             title=faker.sentence(),
             content=faker.paragraph(),
             category=category,
-            hits=random.randint(0, 1000)
+            hits=random.randint(0, 1000),
+            post_mbti=mbti
         )
         post.save()
 
