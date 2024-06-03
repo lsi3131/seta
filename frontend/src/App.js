@@ -42,7 +42,9 @@ function App() {
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/finduser" element={<FindUser />} />
                     <Route path="/chat" element={<Chat />} />
+
                     <Route path="/chatroom/:roomId" element={<ChatRoom />} />
+
                 </Routes>
                 <FabButton />
                 <Footer />
