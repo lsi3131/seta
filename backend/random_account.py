@@ -4,7 +4,7 @@ import django, os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 from faker import Faker
-from account.models import User, Mbti
+from acc.models import User, Mbti
 
 def generate_random_users(total_users):
     seeder = Seed.seeder()
