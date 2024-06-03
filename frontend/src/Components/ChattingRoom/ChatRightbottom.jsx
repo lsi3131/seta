@@ -1,87 +1,133 @@
-import React, {useState, useRef, useEffect, useContext} from "react";
-import style from "./ChattingRoom.module.css";
-import {UserContext} from "../../userContext";
+import React, { useState, useRef, useEffect, useContext } from 'react'
+import style from './ChattingRoom.module.css'
+import { UserContext } from '../../userContext'
 
-const ChatRightBottom = ({roomName = 'room_name'}) => {
-    const [text, setText] = useState("");
-    const textareaRef = useRef(null);
-    const [rows, setRows] = useState(1);
-    const [messages, setMessages] = useState([]);
-    const [socket, setSocket] = useState(null);
-    const currentUser = useContext(UserContext);
+const ChatRightBottom = ({ roomId }) => {
+    const [text, setText] = useState('')
+    const textareaRef = useRef(null)
+    const [rows, setRows] = useState(1)
+    const [messages, setMessages] = useState([])
+    const [socket, setSocket] = useState(null)
+    const currentUser = useContext(UserContext)
+    const roomName = roomId
 
     useEffect(() => {
+        if (!currentUser) return
+
         // WebSocket을 통해 메시지를 받는 부분
         const handleMessage = (event) => {
-            console.log(event.data)
-            const newMessage = JSON.parse(event.data);
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-        };
-
-        const url = `ws://127.0.0.1:8000/ws/chat/${roomName}/`
+            const newMessage = JSON.parse(event.data)
+            setMessages((prevMessages) => [...prevMessages, newMessage])
+        }
 
         // WebSocket 연결
-        const socket = new WebSocket(url); // Django Channels 웹 소켓 URL에 맞게 수
-        socket.addEventListener('message', handleMessage);
+        const url = `ws://127.0.0.1:8000/ws/chat/${roomName}/`
+        const socket = new WebSocket(url)
+
+        socket.addEventListener('message', handleMessage)
+
+        socket.onopen = () => {
+            socket.send(
+                JSON.stringify({
+                    type: 'enter',
+                    username: currentUser.username,
+                    message: `${currentUser.username} 님이 입장하셨습니다.`,
+                }),
+            )
+        }
+
+        socket.onclose = () => {
+            socket.send(
+                JSON.stringify({
+                    type: 'leave',
+                    username: currentUser.username,
+                    message: `${currentUser.username} 님이 퇴장하셨습니다.`,
+                }),
+            )
+        }
 
         setSocket(socket)
 
         // 컴포넌트 언마운트 시 WebSocket 연결 해제
         return () => {
-            socket.removeEventListener('message', handleMessage);
-            socket.close();
-        };
-    }, []);
-
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(
+                    JSON.stringify({
+                        type: 'leave',
+                        username: currentUser.username,
+                        message: `${currentUser.username} 님이 퇴장하셨습니다.`,
+                    }),
+                )
+            }
+            socket.close()
+        }
+    }, [currentUser, roomName])
 
     useEffect(() => {
         const adjustTextareaHeight = () => {
-            const textarea = textareaRef.current;
-            console.log(textarea)
-            textarea.style.height = 'auto';
-            textarea.style.height = `${textarea.scrollHeight}px`;
-        };
-
-        adjustTextareaHeight();
-    }, [text]);
-
-    const sendMessage = (message) => {
-        if (socket.readyState === WebSocket.OPEN) {
-            const jsonMessage = JSON.stringify({message})
-            socket.send(jsonMessage);
+            const textarea = textareaRef.current
+            textarea.style.height = 'auto'
+            textarea.style.height = `${textarea.scrollHeight}px`
         }
-    };
+
+        adjustTextareaHeight()
+    }, [text])
 
     const handleTextChange = (e) => {
-        const lines = e.target.value.split('\n').length;
-        console.log(lines)
+        const lines = e.target.value.split('\n').length
         if (lines > 15) {
-            e.preventDefault();
-            return;
+            e.preventDefault()
+            return
         }
-        setText(e.target.value);
+        setText(e.target.value)
         setRows(lines)
-    };
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
+        if (!text.trim()) return // 빈 메시지 전송 방지
+
         const sendData = {
+            type: 'message',
             message: text,
-            username: currentUser.username
+            username: currentUser.username,
         }
 
-        sendMessage(sendData);
-        setSubmittedText(text);
-        setText("");
-        setRows(1);
-    };
+        socket.send(JSON.stringify(sendData))
+        setText('')
+        setRows(1)
+    }
+
+    useEffect(() => {
+        const handleWindowClose = (event) => {
+            event.preventDefault()
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(
+                    JSON.stringify({
+                        type: 'leave',
+                        username: currentUser.username,
+                        message: `${currentUser.username} 님이 퇴장하셨습니다.`,
+                    }),
+                )
+                socket.close()
+            }
+        }
+
+        window.addEventListener('beforeunload', handleWindowClose)
+
+        return () => {
+            window.removeEventListener('beforeunload', handleWindowClose)
+        }
+    }, [socket, currentUser])
 
     return (
         <div className={style.Room_right_bottom}>
             <div className={style.Room_bottom_content}>
                 <div>
                     {messages.map((msg, index) => (
-                        <div key={index}>{msg.username} : {msg.message}</div>
+                        <div key={index}>
+                            {msg.username}: {msg.message}
+                        </div>
                     ))}
                 </div>
             </div>
@@ -101,7 +147,7 @@ const ChatRightBottom = ({roomName = 'room_name'}) => {
                 </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ChatRightBottom;
+export default ChatRightBottom
