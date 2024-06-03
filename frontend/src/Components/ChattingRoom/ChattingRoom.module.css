@@ -45,10 +45,13 @@
     height: 70%;
     border-radius: 30px;
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    position: relative; 
-    z-index: 0; 
+    /*justify-content: center;*/
+    justify-content: space-between;
+    /*align-items: flex-end;*/
+    align-items: center;
+    position: relative;
+    z-index: 0;
+    flex-direction: column;
 }
 
 .Room_right_bottom::before {
