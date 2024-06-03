@@ -1,5 +1,6 @@
 import style from './ChatRoomCreateModal.module.css'
 import React, {useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom'
 import './ChatRoomCreateModal.module.css'
 import apiClient from "../../services/apiClient";
 
@@ -15,6 +16,7 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
 
     const [categories, setCategories] = useState([])
     const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     useEffect(() => {
         handleGetCategories();
@@ -82,9 +84,8 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
                 // } else if (inputs.password) {
                 //     setError('방제목을 입력해주세요')
                 // }
-                navigate(`/chat/${inputs.roomName}/`)
             })
-            navigate
+            navigate(`/chatroom/${inputs.roomName}`)
         } catch (error) {
             console.error('fail to post categories', error)
         }

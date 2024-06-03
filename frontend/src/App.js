@@ -19,7 +19,7 @@ import MessageDetail from 'Components/MessageDetail/MessageDetail'
 import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
 import Chat from 'Components/Chat/Chat'
-import ChatDetail from 'Components/Chat/ChatDetail'
+import ChatRoom from 'Components/Chat/ChatRoom'
 
 function App() {
     return (
@@ -42,7 +42,9 @@ function App() {
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/finduser" element={<FindUser />} />
                     <Route path="/chat" element={<Chat />} />
-                    <Route path="/chat/messages" element={<ChatDetail />} />
+
+                    <Route path="/chatroom/:roomId" element={<ChatRoom />} />
+
                 </Routes>
                 <FabButton />
                 <Footer />
