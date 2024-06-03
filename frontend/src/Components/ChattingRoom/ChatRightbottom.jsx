@@ -4,7 +4,8 @@ import style from "./ChattingRoom.module.css";
 const ChatRightBottom = () => {
     const [text, setText] = useState("");
     const textareaRef = useRef(null);
-    const [rows, setRows] = useState(1)
+    const [rows, setRows] = useState(1);
+    const [submittedText, setSubmittedText] = useState("");
 
     useEffect(() => {
         const adjustTextareaHeight = () => {
@@ -30,16 +31,16 @@ const ChatRightBottom = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setSubmittedText(text);
         setText("");
-        setRows(1)
+        setRows(1);
     };
 
     return (
         <div className={style.Room_right_bottom}>
             <div className={style.Room_bottom_content}>
 
-            {/* 내용 나오게  */}
-
+            {submittedText}
             </div>
             <div className={style.Room_bottom_submit}>
                 <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
