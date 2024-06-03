@@ -1,6 +1,5 @@
 import style from './ChatRoomPasswordModal.module.css'
 import React, {useEffect, useState} from "react";
-import {useNavigate} from 'react-router-dom'
 import apiClient from "../../services/apiClient";
 
 const ChatRoomPasswordModal = ({roomId, onEnter, onClose}) => {
@@ -61,7 +60,7 @@ const ChatRoomPasswordModal = ({roomId, onEnter, onClose}) => {
     }
 
     return (
-        <div className={`${style.modalBackdrop} ${style.show}`}>
+        <div className={`${style.modalBackdrop}`}>
             <div className={`${style.modal} ${style.showModal}`}>
                 <button className={style.modalClose} onClick={handleClose}>
                     &times;
