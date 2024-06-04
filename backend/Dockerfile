@@ -27,4 +27,3 @@ EXPOSE 8000
 
 # Django 애플리케이션 시작 명령
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-#CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "config.asgi:application"]
