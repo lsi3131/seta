@@ -2,17 +2,16 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import style from './ChattingRoom.module.css'
 import { UserContext } from '../../userContext'
 
-const ChatRightBottom = ({ roomId }) => {
+const ChatRightBottom = ({ members, socket }) => {
     const [text, setText] = useState('')
     const textareaRef = useRef(null)
     const [rows, setRows] = useState(1)
     const [messages, setMessages] = useState([])
-    const [socket, setSocket] = useState(null)
     const currentUser = useContext(UserContext)
-    const roomName = roomId
+    const messagesEndRef = useRef(null)
 
     useEffect(() => {
-        if (!currentUser) return
+        if (!currentUser || !socket) return
 
         // WebSocket을 통해 메시지를 받는 부분
         const handleMessage = (event) => {
@@ -20,48 +19,19 @@ const ChatRightBottom = ({ roomId }) => {
             setMessages((prevMessages) => [...prevMessages, newMessage])
         }
 
-        // WebSocket 연결
-        const url = `ws://127.0.0.1:8000/ws/chat/${roomName}/`
-        const socket = new WebSocket(url)
-
         socket.addEventListener('message', handleMessage)
 
-        socket.onopen = () => {
-            socket.send(
-                JSON.stringify({
-                    type: 'enter',
-                    username: currentUser.username,
-                    message: `${currentUser.username} 님이 입장하셨습니다.`,
-                }),
-            )
-        }
-
-        socket.onclose = () => {
-            socket.send(
-                JSON.stringify({
-                    type: 'leave',
-                    username: currentUser.username,
-                    message: `${currentUser.username} 님이 퇴장하셨습니다.`,
-                }),
-            )
-        }
-
-        setSocket(socket)
-
-        // 컴포넌트 언마운트 시 WebSocket 연결 해제
+        // 컴포넌트 언마운트 시 WebSocket 이벤트 리스너 제거
         return () => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(
-                    JSON.stringify({
-                        type: 'leave',
-                        username: currentUser.username,
-                        message: `${currentUser.username} 님이 퇴장하셨습니다.`,
-                    }),
-                )
-            }
-            socket.close()
+            socket.removeEventListener('message', handleMessage)
         }
-    }, [currentUser, roomName])
+    }, [currentUser, socket])
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
+        }
+    }, [messages])
 
     useEffect(() => {
         const adjustTextareaHeight = () => {
@@ -87,8 +57,14 @@ const ChatRightBottom = ({ roomId }) => {
         e.preventDefault()
         if (!text.trim()) return // 빈 메시지 전송 방지
 
+        // 현재 사용자가 방의 멤버가 아닌 경우 검사
+        if (!members.includes(currentUser.username)) {
+            alert('이 채팅방의 멤버가 아닙니다. 다시 입장해주세요.')
+            return
+        }
+
         const sendData = {
-            type: 'message',
+            message_type: 'message',
             message: text,
             username: currentUser.username,
         }
@@ -98,35 +74,40 @@ const ChatRightBottom = ({ roomId }) => {
         setRows(1)
     }
 
-    useEffect(() => {
-        const handleWindowClose = (event) => {
-            event.preventDefault()
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                socket.send(
-                    JSON.stringify({
-                        type: 'leave',
-                        username: currentUser.username,
-                        message: `${currentUser.username} 님이 퇴장하셨습니다.`,
-                    }),
-                )
-                socket.close()
-            }
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault()
+            handleSubmit(e)
         }
-
-        window.addEventListener('beforeunload', handleWindowClose)
-
-        return () => {
-            window.removeEventListener('beforeunload', handleWindowClose)
-        }
-    }, [socket, currentUser])
+    }
 
     return (
-        <div className={style.Room_right_bottom}>
-            <div className={style.Room_bottom_content}>
-                <div>
+        <>
+            <div className={style.Room_right_bottom}>
+                <div className={style.Room_bottom_content} ref={messagesEndRef}>
                     {messages.map((msg, index) => (
-                        <div key={index}>
-                            {msg.username}: {msg.message}
+                        <div key={index} className={style.messages}>
+                            {msg.message_type === 'message' ? (
+                                <div
+                                    className={
+                                        msg.username === currentUser.username ? style.my_message : style.other_message
+                                    }
+                                >
+                                    <div>
+                                        <span className={style.message_username}>{msg.username}</span>
+                                        <span className={style.message_time}>
+                                            {new Date().toLocaleTimeString('ko-KR')}
+                                        </span>
+                                    </div>
+                                    <p>{msg.message}</p>
+                                </div>
+                            ) : (
+                                <div
+                                    className={msg.message_type === 'enter' ? style.enter_message : style.leave_message}
+                                >
+                                    {msg.message}
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -138,6 +119,7 @@ const ChatRightBottom = ({ roomId }) => {
                         className={style.Room_bottom_submit_textarea}
                         value={text}
                         onChange={handleTextChange}
+                        onKeyPress={handleKeyPress}
                         placeholder="내용을 입력하세요"
                         rows={rows}
                     ></textarea>
@@ -146,7 +128,7 @@ const ChatRightBottom = ({ roomId }) => {
                     </button>
                 </form>
             </div>
-        </div>
+        </>
     )
 }
 
