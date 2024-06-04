@@ -3,8 +3,10 @@ from channels.db import database_sync_to_async
 import json
 from .models import *
 from django.contrib.auth import get_user_model
+from collections import defaultdict
 
 User = get_user_model()
+room_messages = defaultdict(list)
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,21 +25,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+
     async def receive(self, text_data):
+        print(room_messages)
         data = json.loads(text_data)
-        message_type = data['type']
+
+        message_type = data.get('message_type')
         message = data['message']
         username = data['username']
 
         if message_type == 'message':
+            room_messages[self.room_name].append({'username':username, 'message':message})
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'chat_message',
                     'message': message,
                     'username': username,
+                    'message_type':message_type,
                 }
             )
+            if len(room_messages[self.room_name]) >= 10:
+                await self.save_messages(self.room_name)
+
         elif message_type == 'enter':
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -45,17 +55,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': 'chat_message',
                     'message': f'{username}님이 입장하셨습니다.',
                     'username': username,
+                    'message_type':message_type,
+
                 }
             )
             await self.enter_room(self.room_name, username)
         
         elif message_type == 'leave':
+            
+            await self.save_messages(self.room_name)
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'chat_message',
                     'message': f'{username}님이 퇴장하셨습니다.',
                     'username': username,
+                    'message_type':message_type,
                 }
             )
             await self.leave_room(self.room_name, username)
@@ -63,27 +78,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         username = event['username']
+        message_type = event['message_type']
+
+        if message_type in ['enter', 'leave']:
+            self.members = await self.get_room_members(self.room_name)
 
         await self.send(text_data=json.dumps({
             'message': message,
-            'username': username
+            'username': username,
+            'message_type':message_type,
+            'members': self.members
         }))
     
     @database_sync_to_async
-    def save_message(self, room, sender, message_text):
-        # 메시지 텍스트가 제공되었는지 확인합니다.
-        if not sender or not message_text:
-            raise ValueError("발신자 및 메시지 텍스트가 필요합니다.")
-        
-        # 메시지를 생성하고 데이터베이스에 저장합니다.
-        # timestamp 필드는 auto_now_add=True 속성 때문에 자동으로 현재 시간이 저장됩니다.
-        ChatMessage.objects.create(room=room, sender = sender, content=message_text)
+    def save_messages(self, room_name):
+        room = ChatRoom.objects.get(id=int(room_name))
+        messages = room_messages[room_name]
+        for msg in messages:
+            user = User.objects.get(username=msg['username'])
+            ChatMessage.objects.create(room=room, sender=user, content=msg['message']).save()
+
+        room_messages[room_name] = []
+    
 
     @database_sync_to_async
     def enter_room(self, roomid, username):
         user = User.objects.get(username=username)
         room = ChatRoom.objects.get(id=int(roomid))
         room.members.add(user)
+        room.save()
         return room
     
     @database_sync_to_async
@@ -91,6 +114,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(username=username)
         room = ChatRoom.objects.get(id=int(roomid))
         room.members.remove(user)
+        room.save()
         if room.members.count() == 0:
             room.delete()
+            room_messages.pop(roomid)
         return room
+    
+    @database_sync_to_async
+    def get_room_members(self, roomid):
+        room = ChatRoom.objects.get(id=int(roomid))
+        return list(room.members.values_list('username', flat=True))
