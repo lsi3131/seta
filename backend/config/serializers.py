@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
-from account.models import User
+from acc.models import User
 from django.contrib.auth.hashers import check_password
 
 

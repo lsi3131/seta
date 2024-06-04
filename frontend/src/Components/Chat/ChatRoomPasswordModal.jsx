@@ -10,7 +10,6 @@ const ChatRoomPasswordModal = ({roomId, onEnter, onClose}) => {
     const [error, setError] = useState('')
 
     useEffect(() => {
-        console.log(roomId)
     }, [roomId]);
 
     const handleClose = () => {

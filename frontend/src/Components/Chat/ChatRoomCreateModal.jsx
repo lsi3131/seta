@@ -71,8 +71,7 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
                 .then(response => {
                     console.log('success to create chatroom ', response.data)
                     const chatroomId = response.data['chatroom_id']
-                    // onCreate(chatroomId);
-                    navigate(`/chatroom/${chatroomId}`, {state: {password: inputs.password}})
+                    onCreate(chatroomId, inputs.password);
 
                 }).catch(error => {
                     console.log(error)
