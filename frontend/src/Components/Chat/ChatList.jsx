@@ -1,4 +1,3 @@
-
 import { react, useEffect, useState } from 'react'
 import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
@@ -37,8 +36,6 @@ const ChatList = ({ posts }) => {
         setShowCheckPassword(false)
     }
 
-
-const ChatList = ({posts, onChatClick}) => {
     return (
         <div className={style.chat_list}>
             {showCheckPassword && (
@@ -53,7 +50,6 @@ const ChatList = ({posts, onChatClick}) => {
                     >
                         <h2 className={style.chat_card_title}>
                             <Link to="" onClick={(e) => handleLinkClick(e, post)}>
-
                                 {post.name.length > 20 ? post.name.slice(0, 20) + '...' : post.name}
                             </Link>
                             {post.is_secret ? <span className={style.secret}>🔒</span> : null}
