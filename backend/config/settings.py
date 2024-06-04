@@ -165,6 +165,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://13.124.167.253",
+    "http://13.124.167.253:3000"
 ]
 
 REST_FRAMEWORK = {
