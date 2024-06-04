@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import style from './ChattingRoom.module.css'
 
-const ChatLeft = ({ members }) => {
+const ChatLeft = ({ host, members }) => {
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
-        setIsLoading(false)
+        setIsLoading(true)
     })
     if (isLoading) {
         ;<div>Loding...</div>
@@ -14,9 +14,16 @@ const ChatLeft = ({ members }) => {
             <h2>참여자 목록</h2>
             <div className={style.chatMemberList}>
                 {members.map((member, index) => (
-                    <a className={style.chatMembers} href={`/profile/${member}/`} target="_blank" key={index}>
-                        {member}
-                    </a>
+                    <>
+                        <div style={{ position: 'relative' }} key={index}>
+                            {member === host ? (
+                                <sup style={{ position: 'absolute', fontSize: 20, top: 0, right: 0 }}>👑</sup>
+                            ) : null}
+                            <a className={style.chatMembers} href={`/profile/${member}/`} target="_blank">
+                                {member}
+                            </a>
+                        </div>
+                    </>
                 ))}
             </div>
         </div>

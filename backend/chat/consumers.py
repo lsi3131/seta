@@ -59,7 +59,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
                 }
             )
-            await self.enter_room(self.room_name, username)
         
         elif message_type == 'leave':
             
@@ -73,15 +72,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message_type':message_type,
                 }
             )
-            await self.leave_room(self.room_name, username)
             
     async def chat_message(self, event):
         message = event['message']
         username = event['username']
         message_type = event['message_type']
 
-        if message_type in ['enter', 'leave']:
-            self.members = await self.get_room_members(self.room_name)
+        print(message_type)
+        if message_type == 'enter':
+            self.members = await self.enter_room(self.room_name, username)
+        elif message_type == 'leave':
+            self.members = await self.leave_room(self.room_name, username)
 
         await self.send(text_data=json.dumps({
             'message': message,
@@ -107,18 +108,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = ChatRoom.objects.get(id=int(roomid))
         room.members.add(user)
         room.save()
-        return room
+        return list(room.members.values_list('username', flat=True))
     
     @database_sync_to_async
     def leave_room(self, roomid, username):
         user = User.objects.get(username=username)
         room = ChatRoom.objects.get(id=int(roomid))
+
         room.members.remove(user)
-        room.save()
-        if room.members.count() == 0:
+        if room.members.count() > 0:
+            if user == room.host_user:
+                room.host_user = room.members.first()
+                room.save()
+            return list(room.members.values_list('username', flat=True))
+        else:
             room.delete()
-            room_messages.pop(roomid)
-        return room
+            return []
     
     @database_sync_to_async
     def get_room_members(self, roomid):

@@ -127,5 +127,3 @@ def check_room_password(request):
         return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({'message': '비밀번호가 일치합니다.'}, status=status.HTTP_200_OK)
-
-
