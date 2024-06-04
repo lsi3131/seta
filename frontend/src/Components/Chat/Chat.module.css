@@ -54,40 +54,51 @@
     padding-bottom: 10px;
     cursor: pointer;
 }
-
-.chat_list {
-    margin: 20px;
+.chat_cards {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.chat_table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 18px;
-    text-align: left;
+.chat_card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    width: calc(33.3333% - 20px);
 }
 
-.chat_table th,
-.chat_table td {
-    padding: 12px 15px;
-}
-
-.chat_list_title {
+.chat_card_title {
+    font-size: 20px;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
-.chat_list_author {
-    color: #555;
+.chat_card_author,
+.chat_card_members,
+.chat_card_date {
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 
-.chat_list_date {
-    color: #888;
+.chat_card a {
+    color: black;
+    text-decoration: none;
 }
 
-thead > tr > th {
-    background-color: transparent;
-    border-bottom: 2px solid #333;
+.chat_card a:hover {
+    color: #007bff;
 }
-.secret {
-    margin-left: 10px;
+
+.chat_card:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    background-color: #e0e0e047;
+}
+.membersFull:hover {
+    cursor: not-allowed;
 }

@@ -3,7 +3,8 @@
 .Room_vertical {
     display: flex;
     justify-content: center;
-    height: 90vh;
+    height: 100vh;
+    margin-top: 150px;
 }
 
 .Room_container {
@@ -11,11 +12,14 @@
     flex: 1;
 }
 
-.Room_left{
+.Room_left {
     border: 1px solid #333;
-    flex: 1;
+    flex: 0.5;
     margin: 0 10px;
     border-radius: 30px;
+    padding: 30px 30px;
+    height: 70%;
+    overflow-y: scroll;
 }
 
 .Room_right {
@@ -25,37 +29,38 @@
     flex-direction: column;
 }
 
-
-.Room_right_top{
+.Room_right_top {
     border: 1px solid #333;
     flex: 1;
-    margin-bottom: 20px ;
+    margin-bottom: 20px;
     border-radius: 30px;
 }
-
-
-
-
-
-
-
 
 .Room_right_bottom {
     border: 1px solid #333;
     height: 70%;
     border-radius: 30px;
     display: flex;
-    /*justify-content: center;*/
     justify-content: space-between;
-    /*align-items: flex-end;*/
     align-items: center;
     position: relative;
     z-index: 0;
     flex-direction: column;
 }
 
+.Room_bottom_content {
+    padding: 10px 20px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 메시지를 수평 중앙 정렬 */
+}
+
 .Room_right_bottom::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -65,16 +70,13 @@
     background-position: center;
     background-size: 300px;
     background-repeat: no-repeat;
-    opacity: 0.3; 
-    z-index: -1; 
-    /* border-radius: 30px;  */
+    opacity: 0.3;
+    z-index: -1;
 }
 
-
-
 .Room_bottom_submit {
-    width: 80%;
-    margin-bottom: 10px;
+    width: 100%;
+    margin-top: 10px;
     border: 2px solid;
     border-radius: 30px;
 }
@@ -84,19 +86,17 @@
     align-items: flex-end;
 }
 
-
-
 .Room_bottom_submit_textarea {
     flex: 1;
     padding: 10px;
     margin: 5px 10px;
     border: none;
     font-size: 16px;
-    overflow-y: auto; 
-    min-height: 20px; 
-    max-height: 200px; 
+    overflow-y: auto;
+    min-height: 20px;
+    max-height: 200px;
     resize: none;
-  }
+}
 
 .Room_bottom_submit_textarea:focus {
     outline: none;
@@ -117,7 +117,91 @@
     color: #fff;
 }
 
-.Room_bottom_submit_button:hover{
+.Room_bottom_submit_button:hover {
     cursor: pointer;
 }
 
+.messages {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+    word-wrap: break-word;
+    width: 80%;
+    align-items: center;
+}
+.message {
+    background-color: rgba(186, 186, 186, 0.129);
+    border-radius: 20px;
+    padding: 10px 20px;
+    align-self: normal;
+}
+.my_message {
+    background-color: rgba(186, 202, 255, 0.278);
+    border-radius: 20px;
+    padding: 10px 20px;
+    align-self: flex-end;
+}
+
+.other_message {
+    background-color: rgba(255, 186, 186, 0.278);
+    border-radius: 20px;
+    padding: 10px 20px;
+    align-self: flex-start;
+}
+
+.message_username {
+    font-weight: bold;
+    align-self: normal;
+    margin-bottom: 5px;
+}
+.message_time {
+    font-size: 10px;
+    align-self: flex-end;
+    margin-left: 10px;
+}
+
+.enter_message {
+    background-color: rgba(186, 202, 255, 0.278);
+    font-size: 10px;
+    width: 50%;
+    text-align: center;
+    border-radius: 20px;
+    padding: 5px 20px;
+}
+.leave_message {
+    background-color: rgba(255, 186, 186, 0.278);
+    font-size: 10px;
+    width: 50%;
+    text-align: center;
+    border-radius: 20px;
+    padding: 5px 20px;
+}
+.messages p {
+    margin-top: 5px;
+}
+
+.chatMembers {
+    display: inline-block;
+    text-align: center;
+    background-color: rgba(147, 147, 147, 0.878);
+    border-radius: 30px;
+    color: white;
+    padding: 5px 40px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.chatMembers:hover {
+    cursor: pointer;
+    opacity: 0.4;
+}
+
+.chatMemberList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.Room_left_container {
+    text-align: center;
+    overflow-y: auto;
+}
