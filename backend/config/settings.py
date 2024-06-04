@@ -31,6 +31,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    "3.34.22.183"
 ]
 
 
@@ -167,10 +168,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1",
     "http://localhost",
-    "http://13.124.167.253",
-    "http://13.124.167.253:3000",
-    "http://3.35.214.15",
-    "http://3.35.214.15"
+    "http://3.34.22.183",
+    "http://3.34.22.183:3000/",
 ]
 
 REST_FRAMEWORK = {
