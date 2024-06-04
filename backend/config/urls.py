@@ -27,7 +27,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/accounts/", include("account.urls")),
+    path("api/accounts/", include("acc.urls")),
     path("api/posts/", include("post.urls")),
     path("api/messages/", include("message.urls")),
     path("api/chats/", include("chat.urls")),

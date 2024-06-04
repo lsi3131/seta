@@ -2,7 +2,7 @@ import django, os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
-from account.models import User, Mbti
+from acc.models import User, Mbti
 from post.models import Post, PostCategory, Comment
 from django.db import transaction
 

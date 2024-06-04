@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django_seed',
     'storages',
 
-    "account.apps.AccountConfig",
+    "acc.apps.AccountConfig",
     "post.apps.PostConfig",
     'message.apps.MessageConfig',
 
@@ -149,7 +149,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "acc.User"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
