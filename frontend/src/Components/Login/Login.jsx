@@ -353,9 +353,7 @@ function Login() {
                             <Components.Span className="error-message">{errorMessage}</Components.Span>
                             <Components.Anchor href="http://localhost:3000/finduser/">아아디/패스워드찾기</Components.Anchor>
                             <Components.Button>로그인</Components.Button>
-                            <button type="button" onClick={kakaologin}>
-                                카카오로 로그인
-                            </button>
+                            <img src={require("../../Assets/images/kakao_login.png")} onClick={kakaologin} style={{cursor:"pointer", padding:"20px 0"}}/>
                         </Components.Form>
                     </Components.SignInContainer>
 
