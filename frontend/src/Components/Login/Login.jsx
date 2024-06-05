@@ -69,14 +69,16 @@ function Login() {
             if (code) {
                 try {
                     const response = await apiClient.get(`api/accounts/kakao/callback/?code=${code}`)
-                    const { access, refresh } = response.data
+                    const access = response.data.access_token
+                    const refresh = response.data.refresh_token
                     localStorage.setItem('accessToken', access)
                     localStorage.setItem('refreshToken', refresh)
                     if (redirectUrl) {
                         window.location.href = decodeURIComponent(redirectUrl)
-                    } else {
+                    }else {
                         window.location.href = '/'
                     }
+                    
                 }
                 catch (error) {
                     console.error(error)
