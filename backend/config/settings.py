@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
@@ -57,6 +58,13 @@ INSTALLED_APPS = [
 
     'channels',
     'chat',
+
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.kakao",
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 ]
 
 CHANNEL_LAYERS = {
@@ -74,6 +82,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "allauth.account.middleware.AccountMiddleware"
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -184,10 +193,23 @@ CORS_ALLOW_CREDENTIALS = True
 
 DEFAULT_FILE_STORAGE ='storages.backends.s3boto3.S3Boto3Storage'
 
+#AWS 이미지 서버 키
 AWS_ACCESS_KEY_ID = json.load(open(BASE_DIR / "secrets.json"))["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = json.load(open(BASE_DIR / "secrets.json"))["AWS_SECRET_ACCESS_KEY"]
 AWS_STORAGE_BUCKET_NAME = 'picturebucket9856'
 AWS_QUERYSTRING_AUTH = False
+
+#소셜로그인 설정
+KAKAO_REST_API_KEY = json.load(open(BASE_DIR / "secrets.json"))["KAKAO_REST_API_KEY"]
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+SITE_ID = 2
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True
 
 CHANNEL_LAYERS = {
     'default': {
