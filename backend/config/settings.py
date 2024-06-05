@@ -31,7 +31,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "3.34.22.183"
+    "3.34.22.183",
+    "www.draftnews.shop",
+    "draftnews.shop",
 ]
 
 
@@ -169,7 +171,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1",
     "http://localhost",
     "http://3.34.22.183",
-    "http://3.34.22.183:3000/",
+    "http://3.34.22.183:3000",
+    "http://www.draftnews.shop",
+    "http://www.draftnews.shop:3000",
 ]
 
 REST_FRAMEWORK = {

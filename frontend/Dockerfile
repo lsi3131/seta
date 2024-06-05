@@ -3,7 +3,7 @@ FROM node:14 AS build
 
 WORKDIR /app
 
-COPY frontend/package.json frontend/package-lock.json /app/
+COPY frontend/package.json /app/
 RUN npm install
 
 COPY frontend ./
