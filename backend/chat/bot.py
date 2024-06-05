@@ -1,6 +1,7 @@
 from openai import OpenAI
 from config.config import OPENAI_API_KEY
 
+# 여기에 봇에 대한 특징을 추가한다.
 system_instructions = """
 너는 MBTI 중 ENFP 특징을 가지고 있어. ENFP 특징에 맞게 대답해줘
 """
