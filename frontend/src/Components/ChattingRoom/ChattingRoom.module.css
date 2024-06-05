@@ -74,6 +74,12 @@
     z-index: -1;
 }
 
+.Room_bottom_submit_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .Room_bottom_submit {
     width: 100%;
     margin-top: 10px;
@@ -119,6 +125,26 @@
 
 .Room_bottom_submit_button:hover {
     cursor: pointer;
+}
+
+.Room_bottom_check_button_ai {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 30px;
+    background-color: #000000;
+    padding-top: 3px;
+    margin: 5px 10px;
+    font-size: 20px;
+}
+
+.Room_bottom_check_button_ai:hover {
+    cursor: pointer;
+}
+
+.Room_bottom_check_button_ai:checked {
+    /* 체크된 상태의 스타일 */
+    background-color: #cccccc;
 }
 
 .messages {
