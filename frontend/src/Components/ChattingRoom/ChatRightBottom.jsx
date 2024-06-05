@@ -4,6 +4,7 @@ import { UserContext } from '../../userContext'
 
 const ChatRightBottom = ({ members, socket }) => {
     const [text, setText] = useState('')
+    const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
     const [rows, setRows] = useState(1)
     const [messages, setMessages] = useState([])
@@ -63,8 +64,13 @@ const ChatRightBottom = ({ members, socket }) => {
             return
         }
 
+        let message_type = 'message'
+        if(isCheckedAI) {
+            message_type = 'ai_message';
+        }
+
         const sendData = {
-            message_type: 'message',
+            message_type: message_type,
             message: text,
             username: currentUser.username,
         }
@@ -81,13 +87,17 @@ const ChatRightBottom = ({ members, socket }) => {
         }
     }
 
+    const handleCheckAI = (e) => {
+        setIsCheckedAI(e.target.checked);
+    };
+
     return (
         <>
             <div className={style.Room_right_bottom}>
                 <div className={style.Room_bottom_content} ref={messagesEndRef}>
                     {messages.map((msg, index) => (
                         <div key={index} className={style.messages}>
-                            {msg.message_type === 'message' ? (
+                            {msg.message_type === 'message' || msg.message_type === 'ai_message'? (
                                 <div
                                     className={
                                         msg.username === currentUser.username ? style.my_message : style.other_message
@@ -112,8 +122,12 @@ const ChatRightBottom = ({ members, socket }) => {
                     ))}
                 </div>
             </div>
-            <div className={style.Room_bottom_submit}>
-                <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
+            <div className={style.Room_bottom_submit_container}>
+                <span>AI</span>
+                <input className={style.Room_bottom_check_button_ai} type="checkbox" onChange={handleCheckAI}>
+                </input>
+                <div className={style.Room_bottom_submit}>
+                    <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
                     <textarea
                         ref={textareaRef}
                         className={style.Room_bottom_submit_textarea}
@@ -123,10 +137,12 @@ const ChatRightBottom = ({ members, socket }) => {
                         placeholder="내용을 입력하세요"
                         rows={rows}
                     ></textarea>
-                    <button className={style.Room_bottom_submit_button} type="submit">
-                        &#10145;
-                    </button>
-                </form>
+                        <button className={style.Room_bottom_submit_button} type="submit">
+                            &#10145;
+                        </button>
+
+                    </form>
+                </div>
             </div>
         </>
     )
