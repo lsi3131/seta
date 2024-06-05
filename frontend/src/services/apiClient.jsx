@@ -1,8 +1,9 @@
 import axios from 'axios'
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 // Axios 인스턴스 생성
 const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: baseURL,
     timeout: 10000, // 요청 타임아웃
 })
 
@@ -32,7 +33,7 @@ apiClient.interceptors.response.use(
             console.log(refresh)
             if (refresh) {
                 try {
-                    const response = await axios.post('http://127.0.0.1:8000/api/token/refresh/', {
+                    const response = await axios.post(`${baseURL}/api/token/refresh/`, {
                         refresh: refresh,
                     })
                     const accessToken = response.data.access

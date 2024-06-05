@@ -1,0 +1,59 @@
+aws ecr create-repository --repository-name seta-frontend --region ap-northeast-2
+aws ecr create-repository --repository-name seta-backend --region ap-northeast-2
+
+============================
+docker build
+============================
+
+docker-compose build
+
+============================
+개발환경에서 빌드된 이미지 배포
+============================
+
+[frontend]
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin "767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-frontend"
+docker tag lsi3131/seta_frontend:latest 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-frontend:latest
+docker push 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-frontend:latest
+
+[backend]
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin "767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-backend"
+docker tag lsi3131/seta_backend:latest 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-backend:latest
+docker push 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-backend:latest
+
+
+============================
+EC2에서 pull 받기
+============================
+
+[ECR 로그인, pull, 실행]
+[front]
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin "767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-frontend"
+docker pull 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-frontend:latest
+
+[backend]
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin "767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-backend"
+docker pull 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-backend:latest
+
+[run]
+docker run -d --name seta-frontend -p 3000:3000 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-frontend:latest
+docker run -d --name seta-backend -p 8000:8000 767398105786.dkr.ecr.ap-northeast-2.amazonaws.com/seta-backend:latest
+
+=======================
+Postgresql 설치 및 배포
+=======================
+
+서버 측 설정을 어떻게 할 것인지?
+
+테스트 환경에서는 sqlite를 사용할지
+배포 환경에서는 postgresql을 사용할지
+
+============================
+Docker 빌드 시 설정 파일을 따로 빼서하려면?
+============================
+
+
+docker run -d --name seta_frontend -p 3000:3000 lsi3131/seta_frontend:latest
+docker run -d --name seta_backend -p 8000:8000 lsi3131/seta_backend:latest
+
+docker rm -f $(docker ps -aq)
