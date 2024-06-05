@@ -440,9 +440,6 @@ def kakao_callback(request):
     Signup or Signin Request
     """
 
-
-
-    
     try:
         user = User.objects.get(username=username)
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
@@ -472,7 +469,7 @@ def kakao_callback(request):
 
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
-
+        print(access)
         return JsonResponse({"access_token" : str(access), "refresh_token" : str(refresh)})
     
     except User.DoesNotExist:
@@ -487,8 +484,9 @@ def kakao_callback(request):
         accept_json = accept.json()
         accept_json.pop('user', None)
         refresh_token = accept.headers['Set-Cookie']
-        print(refresh_token)
-        return JsonResponse(accept_json)
+        refresh = CustomTokenObtainPairSerializer.refresh_token(user)
+        access = CustomTokenObtainPairSerializer.get_token(user)
+        return JsonResponse({"access_token" : str(access), "refresh_token" : str(refresh)})
 
 class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
