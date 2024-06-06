@@ -4,6 +4,9 @@ import { useLocation, Link } from 'react-router-dom';
 import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
+import { Link } from 'react-router-dom'
+import GoogleLoginButton from 'Components/GoogleLoginButton/GoogleLoginButton'
+
 
 function Login() {
     const [signIn, toggle] = React.useState('true')
@@ -355,7 +358,10 @@ function Login() {
                             <Components.Span className="error-message">{errorMessage}</Components.Span>
                             <Components.Anchor href="http://localhost:3000/finduser/">아아디/패스워드찾기</Components.Anchor>
                             <Components.Button>로그인</Components.Button>
-                            <img src={require("../../Assets/images/kakao_login.png")} onClick={kakaologin} style={{cursor:"pointer", padding:"20px 0"}}/>
+                            <div>
+                              <img src={require("../../Assets/images/kakao_login.png")} onClick={kakaologin} style={{cursor:"pointer", padding:"20px 0"}}/>
+                              <GoogleLoginButton/>
+                            </div>
                         </Components.Form>
                     </Components.SignInContainer>
 

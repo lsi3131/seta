@@ -22,13 +22,19 @@ from .models import Follow, User, Mbti
 from rest_framework_simplejwt.tokens import RefreshToken
 from config.serializers import CustomTokenObtainPairSerializer
 
+
+from django.conf import settings
+from allauth.socialaccount.models import SocialAccount
+from django.http import HttpResponseRedirect, JsonResponse
+from rest_framework import status
+from django.shortcuts import redirect
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 import requests
-from django.http import JsonResponse
 from json.decoder import JSONDecodeError
 from dj_rest_auth.registration.views import SocialLoginView
+
 
 validator = AccountValidator()
 User = get_user_model()
@@ -393,6 +399,99 @@ class FindPasswordAPIView(APIView):
 
         return Response({"message":"이메일을 확인하세요"},status=status.HTTP_200_OK)
     
+
+
+
+# google social login
+state = getattr(settings, 'STATE')
+BASE_URL = 'http://localhost:3000/'
+GOOGLE_CALLBACK_URI = "http://localhost:8000/api/accounts/google/callback/"
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def google_login(request):
+    scope = "https://www.googleapis.com/auth/userinfo.email"
+    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    redirect_url = (f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
+    print(redirect_url)
+    return redirect(redirect_url)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def google_callback(request):
+    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_SECRET")
+    code = request.GET.get('code')
+    token_req = requests.post(
+        "https://oauth2.googleapis.com/token",
+        data={
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "code": code,
+            "grant_type": "authorization_code",
+            "redirect_uri": GOOGLE_CALLBACK_URI,
+            "state": state,
+        },
+    )
+
+    token_req_json = token_req.json()
+    if not token_req_json:
+        return Response({"err_msg": "구글 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    access_token = token_req_json.get('access_token')
+
+    user_info_req = requests.get(f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
+    user_info = user_info_req.json()
+    user_id =user_info.get("user_id")
+    email = user_info.get('email')
+    username = email.split('@')[0]
+
+
+    try: 
+        user = User.objects.get(email=email)
+        social_user = SocialAccount.objects.get(user=user)
+
+
+        if social_user.provider != 'google':
+            return Response({'err_msg': '소셜 로그인 타입이 다릅니다'}, status=status.HTTP_400_BAD_REQUEST)
+
+        refresh = CustomTokenObtainPairSerializer.refresh_token(user)
+        access = CustomTokenObtainPairSerializer.get_token(user)
+        
+        redirect_url = "http://localhost:3000/"
+        respons = HttpResponseRedirect(redirect_url)
+        
+        respons.set_cookie('access', str(access),max_age=5)
+        respons.set_cookie('refresh', str(refresh),max_age=5)
+
+        return respons
+
+    except User.DoesNotExist:
+        
+        user, created = User.objects.get_or_create(email=email, defaults={'username': username})
+        if created:
+            user.set_unusable_password()
+            user.save()
+        print(created)
+        print(user)
+        SocialAccount.objects.create(user=user, provider="google", uid=user_id)
+        
+        refresh = CustomTokenObtainPairSerializer.refresh_token(user)
+        access = CustomTokenObtainPairSerializer.get_token(user)
+
+        redirect_url = "http://localhost:3000/"
+        respons = HttpResponseRedirect(redirect_url)
+        
+        respons.set_cookie('access', str(access),max_age=5)
+        respons.set_cookie('refresh', str(refresh),max_age=5)
+    
+        return respons
+    
+    except SocialAccount.DoesNotExist:
+        return Response({'err_msg': '일반 회원으로 가입된 email입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+      
+      
 #카카오 로그인
 BASE_URL = "http://localhost:3000"
 
@@ -492,3 +591,4 @@ class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
     callback_url = KAKAO_CALLBACK_URI
+
