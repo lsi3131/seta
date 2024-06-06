@@ -47,10 +47,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',
 
     "rest_framework_simplejwt.token_blacklist",
-    "corsheaders",
+    "rest_framework.authtoken",
     "rest_framework",
+    
+    "corsheaders",
     'django_seed',
     'storages',
 
@@ -60,6 +63,12 @@ INSTALLED_APPS = [
 
     'channels',
     'chat',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
 ]
 
 CHANNEL_LAYERS = {
@@ -77,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -219,3 +229,24 @@ CHANNEL_LAYERS = {
 # }
 
 APPEND_SLASH = False
+
+
+SITE_ID = 1
+
+REST_USE_JWT = True
+
+ACCOUNT_USERNAME_REQUIRED = True 
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+#Google_ID
+STATE = json.load(open(BASE_DIR / "secrets.json"))["STATE"]
+GOOGLE_CLIENT_ID = json.load(open(BASE_DIR / "secrets.json"))["GOOGLE_CLIENT_ID"]
+GOOGLE_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["GOOGLE_CLIENT_SECRET"]
+
+#Github_ID
+GITHUB_CLIENT_ID = json.load(open(BASE_DIR / "secrets.json"))["GITHUB_CLIENT_ID"]
+GITHUB_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["GITHUB_CLIENT_SECRET"]

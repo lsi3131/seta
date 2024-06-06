@@ -1,9 +1,10 @@
 import style from './Home.module.css'
-import React from 'react'
+import React, { useEffect } from 'react'
 import BoardCardList from '../BoardCard/BoardCard'
 import HotList from '../HotList/HotList'
 import ImageSlider from '../ImageSlider/ImageSlider'
 import { Link } from 'react-router-dom'
+import { Cookies } from 'react-cookie';
 
 const Home = () => {
     const slides = [
@@ -17,6 +18,21 @@ const Home = () => {
         width: '1200px',
         height: '500px',
     }
+
+    //social login 
+    useEffect(() => {
+        const setTokensFromCookies = () => {
+            const cookies = new Cookies();
+            const access = cookies.get('access');
+            const refresh = cookies.get('refresh');
+
+            if (access && refresh) {
+                localStorage.setItem('accessToken', access);
+                localStorage.setItem('refreshToken', refresh);
+            }
+        };
+        setTokensFromCookies();
+    }, []);
 
     return (
         <div>
@@ -32,7 +48,7 @@ const Home = () => {
                 <div className={style.rightContainer}>
                     <div className={style.rightInnerContainer}>
                         <h2 className={style.textStyleHot}>인기 게시글</h2>
-                        <Link to="/board/hot" style={{textDecoration:"none"}}>
+                        <Link to="/board/hot" style={{ textDecoration: "none" }}>
                             <h4 className={style.textStyleMore}> 더보기 </h4>
                         </Link>
                     </div>

@@ -3,7 +3,8 @@ import { useEffect } from 'react'
 import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
-import { Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
+import GoogleLoginButton from 'Components/SocialLogin/SocialsLogin'
 
 function Login() {
     const [signIn, toggle] = React.useState('true')
@@ -58,6 +59,35 @@ function Login() {
             checkEmail().then((r) => {})
         }
     }, [emailUp, debounceEmailUp])
+
+        //카카오 토큰 받기
+        const location = useLocation();
+        useEffect(() => {
+            const params = new URLSearchParams(location.search);
+            const code = params.get('code');
+            const redirectUrl = params.get('redirectUrl')
+            async function fetchData() {
+                if (code) {
+                    try {
+                        const response = await apiClient.get(`api/accounts/kakao/callback/?code=${code}`)
+                        const access = response.data.access_token
+                        const refresh = response.data.refresh_token
+                        localStorage.setItem('accessToken', access)
+                        localStorage.setItem('refreshToken', refresh)
+                        if (redirectUrl) {
+                            window.location.href = decodeURIComponent(redirectUrl)
+                        }else {
+                            window.location.href = '/'
+                        }
+                        
+                    }
+                    catch (error) {
+                        console.error(error)
+                    }
+                }
+            }
+            fetchData()
+        }, []);
 
     const [isLogin, setIsLogin] = React.useState(false)
 
@@ -114,6 +144,12 @@ function Login() {
             })
             .catch((error) => {})
     }
+
+    const kakaologin = () => {
+        const KAKAO_REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY
+        const KAKAO_REDIRECT_URI = "http://localhost:3000/login"
+        window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&scope=profile_nickname`
+    };
 
     async function checkUserName() {
         if (usernameUp === '') {
@@ -319,6 +355,10 @@ function Login() {
                             <Components.Span className="error-message">{errorMessage}</Components.Span>
                             <Components.Anchor href="http://localhost:3000/finduser/">아아디/패스워드찾기</Components.Anchor>
                             <Components.Button>로그인</Components.Button>
+                            <div>
+                              <img src={require("../../Assets/images/kakao_login.png")} onClick={kakaologin} style={{cursor:"pointer", padding:"20px 0"}}/>
+                              <GoogleLoginButton />
+                            </div>
                         </Components.Form>
                     </Components.SignInContainer>
 
