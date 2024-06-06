@@ -31,6 +31,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    "3.34.22.183",
+    "www.draftnews.shop",
+    "draftnews.shop",
 ]
 
 
@@ -44,11 +47,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     'django.contrib.sites',
 
-    "rest_framework_simplejwt.token_blacklist",
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
     "rest_framework.authtoken",
+    'rest_framework_simplejwt',
+  
     "corsheaders",
     'django_seed',
     'storages',
@@ -62,10 +68,14 @@ INSTALLED_APPS = [
 
     'dj_rest_auth',
     'dj_rest_auth.registration',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+
+
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.kakao",
     'allauth.socialaccount.providers.google',
+
 ]
 
 CHANNEL_LAYERS = {
@@ -83,7 +93,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware"
+
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -175,6 +186,12 @@ MEDIA_ROOT = BASE_DIR / "media"
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://3.34.22.183",
+    "http://3.34.22.183:3000",
+    "http://www.draftnews.shop",
+    "http://www.draftnews.shop:3000",
 ]
 
 REST_FRAMEWORK = {
@@ -194,10 +211,23 @@ CORS_ALLOW_CREDENTIALS = True
 
 DEFAULT_FILE_STORAGE ='storages.backends.s3boto3.S3Boto3Storage'
 
+#AWS 이미지 서버 키
 AWS_ACCESS_KEY_ID = json.load(open(BASE_DIR / "secrets.json"))["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = json.load(open(BASE_DIR / "secrets.json"))["AWS_SECRET_ACCESS_KEY"]
 AWS_STORAGE_BUCKET_NAME = 'picturebucket9856'
 AWS_QUERYSTRING_AUTH = False
+
+#소셜로그인 설정
+KAKAO_REST_API_KEY = json.load(open(BASE_DIR / "secrets.json"))["KAKAO_REST_API_KEY"]
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+SITE_ID = 2
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True
 
 CHANNEL_LAYERS = {
     'default': {

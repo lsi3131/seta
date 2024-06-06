@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    image: lsi3131/seta_backend:latest
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    env_file:
+      - .env
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: lsi3131/seta_frontend:latest
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+

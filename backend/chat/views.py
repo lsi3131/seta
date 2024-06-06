@@ -32,6 +32,20 @@ def serialize_chatroom(chatroom):
     }
 
 
+def serialize_chatroom_detail(chatroom):
+    return {
+        'id': chatroom.id,
+        'name': chatroom.name,
+        'is_secret': chatroom.is_secret,
+        'max_members': chatroom.max_members,
+        'host_user': chatroom.host_user.username,
+        'room_category': chatroom.room_category.name,
+        'created_at': chatroom.created_at.strftime('%Y-%m-%d %H:%M'),
+        'members' : chatroom.members, 
+        'members_count': chatroom.members.count(),
+        'restricted_mbtis': [mbti.mbti_type for mbti in chatroom.restricted_mbtis.all()],
+    }
+
 def serialize_chatroom_category(chatroom_category):
     return {
         'id': chatroom_category.id,
@@ -76,6 +90,13 @@ class ChatRoomAPIView(APIView):
     def delete(self, request, chatroom_pk):
         return Response({'todo': 'todo'}, status=status.HTTP_200_OK)
 
+class ChatRoomDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, chatroom_pk):
+        chatroom = ChatRoom.objects.get(id=chatroom_pk)
+        data = serialize_chatroom(chatroom)
+        return Response(data, status=status.HTTP_200_OK)
+        
 
 class ChatMessageAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -106,5 +127,3 @@ def check_room_password(request):
         return Response({'error': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({'message': '비밀번호가 일치합니다.'}, status=status.HTTP_200_OK)
-
-
