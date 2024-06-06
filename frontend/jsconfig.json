@@ -2,8 +2,5 @@
   "compilerOptions": {
     "baseUrl": "./src"
   },
-  "include": [
-    "src",
-    "src/Components/GoogleLoginButton/GoogleLoginButton.jsx"
-  ]
+  "include": ["src"]
 }

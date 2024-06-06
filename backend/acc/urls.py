@@ -18,8 +18,3 @@ urlpatterns = [
     path('<str:email>/findname/',views.FindNameAPIView.as_view()),
     path('<str:email>/<str:username>/findpassword/',views.FindPasswordAPIView.as_view()),
 ]
-
-urlpatterns = [
-    path('google/login/', views.google_login),
-    path('google/callback/', views.google_callback),
-]

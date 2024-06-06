@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import style from "./FindUser.module.css";
 import { Link } from 'react-router-dom'
+import apiClient from "../../services/apiClient";
 
 const FindUser = () => {
     const [username_email, setUserNameEmail] = useState("");
@@ -28,7 +29,7 @@ const FindUser = () => {
         setModalEmail(username_email)
         try {
             setModalOpen(true);
-            const response = await axios.get(`http://127.0.0.1:8000/api/accounts/${username_email}/findname/`);
+            const response = await apiClient.get(`/api/accounts/${username_email}/findname/`);
         } catch (error) {
             setErrorModalOpen(true)
         }
@@ -43,7 +44,7 @@ const FindUser = () => {
         setModalEmail(password_email)
         try {
             setModalOpen(true);
-            const response = await axios.put(`http://127.0.0.1:8000/api/accounts/${password_email}/${username}/findpassword/`);
+            const response = await apiClient.put(`/api/accounts/${password_email}/${username}/findpassword/`);
         } catch (error) {
             setErrorModalOpen(true)
         }

@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter as Router } from 'react-router-dom'
 import ScrollTop from "./Components/Common/ScrollTop";
 import 'react-quill/dist/quill.snow.css'
-//
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <Router>
