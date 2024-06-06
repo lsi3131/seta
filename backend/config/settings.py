@@ -47,15 +47,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 
-    'django.contrib.sites',
-
-    "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
-    "rest_framework.authtoken",
-    'rest_framework_simplejwt',
-  
     "corsheaders",
+    "rest_framework",
     'django_seed',
     'storages',
 
@@ -66,16 +62,12 @@ INSTALLED_APPS = [
     'channels',
     'chat',
 
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-
-
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.kakao",
-    'allauth.socialaccount.providers.google',
-
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 ]
 
 CHANNEL_LAYERS = {
@@ -94,7 +86,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "allauth.account.middleware.AccountMiddleware"
-
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -250,19 +241,3 @@ CHANNEL_LAYERS = {
 # }
 
 APPEND_SLASH = False
-
-
-SITE_ID = 1
-
-REST_USE_JWT = True
-
-ACCOUNT_USERNAME_REQUIRED = True 
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-STATE = ''
-SOCIAL_AUTH_GOOGLE_CLIENT_ID = json.load(open(BASE_DIR / "secrets.json"))["SOCIAL_AUTH_GOOGLE_CLIENT_ID"]
-SOCIAL_AUTH_GOOGLE_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["SOCIAL_AUTH_GOOGLE_CLIENT_SECRET"]

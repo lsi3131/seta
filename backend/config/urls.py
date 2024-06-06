@@ -28,8 +28,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/accounts/", include("acc.urls")),
-    path('api/accounts/', include('dj_rest_auth.urls')),
-    path('api/accounts/', include('allauth.urls')),
     path("api/posts/", include("post.urls")),
     path("api/messages/", include("message.urls")),
     path("api/chats/", include("chat.urls")),
@@ -39,5 +37,5 @@ urlpatterns = [
 urlpatterns += [
     path('api/login/', CustomTokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
-    path('api/token/verify/', TokenVerifyView.as_view()),
+    path('api/token/verify/', TokenVerifyView.as_view())
 ]
