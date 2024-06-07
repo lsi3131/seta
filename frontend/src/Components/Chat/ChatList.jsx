@@ -9,6 +9,16 @@ const ChatList = ({ posts }) => {
     const [roomId, setRoomId] = useState(0)
     const navigate = useNavigate()
 
+    const navigateToRoom = ({category, roomId, password}) => {
+        let roomType = 'chatroom'
+        if(category === 'game') {
+            roomType = 'gameroom'
+        } else if(category === 'chat') {
+            roomType = 'chatroom'
+        }
+        navigate(`/${roomType}/${roomId}`, { state: { password: password } })
+    }
+
     const handleLinkClick = (e, post) => {
         e.preventDefault()
 
@@ -24,12 +34,12 @@ const ChatList = ({ posts }) => {
         } else {
             // 채팅방으로 이동
             const password = ''
-            navigate(`/chatroom/${post.id}`, { state: { password: password } })
+            navigateToRoom({category: post.category, roomId: roomId, password: password})
         }
     }
 
-    const handleEnterRoom = (roomId, password) => {
-        navigate(`/chatroom/${roomId}`, { state: { password: password } })
+    const handleEnterRoom = (roomId, password, category) => {
+        navigateToRoom({category: category, roomId, password: password})
     }
 
     const handleCloseRoom = () => {
