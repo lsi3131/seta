@@ -162,3 +162,37 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def get_room_members(self, roomid):
         room = ChatRoom.objects.get(id=int(roomid))
         return list(room.members.values_list('username', flat=True))
+
+
+'''
+DrawConsumer
+- 드로잉을 위한 Consumer
+'''
+class DrawConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = f'game_{self.room_name}'
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        pass
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        # Broadcast drawing data to all clients
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "draw_message",
+                "data": data,
+            }
+        )
+
+    async def draw_message(self, event):
+        data = event["data"]
+        await self.send(text_data=json.dumps(data))
