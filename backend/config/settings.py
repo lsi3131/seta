@@ -231,7 +231,7 @@ CHANNEL_LAYERS = {
 APPEND_SLASH = False
 
 
-SITE_ID = 1
+SITE_ID = 2
 
 REST_USE_JWT = True
 
@@ -250,3 +250,9 @@ GOOGLE_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["GOOGLE_CLIENT
 #Github_ID
 GITHUB_CLIENT_ID = json.load(open(BASE_DIR / "secrets.json"))["GITHUB_CLIENT_ID"]
 GITHUB_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["GITHUB_CLIENT_SECRET"]
+
+#Kakao_ID
+KAKAO_REST_API_KEY = json.load(open(BASE_DIR / "secrets.json"))["KAKAO_REST_API_KEY"]
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True
