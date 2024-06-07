@@ -10,6 +10,7 @@ User = get_user_model()
 room_messages = defaultdict(list)
 ai_chat_bot = AIChatBot()
 
+print('here?')
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
