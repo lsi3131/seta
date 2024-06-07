@@ -19,6 +19,10 @@ const AuthenticatedNavbar = ({ currentUser }) => {
         localStorage.removeItem('refreshToken')
         if (window.location.pathname.includes(['/profile', '/messages'])) {
             navigate('/')
+        } else if (window.location.pathname.includes(['/myposts'])) {
+            navigate(`/profile/${currentUser.username}/`)
+        } else if (window.location.pathname.includes(['/chat'])) {
+            navigate('/chat')
         }
         window.location.reload()
     }

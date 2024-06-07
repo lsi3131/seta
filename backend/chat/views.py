@@ -27,23 +27,10 @@ def serialize_chatroom(chatroom):
         'host_user': chatroom.host_user.username,
         'room_category': chatroom.room_category.name,
         'created_at': chatroom.created_at.strftime('%Y-%m-%d %H:%M'),
+        'members': [member.username for member in chatroom.members.all()],
         'members_count': chatroom.members.count(),
         'restricted_mbtis': [mbti.mbti_type for mbti in chatroom.restricted_mbtis.all()],
-    }
-
-
-def serialize_chatroom_detail(chatroom):
-    return {
-        'id': chatroom.id,
-        'name': chatroom.name,
-        'is_secret': chatroom.is_secret,
-        'max_members': chatroom.max_members,
-        'host_user': chatroom.host_user.username,
-        'room_category': chatroom.room_category.name,
-        'created_at': chatroom.created_at.strftime('%Y-%m-%d %H:%M'),
-        'members' : chatroom.members, 
-        'members_count': chatroom.members.count(),
-        'restricted_mbtis': [mbti.mbti_type for mbti in chatroom.restricted_mbtis.all()],
+        'blacklist_users': [user.username for user in chatroom.blacklist_users.all()],
     }
 
 def serialize_chatroom_category(chatroom_category):
@@ -84,18 +71,20 @@ class ChatRoomAPIView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-    def put(self, request, chatroom_pk):
-        return Response({'todo': 'todo'}, status=status.HTTP_200_OK)
-
-    def delete(self, request, chatroom_pk):
-        return Response({'todo': 'todo'}, status=status.HTTP_200_OK)
-
 class ChatRoomDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, chatroom_pk):
         chatroom = ChatRoom.objects.get(id=chatroom_pk)
         data = serialize_chatroom(chatroom)
         return Response(data, status=status.HTTP_200_OK)
+    
+    def put(self, request, chatroom_pk):
+        chatroom = ChatRoom.objects.get(id=chatroom_pk)
+        change_user = request.data.get('host_user')
+        if change_user:
+            chatroom.host_user = get_user_model().objects.get(username=change_user)
+            chatroom.save()
+            return Response({'message': '방장 변경이 완료되었습니다.'}, status=status.HTTP_200_OK)
         
 
 class ChatMessageAPIView(APIView):

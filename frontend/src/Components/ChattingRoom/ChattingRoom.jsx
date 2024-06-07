@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import style from './ChattingRoom.module.css'
 import ChatRightBottom from './ChatRightBottom'
-import ChatRightTop from './ChatRightTop'
 import ChatLeft from './ChatLeft'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
@@ -33,7 +32,6 @@ const ChatRoom = () => {
                     navigate('/chat')
                 }
             }
-
             await fetchData()
         }
         refreshList()
@@ -57,11 +55,16 @@ const ChatRoom = () => {
         }
 
         socket.onmessage = (event) => {
-            console.log(event.data)
             const message = JSON.parse(event.data)
-            if (message.message_type === 'enter' || message.message_type === 'leave') {
+            if (
+                message.message_type === 'enter' ||
+                message.message_type === 'leave' ||
+                message.message_type === 'expel'
+            ) {
                 setMembers(message.members)
                 fetchHost()
+            } else if (message.message_type === 'host_change') {
+                setHost(message.username)
             }
         }
 
@@ -92,10 +95,21 @@ const ChatRoom = () => {
                         message: '',
                     }),
                 )
+
                 socket.close()
             }
         }
     }, [currentUser, roomId])
+
+    const handleExpel = (member) => {
+        socket.send(
+            JSON.stringify({
+                message_type: 'expel',
+                username: member,
+                message: '',
+            }),
+        )
+    }
 
     const fetchHost = async () => {
         try {
@@ -105,7 +119,29 @@ const ChatRoom = () => {
             console.error('호스트 정보를 가져오는데 실패했습니다.', error)
         }
     }
-    fetchHost()
+
+    const handleHostChange = async (member) => {
+        try {
+            const data = {
+                host_user: member,
+            }
+            await apiClient.put(`api/chats/${roomId}/`, data)
+            setHost(member)
+            socket.send(
+                JSON.stringify({
+                    message_type: 'host_change',
+                    username: member,
+                    message: '',
+                }),
+            )
+        } catch (error) {
+            console.error('방장 위임에 실패했습니다.', error)
+        }
+    }
+
+    useEffect(() => {
+        fetchHost()
+    }, [roomId, host])
 
     useEffect(() => {
         const unlisten = navigate((location, action) => {
@@ -118,6 +154,7 @@ const ChatRoom = () => {
                             message: '',
                         }),
                     )
+
                     socket.close()
                 }
             }
@@ -138,7 +175,12 @@ const ChatRoom = () => {
         <div className={style.Room_vertical}>
             <div className={style.Room_container}>
                 <div className={style.Room_left}>
-                    <ChatLeft members={members} host={host} />
+                    <ChatLeft
+                        members={members}
+                        host={host}
+                        handleHostChange={handleHostChange}
+                        handleExpel={handleExpel}
+                    />
                 </div>
                 <div className={style.Room_right}>
                     <ChatRightBottom members={members} socket={socket} />
