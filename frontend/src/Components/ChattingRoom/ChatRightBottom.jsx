@@ -113,15 +113,7 @@ const ChatRightBottom = ({ members, socket }) => {
                                 </div>
                             ) : (
                                 <div
-                                    className={
-                                        msg.message_type === 'enter'
-                                            ? style.enter_message
-                                            : msg.message_type === 'leave'
-                                            ? style.leave_message
-                                            : msg.message_type === 'expel'
-                                            ? style.expel_message
-                                            : style.info_message
-                                    }
+                                    className={msg.message_type === 'enter' ? style.enter_message : style.leave_message}
                                 >
                                     {msg.message}
                                 </div>

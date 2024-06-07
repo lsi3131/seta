@@ -154,7 +154,3 @@ export const isValidMbti = (mbti) => {
     return mbti.toLowerCase() in mbtiParams
 }
 
-export const getUrl = (subUrl) => {
-    const urlRoot = 'http://127.0.0.1:8000'
-    return `${urlRoot}${subUrl}`
-}

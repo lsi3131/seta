@@ -20,8 +20,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        await self.save_messages(self.room_name)
-        await self.delete_room(self.room_name)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -29,6 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
     async def receive(self, text_data):
+        print(room_messages)
         data = json.loads(text_data)
 
         message_type = data.get('message_type')
@@ -60,8 +59,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
                 }
             )
+            await self.enter_room(self.room_name, username)
         
         elif message_type == 'leave':
+            
             await self.save_messages(self.room_name)
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -72,47 +73,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message_type':message_type,
                 }
             )
-        
-        elif message_type == 'host_change':
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': f'{username}님께 방장이 위임됩니다.',
-                    'username': username,
-                    'message_type':message_type,
-                }
-            )
-            
-        elif message_type == 'expel':
-            await self.save_messages(self.room_name)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': f'{username}님이 추방되었습니다.',
-                    'username': username,
-                    'message_type':message_type,
-                }
-            )
+            await self.leave_room(self.room_name, username)
             
     async def chat_message(self, event):
         message = event['message']
         username = event['username']
         message_type = event['message_type']
 
-        if message_type == 'leave':
-            if not username in self.members:
-                return 
-
-        if message_type == 'enter':
-            self.members = await self.enter_room(self.room_name, username)
-        elif message_type == 'leave':
-            self.members = await self.leave_room(self.room_name, username)
-        elif message_type == 'host_change':
+        if message_type in ['enter', 'leave']:
             self.members = await self.get_room_members(self.room_name)
-        elif message_type == 'expel':
-            self.members = await self.expel_user(self.room_name, username)
 
         await self.send(text_data=json.dumps({
             'message': message,
@@ -138,38 +107,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = ChatRoom.objects.get(id=int(roomid))
         room.members.add(user)
         room.save()
-        return list(room.members.values_list('username', flat=True))
+        return room
     
     @database_sync_to_async
     def leave_room(self, roomid, username):
         user = User.objects.get(username=username)
         room = ChatRoom.objects.get(id=int(roomid))
-
         room.members.remove(user)
-        if room.members.count() > 0:
-            print(5678)
-            if user == room.host_user:
-                room.host_user = room.members.first()
-                room.save()
-            return list(room.members.values_list('username', flat=True))
-        
+        room.save()
+        if room.members.count() == 0:
+            room.delete()
+            room_messages.pop(roomid)
+        return room
     
     @database_sync_to_async
     def get_room_members(self, roomid):
         room = ChatRoom.objects.get(id=int(roomid))
         return list(room.members.values_list('username', flat=True))
-    
-    @database_sync_to_async
-    def expel_user(self, roomid, username):
-        user = User.objects.get(username=username)
-        room = ChatRoom.objects.get(id=int(roomid))
-        room.members.remove(user)
-        return list(room.members.values_list('username', flat=True))
-
-    
-    @database_sync_to_async
-    def delete_room(self, roomid):
-        room = ChatRoom.objects.get(id=int(roomid))
-        room.delete()
-        room_messages.pop(roomid)
-        return True

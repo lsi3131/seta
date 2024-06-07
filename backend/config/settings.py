@@ -31,6 +31,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    "3.34.22.183",
+    "www.draftnews.shop",
+    "draftnews.shop",
 ]
 
 
@@ -44,10 +47,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',
 
     "rest_framework_simplejwt.token_blacklist",
-    "corsheaders",
+    "rest_framework.authtoken",
     "rest_framework",
+    
+    "corsheaders",
     'django_seed',
     'storages',
 
@@ -57,6 +63,12 @@ INSTALLED_APPS = [
 
     'channels',
     'chat',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
 ]
 
 CHANNEL_LAYERS = {
@@ -74,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -165,6 +178,12 @@ MEDIA_ROOT = BASE_DIR / "media"
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://3.34.22.183",
+    "http://3.34.22.183:3000",
+    "http://www.draftnews.shop",
+    "http://www.draftnews.shop:3000",
 ]
 
 REST_FRAMEWORK = {
@@ -210,3 +229,30 @@ CHANNEL_LAYERS = {
 # }
 
 APPEND_SLASH = False
+
+
+SITE_ID = 2
+
+REST_USE_JWT = True
+
+ACCOUNT_USERNAME_REQUIRED = True 
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+#Google_ID
+STATE = json.load(open(BASE_DIR / "secrets.json"))["STATE"]
+GOOGLE_CLIENT_ID = json.load(open(BASE_DIR / "secrets.json"))["GOOGLE_CLIENT_ID"]
+GOOGLE_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["GOOGLE_CLIENT_SECRET"]
+
+#Github_ID
+GITHUB_CLIENT_ID = json.load(open(BASE_DIR / "secrets.json"))["GITHUB_CLIENT_ID"]
+GITHUB_CLIENT_SECRET = json.load(open(BASE_DIR / "secrets.json"))["GITHUB_CLIENT_SECRET"]
+
+#Kakao_ID
+KAKAO_REST_API_KEY = json.load(open(BASE_DIR / "secrets.json"))["KAKAO_REST_API_KEY"]
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True

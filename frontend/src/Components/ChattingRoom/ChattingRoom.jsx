@@ -6,6 +6,8 @@ import ChatLeft from './ChatLeft'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
 
+const wsBaseURL = process.env.REACT_APP_WS_BASE_URL;
+
 const ChatRoom = () => {
     const location = useLocation()
     const { roomId } = useParams()
@@ -41,7 +43,7 @@ const ChatRoom = () => {
         if (!currentUser) return
 
         // WebSocket 연결
-        const url = `ws://127.0.0.1:8000/ws/chat/${roomId}/`
+        const url = `${wsBaseURL}/ws/chat/${roomId}/`
         const socket = new WebSocket(url)
 
         socket.onopen = () => {
