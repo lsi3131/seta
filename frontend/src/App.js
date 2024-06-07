@@ -20,8 +20,8 @@ import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
 import Chat from 'Components/Chat/Chat'
 import ChatRoom from 'Components/ChattingRoom/ChattingRoom'
-import GameRoom from "./Components/ChattingRoom/GameRoom";
-import {WebSocketProvider} from "./Components/ChattingRoom/WebSocketProvider";
+import GameRoom from "./Components/GameRoom/GameRoom";
+import {GameWebSocketProvider} from "./Components/GameRoom/GameWebSocketProvider";
 
 function App() {
     return (

@@ -10,8 +10,6 @@ User = get_user_model()
 room_messages = defaultdict(list)
 ai_chat_bot = AIChatBot()
 
-print('here?')
-
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -59,7 +57,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': 'chat_message',
                     'message': message,
                     'username': username,
-                    'message_type': message_type,
+                    'message_type': 'message',
                 }
             )
 
@@ -68,6 +66,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             # AI 메시지 응답
             ai_chatbot_message = await ai_chat_bot.response(message)
+            print(ai_chatbot_message)
             room_messages[self.room_name].append({'username': username, 'message': ai_chatbot_message})
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -75,7 +74,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': 'chat_message',
                     'message': ai_chatbot_message,
                     'username': '봇',
-                    'message_type': message_type,
+                    'message_type': 'ai_message',
                 }
             )
 

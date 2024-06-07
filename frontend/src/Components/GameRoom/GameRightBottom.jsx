@@ -1,10 +1,8 @@
-import React, {useState, useRef, useEffect, useContext} from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import style from './GameRightBottom.module.css'
-import {UserContext} from '../../userContext'
-import Canvas from "./Canvas";
-import {WebSocketProvider} from "./WebSocketProvider";
+import { UserContext } from '../../userContext'
 
-const ChatRightBottom = ({members, socket}) => {
+const GameRightBottom = ({ members, socket }) => {
     const [text, setText] = useState('')
     const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
@@ -19,7 +17,10 @@ const ChatRightBottom = ({members, socket}) => {
         // WebSocket을 통해 메시지를 받는 부분
         const handleMessage = (event) => {
             const newMessage = JSON.parse(event.data)
-            setMessages((prevMessages) => [...prevMessages, newMessage])
+            const handleMessageList = ['enter', 'leave', 'message']
+            if(handleMessageList.includes(newMessage['message_type'])) {
+                setMessages((prevMessages) => [...prevMessages, newMessage])
+            }
         }
 
         socket.addEventListener('message', handleMessage)
@@ -67,7 +68,7 @@ const ChatRightBottom = ({members, socket}) => {
         }
 
         let message_type = 'message'
-        if (isCheckedAI) {
+        if(isCheckedAI) {
             message_type = 'ai_message';
         }
 
@@ -94,44 +95,42 @@ const ChatRightBottom = ({members, socket}) => {
     };
 
     return (
-        <div className={style.container}>
-            <Canvas/>
-
-            <div className={style.chat_container}>
-                <div className={style.Room_right_bottom}>
-                    <div className={style.Room_bottom_content} ref={messagesEndRef}>
-                        {messages.map((msg, index) => (
-                            <div key={index} className={style.messages}>
-                                {msg.message_type === 'message' || msg.message_type === 'ai_message' ? (
-                                    <div
-                                        className={
-                                            msg.username === currentUser.username ? style.my_message : style.other_message
-                                        }
-                                    >
-                                        <div>
-                                            <span className={style.message_username}>{msg.username}</span>
-                                            <span className={style.message_time}>
+        <>
+            <div className={style.container}>
+                <div className={style.center} ref={messagesEndRef}>
+                    {messages.map((msg, index) => (
+                        <div key={index} className={style.messages}>
+                            {msg.message_type === 'message' ? (
+                                <div
+                                    className={
+                                        msg.username === currentUser.username ? style.my_message : style.other_message
+                                    }
+                                >
+                                    <div>
+                                        <span className={style.message_username}>{msg.username}</span>
+                                        <span className={style.message_time}>
                                             {new Date().toLocaleTimeString('ko-KR')}
                                         </span>
-                                        </div>
-                                        <p>{msg.message}</p>
                                     </div>
-                                ) : (
-                                    <div
-                                        className={msg.message_type === 'enter' ? style.enter_message : style.leave_message}
-                                    >
-                                        {msg.message}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                    <div className={style.Room_bottom_submit_container}>
-                        <span>AI</span>
-                        <input className={style.Room_bottom_check_button_ai} type="checkbox" onChange={handleCheckAI}>
-                        </input>
-                        <div className={style.Room_bottom_submit}>
-                            <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
+                                    <p>{msg.message}</p>
+                                </div>
+                            ) : (
+                                <div
+                                    className={msg.message_type === 'enter' ? style.enter_message : style.leave_message}
+                                >
+                                    {msg.message}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div className={style.Room_bottom_submit_container}>
+                <span>AI</span>
+                <input className={style.Room_bottom_check_button_ai} type="checkbox" onChange={handleCheckAI}>
+                </input>
+                <div className={style.Room_bottom_submit}>
+                    <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
                     <textarea
                         ref={textareaRef}
                         className={style.Room_bottom_submit_textarea}
@@ -141,17 +140,15 @@ const ChatRightBottom = ({members, socket}) => {
                         placeholder="내용을 입력하세요"
                         rows={rows}
                     ></textarea>
-                                <button className={style.Room_bottom_submit_button} type="submit">
-                                    &#10145;
-                                </button>
+                        <button className={style.Room_bottom_submit_button} type="submit">
+                            &#10145;
+                        </button>
 
-                            </form>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
-export default ChatRightBottom
+export default GameRightBottom

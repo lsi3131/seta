@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {useWebSocket} from './WebSocketProvider';
+import {useWebSocket} from './GameWebSocketProvider';
 
 const Canvas = () => {
     const canvasRef = useRef(null);

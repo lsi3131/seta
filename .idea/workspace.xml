@@ -4,18 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="bot 기능 1차 구현">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/Canvas.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRightBottom.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRightBottom.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRoom.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/WebSocketProvider.jsx" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="savepoint">
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightTop.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightTop.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/routing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/Chat/GameList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/Chat/GameList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/Canvas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/Canvas.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightTop.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightTop.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRightBottom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightBottom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRightBottom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightBottom.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/WebSocketProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameWebSocketProvider.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +27,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="CSS File" />
         <option value="JSX File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -68,6 +70,7 @@
       <recent name="$PROJECT_DIR$/backend/config" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/Components/GameRoom" />
       <recent name="$PROJECT_DIR$/frontend/src/Components/ChattingRoom" />
     </key>
   </component>
@@ -105,7 +108,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717737849161</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="savepoint">
+      <option name="closed" value="true" />
+      <created>1717743734444</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1717743734444</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -113,8 +124,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="* 누락된 파일 pr #139 롤백" />
-    <MESSAGE value="savepoint" />
     <MESSAGE value="bot 기능 1차 구현" />
-    <option name="LAST_COMMIT_MESSAGE" value="bot 기능 1차 구현" />
+    <MESSAGE value="savepoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="savepoint" />
   </component>
 </project>

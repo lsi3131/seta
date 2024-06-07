@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const WebSocketContext = createContext(null);
 
-export const WebSocketProvider = ({ children, roomId }) => {
+export const GameWebSocketProvider = ({ children, roomId }) => {
   const [ws, setWs] = useState(null);
   const [message, setMessage] = useState(null);
   const clientId = useRef(uuidv4());  // 고유 식별자 생성

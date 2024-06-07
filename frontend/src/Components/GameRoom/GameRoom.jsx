@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import style from './ChattingRoom.module.css'
-import ChatLeft from './ChatLeft'
+import style from './GameRoom.module.css'
+import ChatLeft from '../ChattingRoom/ChatLeft'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
 import GameRightBottom from "./GameRightBottom";
-import {WebSocketProvider} from "./WebSocketProvider";
+import {GameWebSocketProvider} from "./GameWebSocketProvider";
+import GameRightTop from "./GameRightTop";
 
 const wsBaseURL = process.env.REACT_APP_WS_BASE_URL;
 
@@ -137,18 +138,19 @@ const GameRoom = () => {
     }
 
     return (
-        <WebSocketProvider roomId={roomId}>
+        <GameWebSocketProvider roomId={roomId}>
             <div className={style.Room_vertical}>
                 <div className={style.Room_container}>
                     <div className={style.Room_left}>
                         <ChatLeft members={members} host={host}/>
                     </div>
                     <div className={style.Room_right}>
+                        <GameRightTop socket={socket}/>
                         <GameRightBottom members={members} socket={socket}/>
                     </div>
                 </div>
             </div>
-        </WebSocketProvider>
+        </GameWebSocketProvider>
     )
 }
 

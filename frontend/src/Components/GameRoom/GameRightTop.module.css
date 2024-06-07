@@ -1,0 +1,21 @@
+.container {
+    border: 1px solid #333;
+    width: 1000px;
+    height: 400px;
+    overflow-y: auto;
+    border-radius: 30px;
+    display: flex;
+    position: relative;
+    z-index: 0;
+    flex-direction: column;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+.message {
+}
+
+.message > pre{
+    padding: 20px;
+    font-size: 13pt;
+}
