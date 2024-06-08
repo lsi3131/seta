@@ -93,78 +93,77 @@ SETA는 16 가지 유형의 성격유형을 기반으로 운영되는 게시판 
 
 ### 프로필
 
+1. 프로필
+   
+      자신 소개, 내가 작성한 게시물, 팔로우, 팔로잉, 내 MBTI, 팔로우 랭킹을 보여줍니다
 
-<details>
-<summary>1. 프로필  </summary>
-<div>
-자신 소개, 내가 작성한 게시물, 팔로우, 팔로잉, 내 MBTI, 팔로우 랭킹을 보여줍니다
-</div>
-<div markdown="1">
-<div>
-MBTI 를 등록하지 않은 경우
-</div>
-<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d649c3e8-fe1d-4fb3-86bc-e42014577603">
-<div>
-MBTI 등록과 팔로우가 있는 경우
-</div>
-<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/b8ecfd74-305c-4698-b0b9-80292b8528b7">
-<div>
-다른 사람의 프로필 방문시 '프로필 수정' -> '팔로우'로 변경됩니다
-</div>
-<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/cf1f70e6-9dfd-4e3b-b2d8-71b8de083335">
-</div>
-</details>
+      <details>
+      <summary>이미지</summary>
+      <div markdown="1">
+      <div>
+      MBTI 를 등록하지 않은 경우
+      </div>
+      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d649c3e8-fe1d-4fb3-86bc-e42014577603">
+      <div>
+      MBTI 등록과 팔로우가 있는 경우
+      </div>
+      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/b8ecfd74-305c-4698-b0b9-80292b8528b7">
+      <div>
+      다른 사람의 프로필 방문시 '프로필 수정' -> '팔로우'로 변경됩니다
+      </div>
+      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/cf1f70e6-9dfd-4e3b-b2d8-71b8de083335">
+      </div>
+      </details>
   
 
 #### 프로필 수정
 
-<details>
-<summary>1. MBTI 설정 </summary>
-<div>
- 회원가입을 진행 후 자신의 MTBI를 설정합니다 
- 
-최초 1회만 가능하면 MTBI값이 있어야 게시물 작성, 댓글 작성 기능을 사용이 가능합니다
-</div>
-<div markdown="1">
-<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d95cc64e-be6b-487e-a708-8c733b1a873c">
-</div>
-</details>
+1. MBTI 설정
+      회원가입을 진행 후 자신의 MTBI를 설정합니다 
+       
+      최초 1회만 가능하면 MTBI값이 있어야 게시물 작성, 댓글 작성 기능을 사용이 가능합니다
+      <details>
+      <summary>이미지 </summary>
+      <div markdown="1">
+      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d95cc64e-be6b-487e-a708-8c733b1a873c">
+      </div>
+      </details>
     
 
+2. 자기소개
 
-   
-<details>
-<summary>2.자기소개</summary>
-<div markdown="1">
-<div>
-프로필 페이지에 자신을 소개하는 글을 작성이 가능합니다
-</div>
-<img width="851" alt="스크린샷 2024-06-08 17 05 02" src="https://github.com/lsi3131/seta/assets/160498370/531f4364-0b4d-4970-9bbe-16b041a4555f">
-</div>
-</details>
+      프로필 페이지에 자신을 소개하는 글을 작성이 가능합니다
 
-
-    
-<details>
-<summary>3. 비밀번호 변경</summary>
-<div markdown="1">
-<div>
-기존의 비밀번호를 변경을 원하거나 비밀번호 분실시 임시비밀번호를 변경합니다
-</div>
-<img width="849" alt="스크린샷 2024-06-08 17 05 08" src="https://github.com/lsi3131/seta/assets/160498370/b229f1ae-d770-4d6c-a03f-2cf31177ea67">
-</div>
-</details>
+      
+      <details>
+      <summary>이미지</summary>
+      <div markdown="1">
+      <img width="851" alt="스크린샷 2024-06-08 17 05 02" src="https://github.com/lsi3131/seta/assets/160498370/531f4364-0b4d-4970-9bbe-16b041a4555f">
+      </div>
+      </details>
 
 
+3. 비밀번호 변경
 
-<details>
-<summary>4. 계정탈퇴</summary>
-<div markdown="1">
-<div>
-회원의 정보를 데이터에서 삭제를 원하는 경우 비밀번호를 입력 후 삭제가 가능합니다
-<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d95cc64e-be6b-487e-a708-8c733b1a873c">
-</div>
-</details>
+      기존의 비밀번호를 변경을 원하거나 비밀번호 분실시 임시비밀번호를 변경합니다
+      
+      <details>
+      <summary>이미지</summary>
+      <div markdown="1">
+      <img width="849" alt="스크린샷 2024-06-08 17 05 08" src="https://github.com/lsi3131/seta/assets/160498370/b229f1ae-d770-4d6c-a03f-2cf31177ea67">
+      </div>
+      </details>
+
+
+4. 계정탈퇴
+  
+      회원의 정보를 데이터에서 삭제를 원하는 경우 비밀번호를 입력 후 삭제가 가능합니다
+      <details>
+      <summary>이미지</summary>
+      <div markdown="1">
+      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d95cc64e-be6b-487e-a708-8c733b1a873c">
+      </div>
+      </details>
 
 ---
 
