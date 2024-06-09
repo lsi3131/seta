@@ -18,3 +18,10 @@ urlpatterns = [
     path('<str:email>/findname/',views.FindNameAPIView.as_view()),
     path('<str:email>/<str:username>/findpassword/',views.FindPasswordAPIView.as_view()),
 ]
+
+urlpatterns += [
+    path('social/login/', views.social_login),
+    path('social/callback/', views.social_callback),
+    path("kakao/callback/", views.kakao_callback, name="kakao_callback"),
+    path("kakao/login/finish/", views.KakaoLogin.as_view(), name="kakao_login_todjango"),
+]

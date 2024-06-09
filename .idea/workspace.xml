@@ -4,20 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="savepoint">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightTop.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightTop.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="merge from main">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/acc/templates/acc/activate_email.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/acc/templates/acc/find_password.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/acc/templates/acc/find_username.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Assets/images/Google_Login.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Assets/images/kakao_login.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/SocialLogin/SocialsLogin.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/acc/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/acc/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/acc/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/acc/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/Canvas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/Canvas.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightTop.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightTop.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRightBottom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightBottom.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRightBottom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRightBottom.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/WebSocketProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameWebSocketProvider.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/routing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/Chat/ChatList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/Chat/ChatList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatLeft.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatLeft.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightBottom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightbottom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GoogleLogin/GoogleLogin.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/Home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/Login/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/NavBar/NavBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/NavBar/NavBar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,8 +66,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/chatbot",
-    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/frontend/src/Components/ChattingRoom",
+    "git-widget-placeholder": "Merging feat/chatbot",
+    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/backend/chat",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -64,6 +80,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/chat" />
       <recent name="$PROJECT_DIR$/frontend/src/Components/ChattingRoom" />
       <recent name="$PROJECT_DIR$/frontend" />
       <recent name="$PROJECT_DIR$/backend" />
@@ -126,6 +143,7 @@
     <MESSAGE value="* 누락된 파일 pr #139 롤백" />
     <MESSAGE value="bot 기능 1차 구현" />
     <MESSAGE value="savepoint" />
-    <option name="LAST_COMMIT_MESSAGE" value="savepoint" />
+    <MESSAGE value="merge from main" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge from main" />
   </component>
 </project>

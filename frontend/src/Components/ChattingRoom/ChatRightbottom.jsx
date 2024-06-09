@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import style from './ChattingRoom.module.css'
 import { UserContext } from '../../userContext'
 
-const ChatRightBottom = ({ members, socket }) => {
+const ChatRightbottom = ({ members, socket }) => {
     const [text, setText] = useState('')
     const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
@@ -148,4 +148,4 @@ const ChatRightBottom = ({ members, socket }) => {
     )
 }
 
-export default ChatRightBottom
+export default ChatRightbottom
