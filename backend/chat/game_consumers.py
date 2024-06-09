@@ -8,9 +8,13 @@ from .bot import AIChatBot
 
 User = get_user_model()
 room_messages = defaultdict(list)
-ai_chat_bot = AIChatBot()
 
-class ChatConsumer(AsyncWebsocketConsumer):
+
+class GameConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ai_chat_bot = None
+
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
@@ -49,37 +53,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if len(room_messages[self.room_name]) >= 10:
                 await self.save_messages(self.room_name)
 
-        if message_type == 'ai_message':
-            room_messages[self.room_name].append({'username': username, 'message': message})
+        if message_type == 'setting':
+            title = data['title']
+            instruction = data['instruction']
+            member_count = data['member_count']
+            self.ai_chat_bot = AIChatBot(title, instruction, member_count)
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'chat_message',
                     'message': message,
                     'username': username,
-                    'message_type': 'message',
+                    'message_type': message_type,
                 }
             )
-
-            if len(room_messages[self.room_name]) >= 10:
-                await self.save_messages(self.room_name)
-
-            # AI 메시지 응답
-            ai_chatbot_message = await ai_chat_bot.response(message)
-            print(ai_chatbot_message)
-            room_messages[self.room_name].append({'username': username, 'message': ai_chatbot_message})
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': ai_chatbot_message,
-                    'username': '봇',
-                    'message_type': 'ai_message',
-                }
-            )
-
-            if len(room_messages[self.room_name]) >= 10:
-                await self.save_messages(self.room_name)
 
         elif message_type == 'enter':
             await self.channel_layer.group_send(
@@ -167,6 +154,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 DrawConsumer
 - 드로잉을 위한 Consumer
 '''
+
+
 class DrawConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']

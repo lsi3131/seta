@@ -9,8 +9,6 @@ from collections import defaultdict
 
 User = get_user_model()
 room_messages = defaultdict(list)
-ai_chat_bot = AIChatBot()
-
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -48,39 +46,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message_type': message_type,
                 }
             )
-            if len(room_messages[self.room_name]) >= 10:
-                await self.save_messages(self.room_name)
-
-        if message_type == 'ai_message':
-            # 사용자 채팅 메시지 응답
-            room_messages[self.room_name].append({'username': username, 'message': message})
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': message,
-                    'username': username,
-                    'message_type': 'message',
-                }
-            )
-
-            if len(room_messages[self.room_name]) >= 10:
-                await self.save_messages(self.room_name)
-
-            # AI 메시지 응답
-            ai_chatbot_message = await ai_chat_bot.response(message)
-            print(ai_chatbot_message)
-            room_messages[self.room_name].append({'username': username, 'message': ai_chatbot_message})
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': ai_chatbot_message,
-                    'username': '봇',
-                    'message_type': 'ai_message',
-                }
-            )
-
             if len(room_messages[self.room_name]) >= 10:
                 await self.save_messages(self.room_name)
 

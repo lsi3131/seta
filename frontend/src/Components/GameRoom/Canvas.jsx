@@ -1,10 +1,10 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {useWebSocket} from './GameWebSocketProvider';
+import {useGameContext} from './GameProvider';
 
 const Canvas = () => {
     const canvasRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
-    const {sendMessage, message, clientId} = useWebSocket();
+    const {sendMessage, message, clientId} = useGameContext();
 
     const startDrawing = ({nativeEvent}) => {
         const {offsetX, offsetY} = nativeEvent;

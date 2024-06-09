@@ -21,8 +21,6 @@ import FindUser from 'Components/FindUser/FindUser'
 import Chat from 'Components/Chat/Chat'
 import ChatRoom from 'Components/ChattingRoom/ChattingRoom'
 import GameRoom from "./Components/GameRoom/GameRoom";
-import {GameWebSocketProvider} from "./Components/GameRoom/GameWebSocketProvider";
-import {GameSettingProvider} from "./Components/GameRoom/GameSettingProvider";
 
 function App() {
     return (

@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import style from './GameChat.module.css'
-import { UserContext } from '../../userContext'
+import {UserContext} from '../../userContext'
+import {useGameContext} from "./GameProvider";
 
-const GameChat = ({ members, socket }) => {
+const GameChat = () => {
     const [text, setText] = useState('')
     const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
@@ -10,6 +11,7 @@ const GameChat = ({ members, socket }) => {
     const [messages, setMessages] = useState([])
     const currentUser = useContext(UserContext)
     const messagesEndRef = useRef(null)
+    const {members, socket} = useGameContext()
 
     useEffect(() => {
         if (!currentUser || !socket) return
@@ -57,6 +59,21 @@ const GameChat = ({ members, socket }) => {
         setRows(lines)
     }
 
+    const createSendData = (text) => {
+        let messageType = 'message'
+
+        // 첫 텍스트가 '!' 인경우 Command 처리.
+        if(text[0] === '!') {
+            messageType = 'message'
+        }
+
+        return {
+            message_type: messageType,
+            message: text,
+            username: currentUser.username,
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!text.trim()) return // 빈 메시지 전송 방지
@@ -67,16 +84,7 @@ const GameChat = ({ members, socket }) => {
             return
         }
 
-        let message_type = 'message'
-        if(isCheckedAI) {
-            message_type = 'ai_message';
-        }
-
-        const sendData = {
-            message_type: message_type,
-            message: text,
-            username: currentUser.username,
-        }
+        const sendData = createSendData(text)
 
         socket.send(JSON.stringify(sendData))
         setText('')

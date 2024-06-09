@@ -4,17 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat TRPG 채팅 게임 구현&#10;* UI/UX 스켈레톤 구현">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingProvider.jsx" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현">
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/game_consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/routing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightbottom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightbottom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/Canvas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/Canvas.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameChat.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameChat.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameIntroduce.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameIntroduce.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameIntroduce.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameIntroduce.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingProvider.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameWebSocketProvider.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +34,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JSX File" />
         <option value="CSS File" />
         <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -134,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717903029467</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현">
+      <option name="closed" value="true" />
+      <created>1717909414562</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1717909414562</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,17 +164,7 @@
     <MESSAGE value="savepoint" />
     <MESSAGE value="merge from main" />
     <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* UI/UX 스켈레톤 구현" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat TRPG 채팅 게임 구현&#10;* UI/UX 스켈레톤 구현" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx</url>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현" />
   </component>
 </project>

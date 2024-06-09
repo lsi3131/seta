@@ -1,14 +1,13 @@
 import style from './GameSettingModal.module.css'
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './GameSettingModal.module.css'
-import apiClient from "../../services/apiClient";
-import {useGameSetting} from "./GameSettingProvider";
+import {useGameContext} from "./GameProvider";
 
 const GameSettingModal = () => {
-    const {setGameSetting, setShowSetting} = useGameSetting();
+    const {sendAndSetGameSetting, setShowSettingModal} = useGameContext()
     const [inputs, setInputs] = useState({
         title: '',
-        description: '',
+        instruction: '',
     })
 
     const handleInputChange = (e) => {
@@ -21,15 +20,15 @@ const GameSettingModal = () => {
 
 
     const handleClose = () => {
-        setShowSetting(false)
+        setShowSettingModal(false)
     }
 
     const handleCreate = () => {
-        setGameSetting({
+        sendAndSetGameSetting({
             title: inputs.title,
-            description: inputs.description,
+            instruction: inputs.instruction,
         })
-        setShowSetting(false)
+        setShowSettingModal(false)
     }
 
     return (
@@ -52,9 +51,9 @@ const GameSettingModal = () => {
                         </div>
                         <p>세계관 설정</p>
                         <textarea
-                            name="description"
+                            name="instruction"
                             placeholder="게임 세계관에 대해 설정해 주세요."
-                            value={inputs.description}
+                            value={inputs.instruction}
                             onChange={handleInputChange}
                             rows={10}>
                             </textarea>

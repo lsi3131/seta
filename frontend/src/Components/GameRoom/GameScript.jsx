@@ -1,10 +1,12 @@
 import React, {useState, useRef, useEffect, useContext} from "react";
 import style from "./GameScript.module.css";
 import {UserContext} from "../../userContext";
+import { useGameContext} from "./GameProvider";
 
 
-const GameScript = ({socket}) => {
+const GameScript = () => {
     const currentUser = useContext(UserContext)
+    const {socket} = useGameContext()
     const [messages, setMessages] = useState([])
     const messagesEndRef = useRef(null)
 

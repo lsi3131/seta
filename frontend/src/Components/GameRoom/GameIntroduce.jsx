@@ -1,17 +1,17 @@
 import React from "react";
 import style from "./GameIntroduce.module.css";
-import {useGameSetting} from "./GameSettingProvider";
+import {useGameContext} from "./GameProvider";
 
 
-const GameIntroduce = ({socket}) => {
-    const {gameSetting} = useGameSetting();
+const GameIntroduce = () => {
+    const {gameSetting} = useGameContext()
 
     return (
         <div className={style.container}>
             {gameSetting && (
                 <>
                     <h2>{gameSetting['title']}</h2>
-                    <h3>{gameSetting['description']}</h3>
+                    <h3>{gameSetting['instruction']}</h3>
                 </>
             )}
         </div>
