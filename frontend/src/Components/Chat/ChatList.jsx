@@ -1,19 +1,32 @@
-import { react, useEffect, useState } from 'react'
+import { react, useEffect, useState, useContext } from 'react'
 import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
 import { Link, useNavigate } from 'react-router-dom'
 import ChatRoomPasswordModal from './ChatRoomPasswordModal'
+import { UserContext } from '../../userContext'
 
 const ChatList = ({ posts }) => {
     const [showCheckPassword, setShowCheckPassword] = useState(false)
     const [roomId, setRoomId] = useState(0)
+    const currentUser = useContext(UserContext)
     const navigate = useNavigate()
 
     const handleLinkClick = (e, post) => {
         e.preventDefault()
 
+        if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
+            alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
+            return
+        }
+
         if (post.members_count >= post.max_members) {
             alert('채팅방 정원이 초과되었습니다.')
+            return
+        }
+
+        // 이미 채팅방 멤버인 경우 바로 채팅방으로 이동
+        if (post.members.includes(currentUser.username)) {
+            alert('이미 채팅방에 참여하고 있습니다.')
             return
         }
 
