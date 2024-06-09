@@ -1,6 +1,5 @@
 .container {
     border: 1px solid #333;
-    width: 1000px;
     height: 400px;
     overflow-y: auto;
     border-radius: 30px;

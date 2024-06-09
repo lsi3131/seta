@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
-import style from './GameRightBottom.module.css'
+import style from './GameChat.module.css'
 import { UserContext } from '../../userContext'
 
-const GameRightBottom = ({ members, socket }) => {
+const GameChat = ({ members, socket }) => {
     const [text, setText] = useState('')
     const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
@@ -151,4 +151,4 @@ const GameRightBottom = ({ members, socket }) => {
     )
 }
 
-export default GameRightBottom
+export default GameChat

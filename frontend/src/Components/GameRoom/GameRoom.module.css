@@ -22,8 +22,15 @@
     overflow-y: scroll;
 }
 
-.Room_right {
+.Room_center {
     flex: 2;
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.Room_right {
+    flex: 0.5;
     margin: 0 10px;
     display: flex;
     flex-direction: column;

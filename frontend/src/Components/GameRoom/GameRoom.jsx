@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import React, {useState, useEffect, useContext} from 'react'
+import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import style from './GameRoom.module.css'
 import ChatLeft from '../ChattingRoom/ChatLeft'
 import apiClient from '../../services/apiClient'
-import { UserContext } from '../../userContext'
-import GameRightBottom from "./GameRightBottom";
+import {UserContext} from '../../userContext'
+import GameChat from "./GameChat";
 import {GameWebSocketProvider} from "./GameWebSocketProvider";
-import GameRightTop from "./GameRightTop";
+import GameCenter from "./GameCenter";
 
 const wsBaseURL = process.env.REACT_APP_WS_BASE_URL;
 
 const GameRoom = () => {
     const location = useLocation()
-    const { roomId } = useParams()
+    const {roomId} = useParams()
     const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
     const [password, setPassword] = useState(location.state?.password || '')
@@ -138,19 +138,20 @@ const GameRoom = () => {
     }
 
     return (
-        <GameWebSocketProvider roomId={roomId}>
-            <div className={style.Room_vertical}>
-                <div className={style.Room_container}>
-                    <div className={style.Room_left}>
-                        <ChatLeft members={members} host={host}/>
-                    </div>
-                    <div className={style.Room_right}>
-                        <GameRightTop socket={socket}/>
-                        <GameRightBottom members={members} socket={socket}/>
-                    </div>
+        <div className={style.Room_vertical}>
+            <div className={style.Room_container}>
+                <div className={style.Room_left}>
+                    <ChatLeft members={members} host={host}/>
                 </div>
+                <div className={style.Room_center}>
+                    <GameCenter socket={socket}/>
+                </div>
+                <div className={style.Room_right}>
+                    <GameChat members={members} socket={socket}/>
+                </div>
+
             </div>
-        </GameWebSocketProvider>
+        </div>
     )
 }
 

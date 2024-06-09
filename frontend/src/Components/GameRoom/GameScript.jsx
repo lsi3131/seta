@@ -1,9 +1,9 @@
 import React, {useState, useRef, useEffect, useContext} from "react";
-import style from "./GameRightTop.module.css";
+import style from "./GameScript.module.css";
 import {UserContext} from "../../userContext";
 
 
-const GameRightTop = ({socket}) => {
+const GameScript = ({socket}) => {
     const currentUser = useContext(UserContext)
     const [messages, setMessages] = useState([])
     const messagesEndRef = useRef(null)
@@ -49,4 +49,4 @@ const GameRightTop = ({socket}) => {
     );
 };
 
-export default GameRightTop;
+export default GameScript;
