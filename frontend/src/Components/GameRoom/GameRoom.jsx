@@ -7,10 +7,21 @@ import {UserContext} from '../../userContext'
 import GameChat from "./GameChat";
 import {GameWebSocketProvider} from "./GameWebSocketProvider";
 import GameCenter from "./GameCenter";
+import {GameSettingProvider, useGameSetting} from "./GameSettingProvider";
+import GameSettingModal from "./GameSettingModal";
 
 const wsBaseURL = process.env.REACT_APP_WS_BASE_URL;
 
 const GameRoom = () => {
+    return (
+        <GameSettingProvider>
+            <GameRoomContainer/>
+        </GameSettingProvider>
+    )
+}
+
+const GameRoomContainer = () => {
+    const {showSetting} = useGameSetting();
     const location = useLocation()
     const {roomId} = useParams()
     const [isLoading, setIsLoading] = useState(true)
@@ -138,18 +149,21 @@ const GameRoom = () => {
     }
 
     return (
-        <div className={style.Room_vertical}>
-            <div className={style.Room_container}>
-                <div className={style.Room_left}>
-                    <ChatLeft members={members} host={host}/>
-                </div>
-                <div className={style.Room_center}>
-                    <GameCenter socket={socket}/>
-                </div>
-                <div className={style.Room_right}>
-                    <GameChat members={members} socket={socket}/>
-                </div>
+        <div>
+            {showSetting && (<GameSettingModal/>)}
+            <div className={style.Room_vertical}>
+                <div className={style.Room_container}>
+                    <div className={style.Room_left}>
+                        <ChatLeft members={members} host={host}/>
+                    </div>
+                    <div className={style.Room_center}>
+                        <GameCenter socket={socket}/>
+                    </div>
+                    <div className={style.Room_right}>
+                        <GameChat members={members} socket={socket}/>
+                    </div>
 
+                </div>
             </div>
         </div>
     )
