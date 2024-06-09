@@ -16,7 +16,6 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
 
     const [categories, setCategories] = useState([])
     const [error, setError] = useState('')
-    const navigate = useNavigate()
 
     useEffect(() => {
         handleGetCategories();
@@ -31,13 +30,38 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
         }
     }, [categories])
 
+    const submit = () => {
+        try{
+            const data = {
+                name: inputs.roomName,
+                category: inputs.category,
+                member_count: inputs.memberCount,
+                is_secret: inputs.isSecret,
+                password: inputs.password,
+            }
+
+            apiClient.post(`/api/chats/`, data)
+                .then(response => {
+                    console.log('success to create chatroom ', response.data)
+                    const chatroomId = response.data['chatroom_id']
+                    onCreate(chatroomId, inputs.password, inputs.category);
+
+                }).catch(error => {
+                console.log(error)
+                setError(error.response.data['error'])
+            })
+        } catch (error) {
+            console.error('fail to post categories', error)
+        }
+    }
+
     const handleClose = () => {
         onClose()
     }
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            handleSubmit()
+            submit()
         }
     }
 
@@ -57,30 +81,8 @@ const ChatRoomCreateModal = ({onCreate, onClose}) => {
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        try{
-            const data = {
-                name: inputs.roomName,
-                category: inputs.category,
-                member_count: inputs.memberCount,
-                is_secret: inputs.isSecret,
-                password: inputs.password,
-            }
-
-            apiClient.post(`/api/chats/`, data)
-                .then(response => {
-                    console.log('success to create chatroom ', response.data)
-                    const chatroomId = response.data['chatroom_id']
-                    onCreate(chatroomId, inputs.password);
-
-                }).catch(error => {
-                    console.log(error)
-                    setError(error.response.data['error'])
-            })
-        } catch (error) {
-            console.error('fail to post categories', error)
-        }
-        
+        e.preventDefault();
+        submit();
     }
 
     const handleGetCategories = () => {

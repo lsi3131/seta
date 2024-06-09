@@ -20,6 +20,7 @@ import SearchResult from 'Components/Search/SearchResult'
 import FindUser from 'Components/FindUser/FindUser'
 import Chat from 'Components/Chat/Chat'
 import ChatRoom from 'Components/ChattingRoom/ChattingRoom'
+import GameRoom from "./Components/GameRoom/GameRoom";
 
 function App() {
     return (
@@ -44,7 +45,7 @@ function App() {
                     <Route path="/chat" element={<Chat />} />
 
                     <Route path="/chatroom/:roomId" element={<ChatRoom />} />
-
+                    <Route path="/gameroom/:roomId" element={<GameRoom />} />
                 </Routes>
                 <FabButton />
                 <Footer />

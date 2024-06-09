@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import style from './ChattingRoom.module.css'
 import { UserContext } from '../../userContext'
 
-const ChatRightBottom = ({ members, socket }) => {
+const ChatRightbottom = ({ members, socket }) => {
     const [text, setText] = useState('')
-    const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
     const [rows, setRows] = useState(1)
     const [messages, setMessages] = useState([])
@@ -65,9 +64,6 @@ const ChatRightBottom = ({ members, socket }) => {
         }
 
         let message_type = 'message'
-        if(isCheckedAI) {
-            message_type = 'ai_message';
-        }
 
         const sendData = {
             message_type: message_type,
@@ -87,17 +83,13 @@ const ChatRightBottom = ({ members, socket }) => {
         }
     }
 
-    const handleCheckAI = (e) => {
-        setIsCheckedAI(e.target.checked);
-    };
-
     return (
         <>
             <div className={style.Room_right_bottom}>
                 <div className={style.Room_bottom_content} ref={messagesEndRef}>
                     {messages.map((msg, index) => (
                         <div key={index} className={style.messages}>
-                            {msg.message_type === 'message' || msg.message_type === 'ai_message'? (
+                            {msg.message_type === 'message' ? (
                                 <div
                                     className={
                                         msg.username === currentUser.username ? style.my_message : style.other_message
@@ -113,15 +105,7 @@ const ChatRightBottom = ({ members, socket }) => {
                                 </div>
                             ) : (
                                 <div
-                                    className={
-                                        msg.message_type === 'enter'
-                                            ? style.enter_message
-                                            : msg.message_type === 'leave'
-                                            ? style.leave_message
-                                            : msg.message_type === 'expel'
-                                            ? style.expel_message
-                                            : style.info_message
-                                    }
+                                    className={msg.message_type === 'enter' ? style.enter_message : style.leave_message}
                                 >
                                     {msg.message}
                                 </div>
@@ -131,9 +115,6 @@ const ChatRightBottom = ({ members, socket }) => {
                 </div>
             </div>
             <div className={style.Room_bottom_submit_container}>
-                <span>AI</span>
-                <input className={style.Room_bottom_check_button_ai} type="checkbox" onChange={handleCheckAI}>
-                </input>
                 <div className={style.Room_bottom_submit}>
                     <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
                     <textarea
@@ -156,4 +137,4 @@ const ChatRightBottom = ({ members, socket }) => {
     )
 }
 
-export default ChatRightBottom
+export default ChatRightbottom
