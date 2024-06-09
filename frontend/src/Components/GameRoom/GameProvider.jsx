@@ -18,13 +18,12 @@ export const GameProvider = ({children, roomId, initPassword}) => {
     const currentUser = useContext(UserContext)
     const [host, setHost] = useState('')
 
-    const [gameSetting, setGameSetting] = useState(null);
+    const [gameSetting, setGameSetting] = useState({
+        title: '',
+        description: '',
+    });
     const [showSettingModal, setShowSettingModal] = useState(false)
     const [gameStep, setGameStep] = useState(GAME_STEP_LIST[0])
-
-    const sendAndSetGameSetting = (setting) => {
-        setGameSetting(setting)
-    }
 
 
     useEffect(() => {
@@ -139,6 +138,55 @@ export const GameProvider = ({children, roomId, initPassword}) => {
         }
     }, [navigate, socket, currentUser])
 
+    const setGameStepSetting = () => {
+        setGameStep(GAME_STEP_LIST[0])
+    }
+
+    const setGameStepWaitStart = () => {
+        setGameStep(GAME_STEP_LIST[1])
+    }
+
+    const setGameStepGameStart = () => {
+        setGameStep(GAME_STEP_LIST[2])
+    }
+
+    const setAndSendGameSetting = (setting) => {
+        setGameStep(GAME_STEP_LIST[1])
+        setGameSetting(setting)
+        sendSetting(setting)
+    }
+
+    const sendSetting = (setting) => {
+        const sendData = {
+            message_type: 'setting',
+            title: setting['title'],
+            instruction: setting['instruction'],
+            member_count: members.length,
+            message: '',
+            username: currentUser.username,
+        }
+        socket.send(JSON.stringify(sendData))
+    }
+
+    const sendMessage = (text) => {
+        const sendData = {
+            message_type: 'message',
+            message: text,
+            username: currentUser.username,
+        }
+        socket.send(JSON.stringify(sendData))
+    }
+
+    const startGame = () => {
+        setGameStepGameStart();
+        const sendData = {
+            message_type: 'message',
+            message: '!게임시작',
+            username: currentUser.username,
+        }
+        socket.send(JSON.stringify(sendData))
+    }
+
     return (
         <GameContext.Provider value={{
             isLoading,
@@ -149,7 +197,12 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             setShowSettingModal,
             gameSetting,
             gameStep,
-            sendAndSetGameSetting,
+            setGameStepSetting,
+            setGameStepWaitStart,
+            setGameStepGameStart,
+            setAndSendGameSetting,
+            startGame,
+            sendMessage,
         }}>
             {children}
         </GameContext.Provider>

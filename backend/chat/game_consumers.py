@@ -53,20 +53,32 @@ class GameConsumer(AsyncWebsocketConsumer):
             if len(room_messages[self.room_name]) >= 10:
                 await self.save_messages(self.room_name)
 
+            # '!'로 시작할 시  AI 처리
+            if message[0] == '!':
+                message = message[1:]
+                if self.ai_chat_bot is None:
+                    print('챗봇이 설정되지 않았습니다.')
+                    return
+
+                print(f'send message={message}')
+                ai_message = await self.ai_chat_bot.response(message)
+
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': ai_message,
+                        'username': 'AI',
+                        'message_type': 'ai_message',
+                    }
+                )
+
         if message_type == 'setting':
+            print(data)
             title = data['title']
             instruction = data['instruction']
             member_count = data['member_count']
             self.ai_chat_bot = AIChatBot(title, instruction, member_count)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': message,
-                    'username': username,
-                    'message_type': message_type,
-                }
-            )
 
         elif message_type == 'enter':
             await self.channel_layer.group_send(

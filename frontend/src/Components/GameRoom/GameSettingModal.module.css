@@ -69,6 +69,14 @@
     flex-direction: column;
 }
 
+.container_input > textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 5px;
+}
+
 .container_input_name {
     display: flex;
     margin-bottom: 10px;

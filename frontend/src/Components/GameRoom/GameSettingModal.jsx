@@ -4,11 +4,9 @@ import './GameSettingModal.module.css'
 import {useGameContext} from "./GameProvider";
 
 const GameSettingModal = () => {
-    const {sendAndSetGameSetting, setShowSettingModal} = useGameContext()
-    const [inputs, setInputs] = useState({
-        title: '',
-        instruction: '',
-    })
+    const {gameSetting} = useGameContext();
+    const {setAndSendGameSetting, setShowSettingModal} = useGameContext()
+    const [inputs, setInputs] = useState(gameSetting)
 
     const handleInputChange = (e) => {
         const {value, name } = e.target
@@ -24,7 +22,7 @@ const GameSettingModal = () => {
     }
 
     const handleCreate = () => {
-        sendAndSetGameSetting({
+        setAndSendGameSetting({
             title: inputs.title,
             instruction: inputs.instruction,
         })
@@ -42,9 +40,9 @@ const GameSettingModal = () => {
                         <h2>게임 설정 만들기</h2>
                     </div>
                     <div className={style.container_input}>
+                        <p>제목</p>
                         <div className={style.container_input_name}>
-                            <p>제목:</p>
-                            <input type="text" name="title" value={inputs.title} placeholder="방제목을 입력해주세요"
+                            <input type="text" name="title" value={inputs.title} placeholder="게임 제목을 입력해주세요"
                                    onChange={handleInputChange}>
                             </input>
 

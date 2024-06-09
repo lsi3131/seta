@@ -5,13 +5,12 @@ import {useGameContext} from "./GameProvider";
 
 const GameChat = () => {
     const [text, setText] = useState('')
-    const [isCheckedAI, setIsCheckedAI] = useState(false);
     const textareaRef = useRef(null)
     const [rows, setRows] = useState(1)
     const [messages, setMessages] = useState([])
     const currentUser = useContext(UserContext)
     const messagesEndRef = useRef(null)
-    const {members, socket} = useGameContext()
+    const {members, socket, sendMessage} = useGameContext()
 
     useEffect(() => {
         if (!currentUser || !socket) return
@@ -20,7 +19,7 @@ const GameChat = () => {
         const handleMessage = (event) => {
             const newMessage = JSON.parse(event.data)
             const handleMessageList = ['enter', 'leave', 'message']
-            if(handleMessageList.includes(newMessage['message_type'])) {
+            if (handleMessageList.includes(newMessage['message_type'])) {
                 setMessages((prevMessages) => [...prevMessages, newMessage])
             }
         }
@@ -59,20 +58,6 @@ const GameChat = () => {
         setRows(lines)
     }
 
-    const createSendData = (text) => {
-        let messageType = 'message'
-
-        // 첫 텍스트가 '!' 인경우 Command 처리.
-        if(text[0] === '!') {
-            messageType = 'message'
-        }
-
-        return {
-            message_type: messageType,
-            message: text,
-            username: currentUser.username,
-        }
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -84,9 +69,7 @@ const GameChat = () => {
             return
         }
 
-        const sendData = createSendData(text)
-
-        socket.send(JSON.stringify(sendData))
+        sendMessage(text)
         setText('')
         setRows(1)
     }
@@ -97,10 +80,6 @@ const GameChat = () => {
             handleSubmit(e)
         }
     }
-
-    const handleCheckAI = (e) => {
-        setIsCheckedAI(e.target.checked);
-    };
 
     return (
         <>
@@ -134,9 +113,6 @@ const GameChat = () => {
                 </div>
             </div>
             <div className={style.Room_bottom_submit_container}>
-                <span>AI</span>
-                <input className={style.Room_bottom_check_button_ai} type="checkbox" onChange={handleCheckAI}>
-                </input>
                 <div className={style.Room_bottom_submit}>
                     <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
                     <textarea
