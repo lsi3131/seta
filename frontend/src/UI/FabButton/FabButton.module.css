@@ -37,3 +37,20 @@
     margin: 5px 0;
     cursor: pointer;
 }
+
+.moveButton{
+    border: none;
+    background-color: #565656;
+    color: #fff;
+    font-size: 18px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
