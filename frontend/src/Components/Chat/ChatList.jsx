@@ -47,7 +47,7 @@ const ChatList = ({ posts }) => {
         } else {
             // 채팅방으로 이동
             const password = ''
-            navigateToRoom({category: post.category, roomId: roomId, password: password})
+            navigateToRoom({category: post.room_category, roomId: post.id, password: password})
         }
     }
 

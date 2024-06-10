@@ -7,9 +7,9 @@
     <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat TRPG 채팅 게임 구현&#10;* 1인 TRPG 채팅 게임 기능 구현">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/game_consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/Chat/ChatList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/Chat/ChatList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
