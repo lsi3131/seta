@@ -1,9 +1,15 @@
 # Θ (seta) 세상의 모든 타입
 
+목차 
 
 프로젝트 소개 
 
 주요기능
+
+팀원 소개
+
+
+기술 스택 
 
 
 
@@ -18,7 +24,11 @@ SETA는 16 가지 유형의 성격유형을 기반으로 운영되는 게시판 
 사회 이곳저곳에서 “MBTI 가 어떻게 되세요?” 라는 질문을 심심치 않게 들을 수 있다. 
 뉴스, 유튜브, 공영방송 등에서 우리는 종종 사람들의 행동을 MBTI 를 통해 해석하고 설명하는 것을 볼 수 있다.  
 
-![스크린샷 2024-06-07 15 27 20](https://github.com/lsi3131/seta/assets/160498370/d1296d6f-fd04-4f5d-85f2-f8c5496f00a7)
+
+<p align="center">
+<img width="861" alt="스크린샷 2024-06-08 17 04 55"  src="https://github.com/lsi3131/seta/assets/160498370/d1296d6f-fd04-4f5d-85f2-f8c5496f00a7"> 
+</p>
+
 
 복잡한 상황에 대한 특정인물에 대한 행동을 긴말보다는 성격유형으로 설명할 수 있는 편리한 기능에 반해, MBTI 를 통해 자신과 잘 맞을 것 같은 상대를 선택적으로 만나기도하고, 심지어 만나본 적 없는 상대에 대해 프레임을 가지고 바라보기도 한다. 
 
@@ -29,7 +39,7 @@ SETA는 16 가지 유형의 성격유형을 기반으로 운영되는 게시판 
 
 <img width="1251" alt="스크린샷 2024-06-08 16 18 52" src="https://github.com/lsi3131/seta/assets/160498370/8d923e1b-b9c0-4d6b-8a2c-f427acd86371">
 
-  
+
 ---
 
 
@@ -91,32 +101,32 @@ SETA는 16 가지 유형의 성격유형을 기반으로 운영되는 게시판 
 
 ## 주요 기능 
 
-### 프로필
+## 프로필
 
-1. 프로필
-   
-      자신 소개, 내가 작성한 게시물, 팔로우, 팔로잉, 내 MBTI, 팔로우 랭킹을 보여줍니다
+자신 소개, 내가 작성한 게시물, 팔로우, 팔로잉, 내 MBTI, 팔로우 랭킹을 보여줍니다
 
-      <details>
-      <summary>이미지</summary>
-      <div markdown="1">
-      <div>
-      MBTI 를 등록하지 않은 경우
-      </div>
-      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d649c3e8-fe1d-4fb3-86bc-e42014577603">
-      <div>
-      MBTI 등록과 팔로우가 있는 경우
-      </div>
-      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/b8ecfd74-305c-4698-b0b9-80292b8528b7">
-      <div>
-      다른 사람의 프로필 방문시 '프로필 수정' -> '팔로우'로 변경됩니다
-      </div>
-      <img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/cf1f70e6-9dfd-4e3b-b2d8-71b8de083335">
-      </div>
-      </details>
-  
 
-#### 프로필 수정
+<details>
+<summary>이미지</summary>
+<div markdown="1">
+<div>
+MBTI 를 등록하지 않은 경우
+</div>
+<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/d649c3e8-fe1d-4fb3-86bc-e42014577603">
+<div>
+MBTI 등록과 팔로우가 있는 경우
+</div>
+<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/b8ecfd74-305c-4698-b0b9-80292b8528b7">
+<div>
+다른 사람의 프로필 방문시 '프로필 수정' -> '팔로우'로 변경됩니다
+</div>
+<img width="861" alt="스크린샷 2024-06-08 17 04 55" src="https://github.com/lsi3131/seta/assets/160498370/cf1f70e6-9dfd-4e3b-b2d8-71b8de083335">
+</div>
+</details>
+
+
+
+### 프로필 수정
 
 1. MBTI 설정
       회원가입을 진행 후 자신의 MTBI를 설정합니다 
@@ -167,160 +177,273 @@ SETA는 16 가지 유형의 성격유형을 기반으로 운영되는 게시판 
 
 ---
 
-### 게시물
+## 게시물
 
 
-<details>
-<summary>1. 게시물  </summary>
-<div>
- 게시물을 보고 특정 MBTI만 댓글을 작성 할 수 있습니다
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/bf7e54f6-68ad-41c7-8560-5d5543ba9cf1">
-</div>
-</details>
+<p align="center"> 
+<img width="850" alt="게시판" height="400" src="https://github.com/lsi3131/seta/assets/160498370/0b49d8db-d340-437f-b646-f15eee2862ee">
+</p>
+
+
+1. 게시물
+   
+      게시물을 보고 특정 MBTI만 댓글을 작성 할 수 있습니다
+      <details>
+      <summary> 이미지 </summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/bf7e54f6-68ad-41c7-8560-5d5543ba9cf1">
+      </div>
+      </details>
 
 
 
-
-<details>
-<summary>2. 게시물 리스트 </summary>
-<div>
+3. 게시물 리스트 
+      
+  - MBTI별로 각각의 게시판을 가지고 있습니다. 게시물 작성시 질문하고 싶은 MBTI를 선택하여 게시물이 작성되며 각각의 MBTI에게 보여줍니다
   
-- MBTI별로 각각의 게시판을 가지고 있습니다. 게시물 작성시 질문하고 싶은 MBTI를 선택하여 게시물이 작성되며 각각의 MBTI에게 보여줍니다
-
-- 필터 기능과 페이지 기능으로 쉽게 이동이 가능하고 찾을 수 있습니다
-
-- 홈 화면에서 MBTI별로 클릭시 이동이 가능하면 우측 하단에 + 버튼 클릭시 이동이 가능합니다
-</div>
-
-<img width="1221" alt="스크린샷 2024-06-08 16 22 56" src="https://github.com/lsi3131/seta/assets/160498370/a47c31e0-6b77-46e5-82b4-a2383dcf4120">
-<img width="1221" alt="스크린샷 2024-06-08 16 22 56" src="https://github.com/lsi3131/seta/assets/160498370/23d1dbb7-aefb-4ba7-8b89-20f3eb9d94b9">
-<div>
-- 각 MBTI 별로 게시판 리스트가 존제합니다
-</div>
-<div markdown="1">
-<img width="1221" alt="스크린샷 2024-06-08 16 22 56" src="https://github.com/lsi3131/seta/assets/160498370/1949c170-b595-4b58-a9de-6f8af903ff70">
-<img width="1237" alt="스크린샷 2024-06-08 16 22 46" src="https://github.com/lsi3131/seta/assets/160498370/1490d9d3-2948-4c2b-9331-c3ffc45e278b">
-<img width="1219" alt="스크린샷 2024-06-08 16 22 29" src="https://github.com/lsi3131/seta/assets/160498370/a5719ab5-4c58-444f-94e1-0d5fbc4923c5">
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/c8b982e7-0583-4ed5-bbfc-9a5468f73510">
-</div>
-<div>
+  - 필터 기능과 페이지 기능으로 쉽게 이동이 가능하고 찾을 수 있습니다
   
-- 원하는 정렬방식으로 게시물을 찾습니다
- 
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/12a85734-0337-4b39-89d3-bae357c704ad"><img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/aeddc591-24f8-4c50-bd24-c7b8d9576111">
-</details>
+  - 홈 화면에서 MBTI별로 클릭시 이동이 가능하면 우측 하단에 + 버튼 클릭시 이동이 가능합니다
+      <details>
+      <summary>이미지</summary>
+      <img width="1221" alt="스크린샷 2024-06-08 16 22 56" src="https://github.com/lsi3131/seta/assets/160498370/a47c31e0-6b77-46e5-82b4-a2383dcf4120">
+      <img width="1221" alt="스크린샷 2024-06-08 16 22 56" src="https://github.com/lsi3131/seta/assets/160498370/23d1dbb7-aefb-4ba7-8b89-20f3eb9d94b9">
+      <div>
+      - 각 MBTI 별로 게시판 리스트가 존제합니다
+      </div>
+      <div markdown="1">
+      <img width="1221" alt="스크린샷 2024-06-08 16 22 56" src="https://github.com/lsi3131/seta/assets/160498370/1949c170-b595-4b58-a9de-6f8af903ff70">
+      <img width="1237" alt="스크린샷 2024-06-08 16 22 46" src="https://github.com/lsi3131/seta/assets/160498370/1490d9d3-2948-4c2b-9331-c3ffc45e278b">
+      <img width="1219" alt="스크린샷 2024-06-08 16 22 29" src="https://github.com/lsi3131/seta/assets/160498370/a5719ab5-4c58-444f-94e1-0d5fbc4923c5">
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/c8b982e7-0583-4ed5-bbfc-9a5468f73510">
+      </div>
+      <div>
+  
+      - 원하는 정렬방식으로 게시물을 찾습니다
+       
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/12a85734-0337-4b39-89d3-bae357c704ad"><img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/aeddc591-24f8-4c50-bd24-c7b8d9576111">
+      </details>
 
 
+3. 게시물 작성
 
-<details>
-<summary>3. 게시물 작성 </summary>
-<div>
-질문 또는 게시 하고 싶은 특정 MBTI 를 선택해 게시물을 작성이 가능합니다
-
-이미지 삽입, 크기 조절, 글자 변경등 다양한 기능을 지원합니다
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/cff53dbe-249f-4b97-b267-e431fd0e4375">
-</div>
-</details>
-
+      질문 또는 게시 하고 싶은 특정 MBTI 를 선택해 게시물을 작성이 가능합니다
+      
+      이미지 삽입, 크기 조절, 글자 변경등 다양한 기능을 지원합니다
+      <details>
+      <summary>이미지</summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/cff53dbe-249f-4b97-b267-e431fd0e4375">
+      </div>
+      </details>
 
 
-<details>
-<summary>4. 게시물 검색 </summary>
-<div>
-원하는 제목, 내용, 작성자를 검색을 통해 찾을 수 있습니다
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/cace69f1-8e79-42e7-8a2e-bf0e2e67455b">
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/f151d7b4-7b2f-4d27-805d-be574ca5d19e">
-</div>
-</details>
+4. 게시물 검색
+
+      원하는 제목, 내용, 작성자를 검색을 통해 찾을 수 있습니다
+      <details>
+      <summary>이미지</summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/cace69f1-8e79-42e7-8a2e-bf0e2e67455b">
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/f151d7b4-7b2f-4d27-805d-be574ca5d19e">
+      </div>
+      </details>
 
 
+5. 인기 게시물
 
-<details>
-<summary>4. 인기 게시물 </summary>
-<div>
-홈 화면에서 인기글을 확이 가능합니다. 
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/c6efad30-8335-4908-888b-070aba855292">
-'좋아요' 가 많은 순으로 보여 줍니다
-</div>
-더보기 클릭시 인기 게시물 리스트
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/2d979ec8-da34-45d5-8804-51c2dfbf654b">
-<div>
-</div>
-</details>
+      '좋아요'가 많은 순으로 보여 줍니다
+      <details>
+      <summary>이미지</summary>
+      <div>
+      홈 화면에서 인기글을 확인 가능합니다. 
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/c6efad30-8335-4908-888b-070aba855292">
+      '좋아요' 가 많은 순으로 보여 줍니다
+      </div>
+      더보기 클릭시 인기 게시물 리스트
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/2d979ec8-da34-45d5-8804-51c2dfbf654b">
+      <div>
+      </div>
+      </details>
 
+6. 내가 작성한 글 / 좋아요 한 글
+
+      내가 지금까지 작성한 글과 좋아요 클릭한 글을 모아서 볼 수 있습니다
+      
+      <details>
+      <summary>이미지</summary>
+      <div>
+      내가 작성한 글
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/64af06a6-44d8-4392-a3a9-ec700534545d">
+      '좋아요' 가 많은 순으로 보여 줍니다
+      </div>
+      내가 좋아요 한 글
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/105cd5ac-4973-47fe-af52-5c35b117d240">
+      <div>
+      </div>
+      </details>
 
 
 
 ---
 
 
-### 로그인 
+## 로그인 
 
 
-<details>
-<summary>1. 로그인 </summary>
-<div>
-아이디와 패스워드를 통해 로그인이 가능하면 구글, 카카오, 깃허브로 소셜 로그인을 통해서 로그인이 가능합니다
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="">
-</div>
-</details>
+<p align="center">
+<img width="598" alt="회원관리"  height="400" src="https://github.com/lsi3131/seta/assets/160498370/ad42b77c-b18a-43c4-a8fe-f6b021c5c671">
+</p>
 
 
-<details>
-<summary>2. 회원가입 </summary>
-<div>
-유일한 Username과 이메일을 통해 회원가입을 진행합니다
+1. 로그인
 
-그리고 이메을 인증을 통해서만 회원가입이 완료되며 로그인이 가능합니다
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/938e161e-ce1c-4d20-8134-7a970df1b6e8">
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/162c0196-00f3-4d97-a1cc-95663c2bf35e">
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/5723d155-b542-4295-94b2-de38edfb493a">
-</div>
-</details>
+      아이디와 패스워드를 통해 로그인이 가능하면 구글, 카카오, 깃허브로 소셜 로그인을 통해서 로그인이 가능합니다
+      <details>
+      <summary>이미지</summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="">
+      </div>
+      </details>
+
+2. 회원가입
+
+      유일한 Username과 이메일을 통해 회원가입을 진행합니다
+      
+      그리고 이메을 인증을 통해서만 회원가입이 완료되며 로그인이 가능합니다
+      <details>
+      <summary>이미지</summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/938e161e-ce1c-4d20-8134-7a970df1b6e8">
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/162c0196-00f3-4d97-a1cc-95663c2bf35e">
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/5723d155-b542-4295-94b2-de38edfb493a">
+      </div>
+      </details>
 
 
-
-<details>
-<summary>2. 아이디/비밀번호 찾기 </summary>
-<div>
-가입시 사용한 email을 통해 아이디와 비밀번호를 찾을 수 있습니다
-
-email로 아디 값과 비밀번호는 임시비밀번호를 발급해 줍니다  
-</div>
-<div>
-아이디 / 비밀번호 찾기 시 뜨는 화면
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/d9aea30e-bbcd-41b5-a86d-c16147f7c366">
-<div>
-아이디 찾기 이메일 화면 
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/96379cf5-695d-4691-a528-fc0b1e7efd8e">
-<div>
-비밀번호 찾기 이메일 화면 
-</div>
-<img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/b1779a46-f212-4baf-86cd-518ac20d0088">
-</div>
-</details>
+3. 아이디/비밀번호 찾기
+      
+      가입시 사용한 email을 통해 아이디와 비밀번호를 찾을 수 있습니다
+      
+      email로 아디 값과 비밀번호는 임시비밀번호를 발급해 줍니다  
+      
+      <details>
+      <summary>이미지</summary>
+      <div>
+      아이디 / 비밀번호 찾기 시 뜨는 화면
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/d9aea30e-bbcd-41b5-a86d-c16147f7c366">
+      <div>
+      아이디 찾기 이메일 화면 
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/96379cf5-695d-4691-a528-fc0b1e7efd8e">
+      <div>
+      비밀번호 찾기 이메일 화면 
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/b1779a46-f212-4baf-86cd-518ac20d0088">
+      </div>
+      </details>
 
 
 ---
 
-### 쪽지 기능 
+## 메세지 기능 
+
+
+<p align="center"> 
+<img width="605" alt="메시지" height="400" src="https://github.com/lsi3131/seta/assets/160498370/183c71f9-4f55-4b81-9e21-03b2d37b345d">
+</p>
+
+
+
+1. 받은 메시지
+
+      다른 user가 보낸 메시지를 확인 가능하며 내가 보낸 메시지에 답장인 경우 답장으로 표시됩니다.
+      
+      선택시에는 선택삭제 버튼이 보이며 삭제가 가능합니다.
+
+      <details>
+      <summary>이미지</summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/7a006f90-f2fa-446d-bb42-716e596c291a">
+      </div>
+      </details>
+
+
+2. 보낸 메세지
+
+      내가 보낸 메세지를 확인이 가능하며 수신상태를 통해 상대방이 읽었는지를 확인이 가능합니다
+      
+      선택시에는 선택삭제 버튼이 보이며 삭제가 가능합니다
+      
+      <details>
+      <summary>이미지</summary>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/4a80ea74-9219-4b4e-ab0b-27c5adb6f1a6">
+      </div>
+      </details>
+
+
+3. 메세지 작성
+
+      보내고 싶은 username을 입력하여 메세지를 작성이 가능합니다
+      
+      존재하지 않는 계정이라면 안내 메세지와 보내기가 불 가능합니다
+      
+      <details>
+      <summary>이미지</summary>
+      <div>
+      메세지 작성
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/d4b5032a-47a0-41bb-a3e8-c5d1ddf31d83">
+      <div>
+      존제하지 않는 계정
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/030f4ef0-e8e4-416e-bf36-abf8775362ea">
+      </div>
+      </details>
+
+4. 메세지 디테일
+
+      받은 메세지는 제목과 보낸사람 내용이 확인 가능하며 답장하기 버튼이 생성됩니다.
+      
+      답장을 받은 메세지일 경우 전에 보낸 내용이 그대로 출력 됩니다
+      
+      <details>
+      <summary>이미지</summary>
+      <div>
+      기본 메세지
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/5dd8a071-88d7-43e6-90bb-fdf14e9ab583">
+      <div>
+      답장 받은 메세지
+      </div>
+      <img width="1233" alt="스크린샷 2024-06-08 16 23 12" src="https://github.com/lsi3131/seta/assets/160498370/8658318b-0cc4-48f5-8e4c-e28af1ddc4a0">
+      </div>
+      </details>
+
+
+
+
 
 ---
 
-### 채팅 기능
+## 채팅 기능
+
+
+<p align="center"> 
+<img width="918" alt="채팅" height="400" src="https://github.com/lsi3131/seta/assets/160498370/2f3d5170-78bd-4798-84c2-98d637c8d068">
+</p>
+
+
+
+---
 
 <br>
 
 ## 기술 스택
+
+<p align="center"> 
+<img width="762" alt="기술 스택" src="https://github.com/lsi3131/seta/assets/160498370/5b6c3009-1f23-4994-be27-36b0b3174858">
+</p>
+
+
 <div align="center">
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=figma&logoColor=white">
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">

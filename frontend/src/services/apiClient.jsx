@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
+console.log(baseURL)
 // Axios 인스턴스 생성
 const apiClient = axios.create({
     baseURL: baseURL,
