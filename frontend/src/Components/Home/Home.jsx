@@ -25,10 +25,12 @@ const Home = () => {
             const cookies = new Cookies();
             const access = cookies.get('access');
             const refresh = cookies.get('refresh');
-
+            
             if (access && refresh) {
                 localStorage.setItem('accessToken', access);
                 localStorage.setItem('refreshToken', refresh);
+                cookies.remove('access')
+                cookies.remove('refresh')
             }
         };
         setTokensFromCookies();
