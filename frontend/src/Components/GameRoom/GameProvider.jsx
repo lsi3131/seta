@@ -65,7 +65,7 @@ export const GameProvider = ({children, roomId, initPassword}) => {
         }
 
         socket.onmessage = (event) => {
-            console.log(event.data)
+            console.log('on message', event.data)
             const message = JSON.parse(event.data)
             if (message.message_type === 'enter' || message.message_type === 'leave') {
                 setMembers(message.members)

@@ -56,6 +56,7 @@ const GameScript = () => {
             const newMessage = JSON.parse(event.data)
             const handleMessageList = ['ai_message']
             const messageType = newMessage['message_type']
+            console.log('game script', newMessage)
             if (handleMessageList.includes(messageType)) {
                 setMessages((prevMessages) => [...prevMessages, newMessage])
             }

@@ -60,8 +60,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     print('챗봇이 설정되지 않았습니다.')
                     return
 
-                print(f'send message={message}')
                 ai_message = await self.ai_chat_bot.response(message)
+                print(f'send message={message}, ai response message={ai_message}')
 
                 await self.channel_layer.group_send(
                     self.room_group_name,
