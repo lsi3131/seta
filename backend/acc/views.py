@@ -256,9 +256,7 @@ class MbtiAPIView(APIView):
         user = request.user
         mbti_type = data.get('mbti_type', None)
 
-        print(mbti_type)
         if not mbti_type:
-            print(1) 
             return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         mbti = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
@@ -479,9 +477,12 @@ def social_callback(request):
         )
         user_info = user_info_req.json()
         username = user_info.get("login")
+        print(username)
         user_id = str(user_info.get("id"))
+        print(user_id)
         email = user_info.get('email')
         provider = "github"
+
 
     try:
         user = User.objects.get(username=(f'{username}{user_id[:4]}'))
@@ -504,11 +505,9 @@ def social_callback(request):
     except User.DoesNotExist:
 
         if email:
-            user, created = User.objects.get_or_create(
-                email=email, defaults={'username': (f'{username}{user_id[:4]}')})
-        else:
-            user, created = User.objects.get_or_create(
-                defaults={'username': (f'{username}{user_id[:4]}')})
+            user, created = User.objects.get_or_create(defaults={'username': (f'{username}{user_id[:4]}')},email=email)
+        else: 
+            user, created = User.objects.get_or_create(email=username, defaults={'username': (f'{username}{user_id[:4]}')})
         if created:
             user.set_unusable_password()
             user.save()
@@ -526,8 +525,8 @@ def social_callback(request):
         redirect_url = "http://localhost:3000/"
         respons = HttpResponseRedirect(redirect_url)
 
-        respons.set_cookie('access', str(access), max_age=5)
-        respons.set_cookie('refresh', str(refresh), max_age=5)
+        respons.set_cookie('access', str(access), max_age=20)
+        respons.set_cookie('refresh', str(refresh), max_age=20)
 
         return respons
 
@@ -598,7 +597,7 @@ def kakao_callback(request):
 
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
-        user, created = User.objects.get_or_create(
+        user, created = User.objects.get_or_create(email=username,
             defaults={'username': (f'{username}{user_id[:4]}')})
         if created:
             user.set_unusable_password()
