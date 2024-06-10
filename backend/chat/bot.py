@@ -13,10 +13,27 @@ models = {
 
 def system_sub_instructions(member_count):
     text = f"""
-    파티는 {member_count}명으로 제작하고 각 상황별로 주사위를 굴려.  
-    주사위는 6면 주사위를 사용해
+    파티는 4명으로 제작.
+    주사위는 6면 주사위를 사용
+    각 상황별로 주사위를 굴리기.  
     선택지는 3가지를 생성해주고, 선택에 따라 다음 상황이 결정.
+    시작시 파티원의 스테이터스를 배분
+    
+    파티원의 스테이터스는 다음과 같다.
+    [힘:<>,지력:<>,매력:<>]
+    항상 마지막줄에 모든 파티원 스테이터스를 위 포맷으로 반환
+    선택에 따라 모험가의 스탯이 증가 또는 감소. 
+
+    각각의 선택은 주사위를 던진값과 관련 스테이터스 통해 계산.
     """
+    return text
+
+
+def system_sub_description(description):
+    text = f'''
+    세계관은 다음과 같다.\n'
+    {description}
+    '''
     return text
 
 
@@ -36,7 +53,7 @@ class AIChatBot(object):
             },
             {
                 "role": "system",
-                "content": description,
+                "content": system_sub_description(description),
             }
         ]
 

@@ -1,6 +1,8 @@
 import './App.css'
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Cursor from './Components/Cursor/Cursor'
 import NavBar from './Components/NavBar/NavBar'
 import Board from './Components/Board/Board'

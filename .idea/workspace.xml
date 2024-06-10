@@ -4,27 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat TRPG 채팅 게임 구현&#10;* 1인 TRPG 채팅 게임 기능 구현">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/consumers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/game_consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/routing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightbottom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChatRightbottom.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/ChattingRoom/ChattingRoom.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/Canvas.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/Canvas.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameChat.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameChat.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameIntroduce.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameIntroduce.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingProvider.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameWebSocketProvider.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +47,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "feat/chatbot",
-    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/frontend/src/Components/GameRoom",
+    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/frontend/src/Assets/images/game",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -75,11 +60,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/Assets/images/game" />
       <recent name="$PROJECT_DIR$/frontend/src/Components/GameRoom" />
       <recent name="$PROJECT_DIR$/backend/chat" />
       <recent name="$PROJECT_DIR$/frontend/src/Components/ChattingRoom" />
       <recent name="$PROJECT_DIR$/frontend" />
-      <recent name="$PROJECT_DIR$/backend" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/frontend/src/Components/GameRoom" />
@@ -152,7 +137,23 @@
       <option name="project" value="LOCAL" />
       <updated>1717909414562</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat TRPG 채팅 게임 구현&#10;* GameProvider를 사용한 중복코드 최소화&#10;* 채팅에서 ai 기능 제거&#10;* 변수명 리팩토링">
+      <option name="closed" value="true" />
+      <created>1717921109027</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1717921109027</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat TRPG 채팅 게임 구현&#10;* 1인 TRPG 채팅 게임 기능 구현">
+      <option name="closed" value="true" />
+      <created>1717943375319</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1717943375319</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,6 +166,8 @@
     <MESSAGE value="merge from main" />
     <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* UI/UX 스켈레톤 구현" />
     <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현" />
+    <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* GameProvider를 사용한 중복코드 최소화&#10;* 채팅에서 ai 기능 제거&#10;* 변수명 리팩토링" />
+    <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* 1인 TRPG 채팅 게임 기능 구현" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat TRPG 채팅 게임 구현&#10;* 1인 TRPG 채팅 게임 기능 구현" />
   </component>
 </project>
