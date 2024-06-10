@@ -62,12 +62,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                 ai_message = await self.ai_chat_bot.response(message)
                 print(f'send message={message}, ai response message={ai_message}')
+                json_data = json.loads(ai_message)
+                print('json data', json_data)
+
 
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
                         'type': 'chat_message',
-                        'message': ai_message,
+                        'message': json_data,
                         'username': 'AI',
                         'message_type': 'ai_message',
                     }
