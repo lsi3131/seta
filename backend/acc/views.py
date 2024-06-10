@@ -256,7 +256,9 @@ class MbtiAPIView(APIView):
         user = request.user
         mbti_type = data.get('mbti_type', None)
 
+        print(mbti_type)
         if not mbti_type:
+            print(1) 
             return Response({"error": "잘못된 전송 포맷입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         mbti = Mbti.objects.filter(mbti_type__icontains=mbti_type).first()
@@ -482,7 +484,7 @@ def social_callback(request):
         provider = "github"
 
     try:
-        user = User.objects.get(username=(f'{username}#{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
         social_user = SocialAccount.objects.get(user=user)
 
         if not social_user.provider:
@@ -503,10 +505,10 @@ def social_callback(request):
 
         if email:
             user, created = User.objects.get_or_create(
-                email=email, defaults={'username': (f'{username}#{user_id[:4]}')})
+                email=email, defaults={'username': (f'{username}{user_id[:4]}')})
         else:
             user, created = User.objects.get_or_create(
-                defaults={'username': (f'{username}#{user_id[:4]}')})
+                defaults={'username': (f'{username}{user_id[:4]}')})
         if created:
             user.set_unusable_password()
             user.save()
@@ -567,7 +569,7 @@ def kakao_callback(request):
     user_id = str(profile_json.get("id"))
 
     try:
-        user = User.objects.get(username=(f'{username}#{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
@@ -597,7 +599,7 @@ def kakao_callback(request):
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         user, created = User.objects.get_or_create(
-            defaults={'username': (f'{username}#{user_id[:4]}')})
+            defaults={'username': (f'{username}{user_id[:4]}')})
         if created:
             user.set_unusable_password()
             user.save()
