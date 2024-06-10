@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly,AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from post.views import serialize_post
 from .util import AccountValidator
 from .models import Follow, User, Mbti
@@ -60,21 +60,20 @@ class AccountAPIView(APIView):
                 return validator.get_response_data()
 
         get_user_model().objects.create_user(
-            username=username, password=password, email=email, introduce=introduce, is_active = False)
-
+            username=username, password=password, email=email, introduce=introduce, is_active=False)
 
         subject = ''' '세타' 이메일 인증'''
         message = render_to_string('account/activate_email.html', {'username': username,
-            "email":email})
-        
+                                                                   "email": email})
+
         is_active_email = EmailMessage(
             subject,
             message,
-            to = [email]
-            )
+            to=[email]
+        )
         is_active_email.content_subtype = "html"
         is_active_email.send()
-        
+
         return Response({
             "username": username,
             "password": password,
@@ -92,7 +91,6 @@ class AccountAPIView(APIView):
         if data.get('email') and not validator.validate('email', {'data': email}):
             return validator.get_response_data()
 
-
         user.email = email
         user.introduce = introduce
         user.save()
@@ -104,7 +102,7 @@ class AccountAPIView(APIView):
     def delete(self, request):
         user = request.user
         print(request.data)
-        if request.data.get('password') and check_password(request.data.get('password'), user.password):       
+        if request.data.get('password') and check_password(request.data.get('password'), user.password):
             user.delete()
             return Response({"message": f"계정이 삭제되었습니다"}, status=status.HTTP_204_NO_CONTENT)
         return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
@@ -197,15 +195,18 @@ def mbtiRank(request, username):
     following_mbti_ranking = {}
     for follower in user.followers.all():
         if follower.mbti:
-            follower_mbti_ranking[follower.mbti.mbti_type] = follower_mbti_ranking.get(follower.mbti.mbti_type, 0) + 1
+            follower_mbti_ranking[follower.mbti.mbti_type] = follower_mbti_ranking.get(
+                follower.mbti.mbti_type, 0) + 1
 
     for following in user.following.all():
         if following.mbti:
             following_mbti_ranking[following.mbti.mbti_type] = following_mbti_ranking.get(following.mbti.mbti_type,
                                                                                           0) + 1
 
-    following_mbti_ranking = sorted(following_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
-    follower_mbti_ranking = sorted(follower_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
+    following_mbti_ranking = sorted(
+        following_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
+    follower_mbti_ranking = sorted(
+        follower_mbti_ranking.items(), key=lambda x: x[1], reverse=True)[:3]
 
     return Response({
         "following": following_mbti_ranking,
@@ -313,121 +314,114 @@ def Myposts(request, username):
         'results': response_posts,
     }
 
-
     if str(request.user) == username:
         paginator_like = Paginator(like_posts, per_page)
         if page_number:
             like_posts = paginator_like.get_page(page_number)
-        response_like_posts = [serialize_post(post) for post in like_posts ]
+        response_like_posts = [serialize_post(post) for post in like_posts]
 
         paginated_like_posts = {
             'total_page': paginator_like.num_pages,
             "per_page": per_page,
             'results': response_like_posts,
         }
-        return Response({"paginated_posts":paginated_posts,
-                        "paginated_like_posts":paginated_like_posts}, 
+        return Response({"paginated_posts": paginated_posts,
+                        "paginated_like_posts": paginated_like_posts},
                         status=status.HTTP_200_OK)
-    
-    return Response({"paginated_posts":paginated_posts}
-                    ,status=status.HTTP_200_OK)
 
-
+    return Response({"paginated_posts": paginated_posts}, status=status.HTTP_200_OK)
 
 
 class UserActivateAPIView(APIView):
 
     def get(self, request, email):
         user = get_object_or_404(User, email=email)
-        
+
         if user.is_active:
             return redirect("http://localhost:3000/login")
         else:
             user.is_active = True
             user.save()
             return redirect("http://localhost:3000/login")
-        
 
 
 # 아이디 찾기
 class FindNameAPIView(APIView):
     def get(self, request, email):
         username = get_object_or_404(User, email=email)
-        
-        
+
         subject = ''' '세타' 아이디 찾기'''
         message = render_to_string('account/find_username.html', {'username': username,
-            "email":email})
-        
+                                                                  "email": email})
+
         find_uaername_email = EmailMessage(
             subject,
             message,
-            to = [email]
-            )
+            to=[email]
+        )
         find_uaername_email.content_subtype = "html"
         find_uaername_email.send()
 
-        return Response({"message":"이메일을 확인하세요"}, status=status.HTTP_200_OK)
-    
+        return Response({"message": "이메일을 확인하세요"}, status=status.HTTP_200_OK)
 
 
 # 비밀번호 찾기
 class FindPasswordAPIView(APIView):
     def put(self, request, email, username):
-        user = get_object_or_404(User,email=email, username=username)
+        user = get_object_or_404(User, email=email, username=username)
 
         allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
-        random_password = User.objects.make_random_password(length=16, allowed_chars=allowed_chars)
+        random_password = User.objects.make_random_password(
+            length=16, allowed_chars=allowed_chars)
 
         user.password = make_password(random_password)
         user.save()
 
         subject = ''' '세타' 임시 비밀번호'''
         message = render_to_string('account/find_password.html', {'username': username,
-            "email":email,
-            "password":random_password})
-        
+                                                                  "email": email,
+                                                                  "password": random_password})
+
         find_password_email = EmailMessage(
             subject,
             message,
-            to = [email]
-            )
+            to=[email]
+        )
         find_password_email.content_subtype = "html"
         find_password_email.send()
 
-        return Response({"message":"이메일을 확인하세요"},status=status.HTTP_200_OK)
-    
+        return Response({"message": "이메일을 확인하세요"}, status=status.HTTP_200_OK)
 
-    
 
 # social login
-
 BASE_URL = 'http://localhost:3000/'
 SOCIAL_CALLBACK_URI = "http://localhost:8000/api/accounts/social/callback/"
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def social_login(request):
     provider = request.GET.get('provider')
-    
+
     if provider == 'google':
         scope = "https://www.googleapis.com/auth/userinfo.email"
         client_id = getattr(settings, "GOOGLE_CLIENT_ID")
-        redirect_url = (f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={SOCIAL_CALLBACK_URI}&scope={scope}")
+        redirect_url = (
+            f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={SOCIAL_CALLBACK_URI}&scope={scope}")
         return redirect(redirect_url)
 
     if provider == 'github':
         client_id = "Iv23ctbQsiHpb6Z1RA14"
-        redirect_url = (f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
+        redirect_url = (
+            f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
         return redirect(redirect_url)
-    
 
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def social_callback(request):
     code = request.GET.get('code')
-    scope = request.GET.get('scope') #google인 경우에만 존제
+    scope = request.GET.get('scope')  # google인 경우에만 존제
 
     if scope:
         client_id = getattr(settings, "GOOGLE_CLIENT_ID")
@@ -442,51 +436,52 @@ def social_callback(request):
                 "grant_type": "authorization_code",
                 "redirect_uri": SOCIAL_CALLBACK_URI,
                 "state": state,
-                
+
             },
         )
 
         token_req_json = token_req.json()
         if not token_req_json:
             return Response({"err_msg": "구글 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         access_token = token_req_json.get('access_token')
 
-        user_info_req = requests.get(f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
+        user_info_req = requests.get(
+            f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
         user_info = user_info_req.json()
-        user_id =user_info.get("user_id")
+        user_id = user_info.get("user_id")
         email = user_info.get('email')
         username = email.split('@')[0]
-        provider="google"
+        provider = "google"
 
     if not scope:
         client_id = getattr(settings, "GITHUB_CLIENT_ID")
         client_secret = getattr(settings, "GITHUB_CLIENT_SECRET")
         token_req = requests.post(
-                f'https://github.com/login/oauth/access_token',
-                data={
-                    'client_id': client_id,
-                    'client_secret': client_secret,
-                    'code': code
-                },
-                headers={'Accept': 'application/json'} 
-            )
+            f'https://github.com/login/oauth/access_token',
+            data={
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'code': code
+            },
+            headers={'Accept': 'application/json'}
+        )
         token_req_json = token_req.json()
         access_token = token_req_json.get('access_token')
         user_info_req = requests.get(
-                'https://api.github.com/user',
-                headers={
-                    'Authorization': f'token {access_token}',
-                    'Accept': 'application/json'
-                }
-            )
+            'https://api.github.com/user',
+            headers={
+                'Authorization': f'token {access_token}',
+                'Accept': 'application/json'
+            }
+        )
         user_info = user_info_req.json()
         username = user_info.get("login")
         user_id = str(user_info.get("id"))
         email = user_info.get('email')
-        provider="github"
+        provider = "github"
 
-    try: 
+    try:
         user = User.objects.get(username=(f'{username}#{user_id[:4]}'))
         social_user = SocialAccount.objects.get(user=user)
 
@@ -495,51 +490,53 @@ def social_callback(request):
 
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
-        
+
         redirect_url = "http://localhost:3000/"
         respons = HttpResponseRedirect(redirect_url)
-        
-        respons.set_cookie('access', str(access),max_age=5)
-        respons.set_cookie('refresh', str(refresh),max_age=5)
+
+        respons.set_cookie('access', str(access), max_age=5)
+        respons.set_cookie('refresh', str(refresh), max_age=5)
 
         return respons
 
     except User.DoesNotExist:
-        
+
         if email:
-            user, created = User.objects.get_or_create(email=email, defaults={'username': (f'{username}#{user_id[:4]}')})
+            user, created = User.objects.get_or_create(
+                email=email, defaults={'username': (f'{username}#{user_id[:4]}')})
         else:
-            user, created = User.objects.get_or_create(defaults={'username': (f'{username}#{user_id[:4]}')})
+            user, created = User.objects.get_or_create(
+                defaults={'username': (f'{username}#{user_id[:4]}')})
         if created:
             user.set_unusable_password()
             user.save()
 
         if provider == 'google':
-            SocialAccount.objects.create(user=user, provider="google", uid=user_id)
+            SocialAccount.objects.create(
+                user=user, provider="google", uid=user_id)
         elif provider == 'github':
-            SocialAccount.objects.create(user=user, provider="github", uid=user_id)
-        
-        
+            SocialAccount.objects.create(
+                user=user, provider="github", uid=user_id)
+
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
 
         redirect_url = "http://localhost:3000/"
         respons = HttpResponseRedirect(redirect_url)
-        
-        respons.set_cookie('access', str(access),max_age=5)
-        respons.set_cookie('refresh', str(refresh),max_age=5)
-    
+
+        respons.set_cookie('access', str(access), max_age=5)
+        respons.set_cookie('refresh', str(refresh), max_age=5)
+
         return respons
-    
+
     except SocialAccount.DoesNotExist:
         return Response({'err_msg': '일반 회원으로 가입된 email입니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
-      
-      
-#카카오 로그인
+
+# 카카오 로그인
 BASE_URL = "http://localhost:3000"
 
-KAKAO_CALLBACK_URI = "http://localhost:3000/login"  # 프론트 로그인 URI 입력
+KAKAO_CALLBACK_URI = "http://localhost:8000/api/accounts/kakao/callback/"  # 프론트 로그인 URI 입력
 
 
 @api_view(["GET"])
@@ -548,9 +545,6 @@ def kakao_callback(request):
     rest_api_key = settings.KAKAO_REST_API_KEY
     code = request.GET.get("code")
     redirect_uri = KAKAO_CALLBACK_URI
-    """
-    Access Token Request
-    """
     token_req = requests.get(
         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}"
     )
@@ -559,9 +553,6 @@ def kakao_callback(request):
     if error is not None:
         raise JSONDecodeError(error)
     access_token = token_req_json.get("access_token")
-    """
-    Email Request
-    """
     profile_request = requests.post(
         "https://kapi.kakao.com/v2/user/me",
         headers={"Authorization": f"Bearer {access_token}"},
@@ -571,20 +562,12 @@ def kakao_callback(request):
     if error is not None:
         raise JSONDecodeError(error)
     kakao_account = profile_json.get("kakao_account")
-    """
-    kakao_account에서 이메일 외에
-    카카오톡 프로필 이미지, 배경 이미지 url 가져올 수 있음
-    print(kakao_account) 참고
-    """
-    print(kakao_account)
     profile = kakao_account.get("profile")
     username = profile.get("nickname")
-    """
-    Signup or Signin Request
-    """
+    user_id = str(profile_json.get("id"))
 
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(username=(f'{username}#{user_id[:4]}'))
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
@@ -598,40 +581,34 @@ def kakao_callback(request):
                 {"err_msg": "no matching social type"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
 
         # 기존에 kakao로 가입된 유저
-        data = {"access_token": access_token, "code": code}
-        accept = requests.post("http://127.0.0.1:8000/api/accounts/kakao/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        refresh_token = accept.headers['Set-Cookie']
-
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
-        print(access)
-        return JsonResponse({"access_token" : str(access), "refresh_token" : str(refresh)})
-    
+
+        redirect_url = "http://localhost:3000/"
+        respons = HttpResponseRedirect(redirect_url)
+
+        respons.set_cookie('access', str(access), max_age=5)
+        respons.set_cookie('refresh', str(refresh), max_age=5)
+
+        return respons
+
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
-        data = {"access_token": access_token, "code": code}
-        accept = requests.post("http://127.0.0.1:8000/api/accounts/kakao/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({"err_msg": "failed to signup"}, status=accept_status)
-        # user의 pk, email, first name, last name과 Access Token, Refresh token 가져옴
+        user, created = User.objects.get_or_create(
+            defaults={'username': (f'{username}#{user_id[:4]}')})
+        if created:
+            user.set_unusable_password()
+            user.save()
 
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        refresh_token = accept.headers['Set-Cookie']
+        SocialAccount.objects.create(user=user, provider="kakao", uid=user_id)
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
-        return JsonResponse({"access_token" : str(access), "refresh_token" : str(refresh)})
+        redirect_url = "http://localhost:3000/"
+        respons = HttpResponseRedirect(redirect_url)
 
-class KakaoLogin(SocialLoginView):
-    adapter_class = kakao_view.KakaoOAuth2Adapter
-    client_class = OAuth2Client
-    callback_url = KAKAO_CALLBACK_URI
+        respons.set_cookie('access', str(access), max_age=5)
+        respons.set_cookie('refresh', str(refresh), max_age=5)
+
+        return respons

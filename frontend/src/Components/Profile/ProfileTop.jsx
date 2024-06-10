@@ -17,6 +17,8 @@ const ProfileTop = ({ user, onFollowUpdate }) => {
     }, [user])
 
     const isMyProfile = () => {
+
+        console.log(user.username)
         if (currentUser === null) {
             return false
         }
