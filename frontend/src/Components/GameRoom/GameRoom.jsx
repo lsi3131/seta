@@ -6,6 +6,7 @@ import GameChat from "./GameChat";
 import {GameProvider, useGameContext} from "./GameProvider";
 import GameCenter from "./GameCenter";
 import GameSettingModal from "./GameSettingModal";
+import ReactLoading from 'react-loading';
 
 const GameRoom = () => {
     const location = useLocation()
@@ -20,7 +21,11 @@ const GameRoom = () => {
 }
 
 const GameRoomContainer = () => {
-    const {isLoading, members, socket, host, showSettingModal} = useGameContext()
+    const {isLoading, isAISubmit, members, socket, host, showSettingModal} = useGameContext()
+
+    useEffect(() => {
+        console.log('is submit', isAISubmit)
+    }, [isAISubmit]);
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -28,6 +33,11 @@ const GameRoomContainer = () => {
 
     return (
         <div>
+            {isAISubmit && (
+                <div className={style.loadingContainer}>
+                    <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>
+                </div>
+                )}
             {showSettingModal && (<GameSettingModal/>)}
             <div className={style.Room_vertical}>
                 <div className={style.Room_container}>

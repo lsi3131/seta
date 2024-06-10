@@ -1,6 +1,8 @@
 .container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .userList {
@@ -9,6 +11,7 @@
 
 .sliderContainer {
     width: 800px;
+    height: 80vh;
     margin: 0 auto;
     overflow: auto; /* Enable scrolling when content exceeds height */
 }

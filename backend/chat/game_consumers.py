@@ -60,21 +60,45 @@ class GameConsumer(AsyncWebsocketConsumer):
                     print('챗봇이 설정되지 않았습니다.')
                     return
 
-                ai_message = await self.ai_chat_bot.response(message)
-                print(f'send message={message}, ai response message={ai_message}')
-                json_data = json.loads(ai_message)
-                print('json data', json_data)
+                if message in ('게임시작', '다시시작'):
+                    ai_message = await self.ai_chat_bot.response(message)
+                    print(f'send message={message}, ai response message={ai_message}')
+                    json_data = json.loads(ai_message)
 
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'chat_message',
+                            'message': json_data,
+                            'username': 'AI',
+                            'message_type': 'ai_message_start',
+                        }
+                    )
+                elif int(message) in range(1, 4):
+                    ai_message = await self.ai_chat_bot.response(message)
+                    print(f'send message={message}, ai response message={ai_message}')
+                    json_data = json.loads(ai_message)
 
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    {
-                        'type': 'chat_message',
-                        'message': json_data,
-                        'username': 'AI',
-                        'message_type': 'ai_message',
-                    }
-                )
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'chat_message',
+                            'message': json_data,
+                            'username': 'AI',
+                            'message_type': 'ai_message',
+                        }
+                    )
+                else:
+                    print('invalid message')
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'chat_message',
+                            'message': '',
+                            'username': 'AI',
+                            'message_type': 'ai_message_error',
+                        }
+                    )
 
         if message_type == 'setting':
             print(data)
@@ -91,7 +115,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'message': f'{username}님이 입장하셨습니다.',
                     'username': username,
                     'message_type': message_type,
-
                 }
             )
 

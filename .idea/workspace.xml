@@ -4,19 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat/chatbot &#10;* AI 스크립트 json형태로 반환되도록 명시적 적용">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Assets/images/game/trpg_cha.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Assets/images/game/trpg_int.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Assets/images/game/trpg_str.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/TRPGGameUser.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/TRPGGameUser.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/test.json" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat/chatbot &#10;* AI 스크립트 json 변환하여 반환&#10;* 사용자 스탯이 나타나도록 기능 적용">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/game_consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" afterDir="false" />
     </list>
@@ -178,7 +173,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718005855000</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="feat/chatbot &#10;* AI 스크립트 json 변환하여 반환&#10;* 사용자 스탯이 나타나도록 기능 적용">
+      <option name="closed" value="true" />
+      <created>1718014250766</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1718014250766</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,6 +198,7 @@
     <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* 1인 TRPG 채팅 게임 기능 구현" />
     <MESSAGE value="hot fix&#10;* 채팅방 입장되지 않는 문제 수정" />
     <MESSAGE value="feat/chatbot &#10;* AI 스크립트 json형태로 반환되도록 명시적 적용" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat/chatbot &#10;* AI 스크립트 json형태로 반환되도록 명시적 적용" />
+    <MESSAGE value="feat/chatbot &#10;* AI 스크립트 json 변환하여 반환&#10;* 사용자 스탯이 나타나도록 기능 적용" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat/chatbot &#10;* AI 스크립트 json 변환하여 반환&#10;* 사용자 스탯이 나타나도록 기능 적용" />
   </component>
 </project>
