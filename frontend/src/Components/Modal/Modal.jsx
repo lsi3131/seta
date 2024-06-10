@@ -6,7 +6,7 @@ const Modal = ({children, ModalStyles}) => {
 
 {/*
     모달 open, close 방법
-    const [ModalOpen, setModalOpen] = useState(false)
+    const [isModalOpen, setModalOpen] = useState(false)
 
     const isModalOppen = () =>{
         setModalOpen(true)
@@ -20,13 +20,9 @@ const Modal = ({children, ModalStyles}) => {
 
     <button onClick={isModalOppen}>버튼</button>
 
-    {MoalOpen &&(
-        <Moal
-        ModalStyles={modal의 vertical seiz 변경 가능}
-        >
-        
-        </Moal>
-    )}
+    {isModalOpen &&(<Modal ModalStyles={{width: "300px", height: "300px"}}>
+
+    </Modal>)}
 */}
 
     return (
