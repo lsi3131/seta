@@ -1,5 +1,5 @@
 import json
-import collections
+import threading
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import *
@@ -12,8 +12,37 @@ User = get_user_model()
 room_messages = defaultdict(list)
 room_ai_chat_bots = {}
 voted_user_choice = {}
+room_countdown = {}
 
 class GameConsumer(AsyncWebsocketConsumer):
+    def decrease_countdown(self):
+        if room_countdown[self.room_name] == 0:
+            # 강제 이벤트 발생
+            return
+
+        room_countdown[self.room_name] -= 1
+
+        self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'username': username,
+                'message_type': message_type,
+            }
+        )
+
+        print("Task executed!")
+        # 다시 타이머 설정 (1초 간격으로 반복)
+        threading.Timer(1.0, self.decrease_countdown).start()
+
+    def start_countdown(self):
+        if not room_countdown[self.room_name]:
+            print('countdown is not set')
+            return
+        # 처음 타이머 시작
+        threading.Timer(1.0, self.decrease_countdown).start()
+
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
@@ -26,6 +55,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if self.room_name not in room_ai_chat_bots:
             room_ai_chat_bots[self.room_name] = None
+
+        if self.room_name not in room_countdown:
+            room_countdown[self.room_name] = None
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(

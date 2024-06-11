@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat/chatbot &#10;* 모험가 리스트 UI/UX 수정">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSetting.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/temp.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/temp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSetting.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,24 +41,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.pytest in test_json.py.executor": "Run",
-    "Python.temp.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/chatbot",
-    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/frontend/src/Components/GameRoom",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/Applications/PyCharm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.pytest in test_json.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.temp.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/chatbot&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/frontend/src/Components/GameRoom&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/PyCharm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/frontend/src/Components/GameRoom" />

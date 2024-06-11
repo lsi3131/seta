@@ -60,7 +60,11 @@ const GameScript = () => {
                 <div className={style.loadingContainer}>
                     <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>
                 </div>
-                )}
+            )}
+            <div className={style.countdown}>
+                <h3>투표까지 남은 시간 : </h3>
+                <span className="timer">{11}초</span>
+            </div>
             <div className={style.container} ref={messagesEndRef}>
                 <TRPGGameUserList users={aiParty}/>
                 <div className={style.textSlider}>
