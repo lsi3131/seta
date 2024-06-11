@@ -16,7 +16,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from post.views import serialize_post
 from .util import AccountValidator
-from .models import Follow, User, Mbti
+from .models import Follow, User, Mbti, MbtiVote
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from config.serializers import CustomTokenObtainPairSerializer
@@ -32,7 +32,7 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 import requests
 from json.decoder import JSONDecodeError
 from dj_rest_auth.registration.views import SocialLoginView
-
+from django.db.models import Count, Case, When, IntegerField
 
 validator = AccountValidator()
 User = get_user_model()
@@ -613,3 +613,39 @@ def kakao_callback(request):
         respons.set_cookie('refresh', str(refresh), max_age=5)
 
         return respons
+
+
+class AccountMbtiVoteView(APIView):
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def post(self, request, username):
+        owner = get_object_or_404(User, username=username)
+        voter = request.user
+        data = request.data
+        vote_type = data['vote_type']
+        vote_value = data['vote_value']
+
+        mbti_vote = MbtiVote.objects.filter(mbti_owner=owner, voter=voter, vote_dimension=vote_type).first()
+        if not mbti_vote:
+            MbtiVote.objects.create(mbti_owner=owner, voter=voter, vote_dimension=vote_type, vote_value=vote_value)
+
+        return Response({"message": "투표에 성공했습니다."}, status=status.HTTP_200_OK)
+
+    def get(self, request, username):
+        owner = get_object_or_404(User, username=username)
+
+        mbti_vote_counts = MbtiVote.objects.filter(mbti_owner=owner).aggregate(
+            I_count=Count(Case(When(vote_value='I', then=1), output_field=IntegerField())),
+            E_count=Count(Case(When(vote_value='E', then=1), output_field=IntegerField())),
+            N_count=Count(Case(When(vote_value='N', then=1), output_field=IntegerField())),
+            S_count=Count(Case(When(vote_value='S', then=1), output_field=IntegerField())),
+            F_count=Count(Case(When(vote_value='F', then=1), output_field=IntegerField())),
+            T_count=Count(Case(When(vote_value='T', then=1), output_field=IntegerField())),
+            P_count=Count(Case(When(vote_value='P', then=1), output_field=IntegerField())),
+            J_count=Count(Case(When(vote_value='J', then=1), output_field=IntegerField()))
+        )
+
+        print(mbti_vote_counts)
+
+        return Response(mbti_vote_counts, status=status.HTTP_200_OK)
+

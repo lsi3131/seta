@@ -25,7 +25,15 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
+class MbtiVote(models.Model):
+    voter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mbti_votes_given')
+    mbti_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mbti_votes_received')
+    vote_dimension = models.CharField(max_length=2, choices=(('IE', 'IE'), ('NS', 'NS'), ('FT', 'FT'), ('PJ', 'PJ')))
+    vote_value = models.CharField(max_length=1, choices=(('I', 'I'), ('E', 'E'), ('N', 'N'), ('S', 'S'), ('F', 'F'), ('T', 'T'), ('P', 'P'), ('J', 'J')))
+
+    class Meta:
+        unique_together = ('voter', 'mbti_owner', 'vote_dimension')
 
 class Follow(models.Model):
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following_set")
