@@ -47,7 +47,7 @@ const TextSlider = ({messages}) => {
 };
 
 const GameScript = () => {
-    const {aiMessages, aiParty, isAISubmit} = useGameContext()
+    const {aiMessages, aiParty, isAISubmit, remainVoteSecond} = useGameContext()
     const messagesEndRef = useRef(null)
 
     useEffect(() => {
@@ -61,10 +61,12 @@ const GameScript = () => {
                     <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>
                 </div>
             )}
-            <div className={style.countdown}>
-                <h3>투표까지 남은 시간 : </h3>
-                <span className="timer">{11}초</span>
-            </div>
+            {/*<div className={style.countdown}>*/}
+            {/*    <h3>투표까지 남은 시간 : </h3>*/}
+            {/*    {remainVoteSecond && (*/}
+            {/*        <span className="timer">{remainVoteSecond}초</span>*/}
+            {/*    )}*/}
+            {/*</div>*/}
             <div className={style.container} ref={messagesEndRef}>
                 <TRPGGameUserList users={aiParty}/>
                 <div className={style.textSlider}>
