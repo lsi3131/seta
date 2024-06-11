@@ -1,8 +1,10 @@
 import React from 'react';
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+
 const GoogleLoginButton = () => {
   const handleGoogleLogin = (provider) => {
-    window.location.href = `http://127.0.0.1:8000/api/accounts/social/login/?provider=${provider}`;
+    window.location.href = `${baseURL}/api/accounts/social/login/?provider=${provider}`;
   };
 
   const kakaologin = () => {
