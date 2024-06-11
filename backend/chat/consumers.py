@@ -16,7 +16,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -50,7 +49,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.save_messages(self.room_name)
 
         elif message_type == 'enter':
-            print(self.scope['user'])
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -73,6 +71,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message_type':message_type,
                 }
             )
+            await self.leave_room(self.room_name, username)
         
         elif message_type == 'host_change':
             await self.channel_layer.group_send(
@@ -147,8 +146,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         room = ChatRoom.objects.get(id=int(roomid))
 
         room.members.remove(user)
+
         if room.members.count() > 0:
-            print(5678)
             if user == room.host_user:
                 room.host_user = room.members.first()
                 room.save()
