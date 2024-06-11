@@ -27,7 +27,8 @@ const HotList = () => {
                             <div className={style.hotCategory} style={{ color: getFontColor(hot.mbti[0]) }}>
                                 {hot.category}
                             </div>
-                            <a className={style.hotTitle} href={`/detail/${hot.id}?mbti=${hot.mbti[0]}&boardMbti=${hot.mbti[0]}`}>
+                            <a className={style.hotTitle}
+                               href={`/detail/${hot.id}?mbti=${hot.mbti[0]}&boardMbti=${hot.mbti[0]}`}>
                                 {hot.title.length > 20 ? hot.title.slice(0, 20) + '...' : hot.title}
                                 <span className={style.hotComment} style={{ color: getFontColor(hot.mbti[0]) }}>
                                     [ {hot.comments} ]
