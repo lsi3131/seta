@@ -3,7 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import style from "./Board.module.css";
 import {formatDateDayBefore, getButtonColor, getFontColor} from "../../Utils/helpers";
 
-const BoardPost = ({boardMbti, post, currentPostId = null}) => {
+const BoardPost = ({boardMbti, post, filterOption, currentPostId = null}) => {
     const navigate = useNavigate()
 
     const handleMoveToPostMbti = (postMbti) => {
@@ -38,7 +38,6 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
         }
     }
 
-    console.log(post)
     return (
         <>
             <div className={style.board_post} style={getPostBackgroundStyle()}>
@@ -48,7 +47,8 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
                     </div>
                     <div className={style.board_post_title}>
                         <Link
-                            to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${boardMbti}`} style={getTitleTextStyle()}>{post.title}</Link>
+                            to={`/detail/${post.id}?mbti=${post.post_mbti}&boardMbti=${boardMbti}&category=${filterOption.filter}&order=${filterOption.order}&page=${filterOption.page}`}
+                            style={getTitleTextStyle()}>{post.title}</Link>
                         <p style={{color: getFontColor(post.post_mbti)}}>[{post.comments}]</p>
                     </div>
                     <div className={style.board_post_bottom}>
@@ -82,7 +82,7 @@ const BoardPost = ({boardMbti, post, currentPostId = null}) => {
     )
 }
 
-const BoardPostList = ({boardMbti, posts, currentPostId}) => {
+const BoardPostList = ({boardMbti, posts, currentPostId, filterOption}) => {
     useEffect(() => {
         //post 변경에 다른 값 갱신
     }, [posts])
@@ -91,17 +91,20 @@ const BoardPostList = ({boardMbti, posts, currentPostId}) => {
         <div>
             {posts.map((post, index) => (
                 <div key={index}>
-                    <BoardPost currentPostId={currentPostId} post={post} boardMbti={boardMbti}/>
+                    <BoardPost currentPostId={currentPostId} post={post} boardMbti={boardMbti} filterOption={filterOption}/>
                 </div>
             ))}
         </div>
     )
 }
 
-const BoardPostBox = ({boardMbti, posts, currentPostId}) => {
+const BoardPostBox = ({boardMbti, posts, currentPostId, filterOption}) => {
+    useEffect(() => {
+        console.log('filter open',filterOption)
+    }, [filterOption]);
     return (
         <>
-            <BoardPostList boardMbti={boardMbti} posts={posts} currentPostId={currentPostId}/>
+            <BoardPostList boardMbti={boardMbti} posts={posts} currentPostId={currentPostId} filterOption={filterOption}/>
         </>
     )
 }

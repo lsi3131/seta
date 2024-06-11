@@ -112,9 +112,7 @@ const Board = () => {
 
     const updateQuery = (newParams) => {
         const currentParams = queryString.parse(location.search);
-        console.log(currentParams)
         const updatedParams = { ...currentParams, ...newParams };
-        console.log(updatedParams)
         navigate(`?${queryString.stringify(updatedParams)}`, { replace: true });
     };
 
@@ -175,7 +173,7 @@ const Board = () => {
 
                     <div className={style.container_content}>
 
-                        <BoardPostBox boardMbti={mbti} posts={posts}/>
+                        <BoardPostBox boardMbti={mbti} posts={posts} filterOption={{ filter : filter, order : order, page : page }}/>
                         <Pagination currentPage={currentPage} totalPages={totalPage}
                                     onPageChange={handlePageChange}/>
 

@@ -17,6 +17,7 @@ import Pagination from "../Pagenation/Pagination";
 import useBoardDetailAPI from "../../api/Hooks/useBoardDetailAPI";
 import useCommentAPI from "../../api/Hooks/useCommentAPI";
 import comment from "./Comment";
+import queryString from "query-string";
 
 
 const BoardTitle = ({mbti, post, commentCount}) => {
@@ -89,6 +90,7 @@ const BoardDetail = () => {
     const navigate = useNavigate()
     const mbti = params.get('mbti')
     const boardMbti = params.get('boardMbti')
+    const { filter = '', order = 'recent', page = 1 } = queryString.parse(location.search);
 
     /* post->comment 의존성 처리를 위한 state*/
     const [commentPostId, setCommentPostId] = useState(null);
@@ -99,7 +101,7 @@ const BoardDetail = () => {
         totalPage,
         currentPage,
         handleGetPostListPage,
-    } = useBoardAPI(boardMbti);
+    } = useBoardAPI(boardMbti, filter, order, page);
 
     const {
         isLoading: isBoardDetailLoading,
@@ -197,7 +199,7 @@ const BoardDetail = () => {
             <div className={style.elevated_component}>
                 <div className={style.board_list_container}>
                     <div className={style.board_list_bottom_container}>
-                        <BoardPostBox boardMbti={boardMbti} posts={posts} currentPostId={postId}/>
+                        <BoardPostBox boardMbti={boardMbti} posts={posts} currentPostId={postId} filterOption={{ filter : filter, order : order, page : page }}/>
                         <Pagination currentPage={currentPage} totalPages={totalPage}
                                     onPageChange={handleGetPostListPage}/>
                     </div>
