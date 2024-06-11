@@ -59,7 +59,9 @@ const ChatRightBottom = ({ members, socket }) => {
 
         // 현재 사용자가 방의 멤버가 아닌 경우 검사
         if (!members.includes(currentUser.username)) {
-            alert('이 채팅방의 멤버가 아닙니다. 다시 입장해주세요.')
+            if (window.confirm('이 채팅방의 멤버가 아닙니다. 채팅방 목록으로 돌아가시겠습니까?')) {
+                window.location.href = '/chat' // 채팅방 목록으로 이동하는 URL을 여기에 입력하세요
+            }
             return
         }
 

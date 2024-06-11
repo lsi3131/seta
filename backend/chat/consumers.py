@@ -50,6 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.save_messages(self.room_name)
 
         elif message_type == 'enter':
+            print(self.scope['user'])
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {

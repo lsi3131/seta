@@ -127,7 +127,6 @@
     cursor: pointer;
 }
 
-
 .messages {
     display: flex;
     flex-direction: column;
@@ -215,7 +214,7 @@
     margin-top: 10px;
 }
 
-.chatMembers:hover {
+a.chatMembers:hover {
     cursor: pointer;
     opacity: 0.4;
 }
@@ -267,6 +266,19 @@
     background-color: #ddd;
 }
 
+.member_modal a {
+    text-decoration: none;
+    color: black;
+}
+
+.member_modal a:hover {
+    color: blue;
+    font-weight: bold;
+}
+.member_modal_menu_item:hover {
+    color: blue;
+    font-weight: bold;
+}
 @keyframes animatetop {
     from {
         top: -300px;
