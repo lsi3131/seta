@@ -32,8 +32,8 @@ const GameCenter = () => {
                         </>
                     ) : (
                         <>
-                            <div>
-                                <h3>방장의 방 생성을 기다리세요...</h3>
+                            <div className={style.waitForCreate}>
+                                <h3>방장이 방을 생성중입니다...</h3>
                             </div>
                         </>
                     )}

@@ -91,6 +91,7 @@ def system_sub_instructions(member_count, user_description):
 
 게임을 즐겨주셔서 감사합니다.", "party": [{"name":"레오나", "str":12, "int":12, "cha":10},{"name":"에릭", "str":10, "int":13, "cha":12}],"end": 1}
     '''
+    print(text)
     return text
 
 

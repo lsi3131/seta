@@ -8,7 +8,7 @@ const TRPGGameUserList = ({users}) => {
     return (
         <div className={style.userListContainer}>
             <div className={style.userListTitle}>
-                <h2>모험가 리스트</h2>
+                <h2>유저</h2>
             </div>
             <div className={style.userList}>
                 {users.map((user, index) => (
