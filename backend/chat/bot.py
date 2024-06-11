@@ -71,6 +71,7 @@ class AIChatBot(object):
     def __init__(self, title, description, member_count):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         self.title = title
+        self.member_count = member_count
         self.messages = [
             {
                 "role": "system",
