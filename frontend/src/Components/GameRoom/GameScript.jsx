@@ -2,10 +2,11 @@ import React, {useState, useRef, useEffect, useContext} from "react";
 import Slider from 'react-slick';
 import style from "./GameScript.module.css";
 import {UserContext} from "../../userContext";
-import { useGameContext} from "./GameProvider";
+import {useGameContext} from "./GameProvider";
+import TRPGGameUser from "./TRPGGameUser";
+import ReactLoading from "react-loading";
 
-
-const TextSlider = ({ messages }) => {
+const TextSlider = ({messages}) => {
     const settings = {
         dots: true,
         infinite: true,
@@ -18,7 +19,9 @@ const TextSlider = ({ messages }) => {
 
     useEffect(() => {
         if (sliderRef.current) {
-            sliderRef.current.slickGoTo(messages.length - 1);
+            if (messages.length > 0) {
+                sliderRef.current.slickGoTo(messages.length);
+            }
         }
     }, [messages.length]);
 
@@ -26,12 +29,17 @@ const TextSlider = ({ messages }) => {
         console.log('current message!!', messages)
     }, [messages]);
 
+    const getScript = (message) => {
+        return message['script']
+    }
+
     return (
-        <div style={{ width: '800px', margin: '0 auto' }}>
+        <div className={style.sliderContainer}>
             <Slider ref={sliderRef} {...settings}>
+                <></>
                 {messages.map((msg, index) => (
                     <div key={index} className={style.message}>
-                        <pre>{msg.message}</pre>
+                        <pre>{getScript(msg.message)}</pre>
                     </div>
                 ))}
             </Slider>
@@ -40,39 +48,30 @@ const TextSlider = ({ messages }) => {
 };
 
 const GameScript = () => {
-    const currentUser = useContext(UserContext)
-    const {socket} = useGameContext()
-    const [messages, setMessages] = useState([])
+    const {aiMessages, aiParty, isAISubmit} = useGameContext()
     const messagesEndRef = useRef(null)
 
     useEffect(() => {
-    }, [messages]);
-
-    useEffect(() => {
-        if (!currentUser || !socket) return
-
-        // WebSocket을 통해 메시지를 받는 부분
-        const handleMessage = (event) => {
-            const newMessage = JSON.parse(event.data)
-            const handleMessageList = ['ai_message']
-            const messageType = newMessage['message_type']
-            console.log('game script', newMessage)
-            if (handleMessageList.includes(messageType)) {
-                setMessages((prevMessages) => [...prevMessages, newMessage])
-            }
-        }
-
-        socket.addEventListener('message', handleMessage)
-
-        // 컴포넌트 언마운트 시 WebSocket 이벤트 리스너 제거
-        return () => {
-            socket.removeEventListener('message', handleMessage)
-        }
-    }, [currentUser, socket])
+        console.log(aiMessages)
+    }, [aiMessages]);
 
     return (
-        <div className={style.container} ref={messagesEndRef}>
-            <TextSlider messages={messages}/>
+        <div>
+            {isAISubmit && (
+                <div className={style.loadingContainer}>
+                    <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>
+                </div>
+                )}
+            <div className={style.container} ref={messagesEndRef}>
+                <div className={style.userList}>
+                    {aiParty.map((user, index) => (
+                        <div key={index}>
+                            <TRPGGameUser user={user}/>
+                        </div>
+                    ))}
+                </div>
+                <TextSlider messages={aiMessages}/>
+            </div>
         </div>
     );
 };

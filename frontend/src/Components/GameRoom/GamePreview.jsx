@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import style from "./GamePreview.module.css";
 import {useGameContext} from "./GameProvider";
 
@@ -7,6 +7,9 @@ const GamePreview = () => {
     const {gameSetting} = useGameContext()
 
     const {setShowSettingModal, startGame} = useGameContext()
+
+    useEffect(() => {
+    }, []);
 
     const handleGameStart = () => {
         startGame()
