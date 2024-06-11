@@ -17,8 +17,12 @@ const ImageSlider = ({ slides }) => {
                     return <img src={item.url} alt={item.title} key={idx} style={{translate: `${-100*slide}%`}} className={style.slide}/>;
                 })}
             </div>
-            <div className={style.arrowLeft} onClick={prevSlide}>🡰</div>
-            <div className={style.arrowRight} onClick={nextSlide}>🡺</div>
+            <div className={style.arrowLeft} onClick={prevSlide}>
+                <img src={require("../../Assets/images/left_arrow.png")}/>
+            </div>
+            <div className={style.arrowRight} onClick={nextSlide}>
+                <img src={require("../../Assets/images/right_arrow.png")}/>
+            </div>
             <span className={style.indicators}>
                 {slides.map((_, idx) =>{
                     return (
