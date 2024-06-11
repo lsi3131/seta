@@ -4,22 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat/chatbot &#10;* 모험가 리스트 UI/UX 수정">
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSetting.jsx" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="savepoint">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/temp.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/temp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameCenter.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GamePreview.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/game_consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/chat/temp.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/temp2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameProvider.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSettingModal.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameSetting.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +51,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "feat/chatbot",
-    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/frontend/src/Components/GameRoom",
+    "last_opened_file_path": "/Users/sang-il/Desktop/workspace/03_bootcamp/09_django/seta3/seta/backend/chat",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -73,9 +64,9 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/chat" />
       <recent name="$PROJECT_DIR$/frontend/src/Components/GameRoom" />
       <recent name="$PROJECT_DIR$/frontend/src/Assets/images/game" />
-      <recent name="$PROJECT_DIR$/backend/chat" />
       <recent name="$PROJECT_DIR$/frontend/src/Components/ChattingRoom" />
       <recent name="$PROJECT_DIR$/frontend" />
     </key>
@@ -295,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718082718179</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="savepoint">
+      <option name="closed" value="true" />
+      <created>1718089859290</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1718089859290</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -304,7 +303,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="* 누락된 파일 pr #139 롤백" />
     <MESSAGE value="bot 기능 1차 구현" />
-    <MESSAGE value="savepoint" />
     <MESSAGE value="merge from main" />
     <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* UI/UX 스켈레톤 구현" />
     <MESSAGE value="feat TRPG 채팅 게임 구현&#10;* GameSetting 관련 스켈레톤 구현" />
@@ -320,10 +318,11 @@
     <MESSAGE value="feat/chatbot &#10;* AI 스크립트 수정" />
     <MESSAGE value="feat/chatbot &#10;* ai 스크립트 수정" />
     <MESSAGE value="feat/chatbot &#10;* 모험가 리스트 UI/UX 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat/chatbot &#10;* 모험가 리스트 UI/UX 수정" />
+    <MESSAGE value="savepoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="savepoint" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/seta$temp.coverage" NAME="temp Coverage Results" MODIFIED="1718076167974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/chat" />
+    <SUITE FILE_PATH="coverage/seta$temp.coverage" NAME="temp Coverage Results" MODIFIED="1718093314515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/chat" />
     <SUITE FILE_PATH="coverage/seta$pytest_in_test_json_py.coverage" NAME="pytest in test_json.py Coverage Results" MODIFIED="1718069228861" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/chat" />
   </component>
 </project>
