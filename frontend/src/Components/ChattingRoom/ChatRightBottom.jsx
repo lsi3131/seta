@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import style from './ChattingRoom.module.css'
 import { UserContext } from '../../userContext'
 
-const ChatRightbottom = ({ members, socket }) => {
+const ChatRightBottom = ({ members, socket }) => {
     const [text, setText] = useState('')
     const textareaRef = useRef(null)
     const [rows, setRows] = useState(1)
@@ -59,14 +59,14 @@ const ChatRightbottom = ({ members, socket }) => {
 
         // 현재 사용자가 방의 멤버가 아닌 경우 검사
         if (!members.includes(currentUser.username)) {
-            alert('이 채팅방의 멤버가 아닙니다. 다시 입장해주세요.')
+            if (window.confirm('이 채팅방의 멤버가 아닙니다. 채팅방 목록으로 돌아가시겠습니까?')) {
+                window.location.href = '/chat' // 채팅방 목록으로 이동하는 URL을 여기에 입력하세요
+            }
             return
         }
 
-        let message_type = 'message'
-
         const sendData = {
-            message_type: message_type,
+            message_type: 'message',
             message: text,
             username: currentUser.username,
         }
@@ -105,7 +105,15 @@ const ChatRightbottom = ({ members, socket }) => {
                                 </div>
                             ) : (
                                 <div
-                                    className={msg.message_type === 'enter' ? style.enter_message : style.leave_message}
+                                    className={
+                                        msg.message_type === 'enter'
+                                            ? style.enter_message
+                                            : msg.message_type === 'leave'
+                                            ? style.leave_message
+                                            : msg.message_type === 'expel'
+                                            ? style.expel_message
+                                            : style.info_message
+                                    }
                                 >
                                     {msg.message}
                                 </div>
@@ -114,9 +122,8 @@ const ChatRightbottom = ({ members, socket }) => {
                     ))}
                 </div>
             </div>
-            <div className={style.Room_bottom_submit_container}>
-                <div className={style.Room_bottom_submit}>
-                    <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
+            <div className={style.Room_bottom_submit}>
+                <form action="#" className={style.Room_bottom_submit_form} onSubmit={handleSubmit}>
                     <textarea
                         ref={textareaRef}
                         className={style.Room_bottom_submit_textarea}
@@ -126,15 +133,13 @@ const ChatRightbottom = ({ members, socket }) => {
                         placeholder="내용을 입력하세요"
                         rows={rows}
                     ></textarea>
-                        <button className={style.Room_bottom_submit_button} type="submit">
-                            &#10145;
-                        </button>
-
-                    </form>
-                </div>
+                    <button className={style.Room_bottom_submit_button} type="submit">
+                        &#10145;
+                    </button>
+                </form>
             </div>
         </>
     )
 }
 
-export default ChatRightbottom
+export default ChatRightBottom

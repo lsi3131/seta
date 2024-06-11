@@ -17,6 +17,7 @@ export const GameProvider = ({children, roomId, initPassword}) => {
     const [members, setMembers] = useState([])
     const currentUser = useContext(UserContext)
     const [host, setHost] = useState('')
+    const [remainVoteSecond, setRemainVoteSecond] = useState(null)
 
 
     const [gameSetting, setGameSetting] = useState({
@@ -87,8 +88,7 @@ export const GameProvider = ({children, roomId, initPassword}) => {
                     setAiParty(message['message']['party'])
                     setIsAISubmit(false)
                     setGameStepGameStart()
-                }
-                else if (message.message_type === 'ai_message') {
+                } else if (message.message_type === 'ai_message') {
                     setAiMessages((prevMessages) => [...prevMessages, message])
                     setAiParty(message['message']['party'])
                     setIsAISubmit(false)
@@ -98,6 +98,10 @@ export const GameProvider = ({children, roomId, initPassword}) => {
                 }
             }
 
+            if (message.message_type === 'ai_vote_countdown') {
+                console.log(`ai countdown. ${message}`)
+                setRemainVoteSecond(message.message)
+            }
         }
 
         const handleBeforeUnload = (event) => {
@@ -202,7 +206,7 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             username: currentUser.username,
         }
 
-        if(text[0] === '!') {
+        if (text[0] === '!') {
             setIsAISubmit(true)
         }
 
@@ -231,6 +235,7 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             aiMessages,
             aiParty,
             isAISubmit,
+            remainVoteSecond,
         }}>
             {children}
         </GameContext.Provider>

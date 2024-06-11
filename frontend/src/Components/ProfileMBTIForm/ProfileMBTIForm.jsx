@@ -40,17 +40,17 @@ const ProfileChart = ({percentPJ = 50, percentFT = 50, percentNS = 50, percentIE
 
     useEffect(() => {
         let data = JSON.parse(JSON.stringify(chartData));
-        data[0].P = Math.round(percentPJ)
-        data[0].J = Math.round(100 - percentPJ)
+        data[0].J = Math.round(percentPJ)
+        data[0].P = Math.round(100 - percentPJ)
 
-        data[1].F = Math.round(percentFT)
-        data[1].T = Math.round(100 - percentFT)
+        data[1].T = Math.round(percentFT)
+        data[1].F = Math.round(100 - percentFT)
 
         data[2].N = Math.round(percentNS)
         data[2].S = Math.round(100 - percentNS)
 
-        data[3].I = Math.round(percentIE)
-        data[3].E = Math.round(100 - percentIE)
+        data[3].E = Math.round(percentIE)
+        data[3].I = Math.round(100 - percentIE)
 
         setChartData(data)
     }, [percentPJ, percentFT, percentNS, percentIE]);

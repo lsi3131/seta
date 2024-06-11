@@ -105,19 +105,14 @@ def system_sub_description(description):
 
 class AIChatBot(object):
 
-    def __init__(self, title, description, member_count):
+    def __init__(self, description, member_count):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
-        self.title = title
         self.member_count = member_count
         self.messages = [
             {
                 "role": "system",
                 "content": system_sub_instructions(member_count, description),
             },
-            # {
-            #     "role": "system",
-            #     "content": system_sub_description(description),
-            # }
         ]
 
     async def response(self, message):
