@@ -84,6 +84,8 @@ const Chat = () => {
         setView(view)
     }
 
+    console.log(currentUser)
+
     return (
         <div className={style.chat_container}>
             {showCheckPassword && (
@@ -93,7 +95,7 @@ const Chat = () => {
 
             <div className={style.chat_header}>
                 <button onClick={() => window.location.reload()}>새로고침</button>
-                <button onClick={() => setShowCreateRoom(true)}>방만들기</button>
+                <button onClick={() => {!currentUser.username ? window.location.href = '/login' : setShowCreateRoom(true) }}>방만들기</button>
             </div>
 
             <div className={style.chat_category}>

@@ -47,9 +47,10 @@ const GameList = ({ posts }) => {
                         key={post.id}
                         className={style.chat_card}
                         style={{ cursor: post.members_count >= post.max_members ? 'not-allowed' : '' }}
+                        onClick={(e) => handleLinkClick(e, post)}
                     >
                         <h2 className={style.chat_card_title}>
-                            <Link to="" onClick={(e) => handleLinkClick(e, post)}>
+                            <Link to="" >
                                 {post.name.length > 20 ? post.name.slice(0, 20) + '...' : post.name}
                             </Link>
                             {post.is_secret ? <span className={style.secret}>🔒</span> : null}
