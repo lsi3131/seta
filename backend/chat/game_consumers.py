@@ -74,6 +74,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                 # 게임시작, 다시시작 명령어 처리
                 if message in ('게임시작', '다시시작'):
+                    await self.set_room_game_status(self.room_name, 's')
+
                     ai_message = await ai_chat_bot.response(message)
                     print(f'send message={message}, ai response message={ai_message}')
                     ai_message = ai_message.replace('\n', '\\n')
@@ -219,3 +221,9 @@ class GameConsumer(AsyncWebsocketConsumer):
     def get_room_members(self, roomid):
         room = ChatRoom.objects.get(id=int(roomid))
         return list(room.members.values_list('username', flat=True))
+
+    @database_sync_to_async
+    def set_room_game_status(self, roomid, status):
+        room = ChatRoom.objects.get(id=int(roomid))
+        room.game_status = status
+        room.save()

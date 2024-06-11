@@ -4,7 +4,7 @@ import style from './GameRoom.module.css'
 import GameChat from "./GameChat";
 import {GameProvider, useGameContext} from "./GameProvider";
 import GameCenter from "./GameCenter";
-import GameSettingModal from "./GameSettingModal";
+import GameSetting from "./GameSetting";
 import GameLeft from "./GameLeft";
 
 const GameRoom = () => {
@@ -31,7 +31,7 @@ const GameRoomContainer = () => {
 
     return (
         <div>
-            {showSettingModal && (<GameSettingModal/>)}
+            {showSettingModal && (<GameSetting/>)}
             <div className={style.Room_vertical}>
                 <div className={style.Room_container}>
                     <div className={style.Room_left}>

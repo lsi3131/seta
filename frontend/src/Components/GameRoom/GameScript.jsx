@@ -1,10 +1,9 @@
-import React, {useState, useRef, useEffect, useContext} from "react";
+import React, { useRef, useEffect} from "react";
 import Slider from 'react-slick';
 import style from "./GameScript.module.css";
-import {UserContext} from "../../userContext";
 import {useGameContext} from "./GameProvider";
-import TRPGGameUser from "./TRPGGameUser";
 import ReactLoading from "react-loading";
+import TRPGGameUserList from "./TRPGGameUser";
 
 const TextSlider = ({messages}) => {
     const settings = {
@@ -56,21 +55,17 @@ const GameScript = () => {
     }, [aiMessages]);
 
     return (
-        <div>
+        <div className={style.containerWrapper}>
             {isAISubmit && (
                 <div className={style.loadingContainer}>
                     <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>
                 </div>
                 )}
             <div className={style.container} ref={messagesEndRef}>
-                <div className={style.userList}>
-                    {aiParty.map((user, index) => (
-                        <div key={index}>
-                            <TRPGGameUser user={user}/>
-                        </div>
-                    ))}
+                <TRPGGameUserList users={aiParty}/>
+                <div className={style.textSlider}>
+                    <TextSlider messages={aiMessages}/>
                 </div>
-                <TextSlider messages={aiMessages}/>
             </div>
         </div>
     );

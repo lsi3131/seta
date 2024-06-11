@@ -31,6 +31,10 @@ class ChatRoom(models.Model):
     room_category = models.ForeignKey(ChatRoomCategory, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     blacklist_users = models.ManyToManyField(AUTH_USER_MODEL, related_name='blacklist_user_chat_rooms', blank=True)
+    game_status = models.CharField(null=True, blank=True, max_length=2, choices=(
+        ('w', 'Wait'),
+        ('s', 'Start'),
+    ))
 
     def __str__(self):
         return f"<{self.room_category}> {self.name}"

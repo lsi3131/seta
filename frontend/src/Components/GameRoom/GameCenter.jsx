@@ -3,13 +3,13 @@ import style from "./GameCenter.module.css";
 import GameScript from "./GameScript";
 import {useGameContext} from "./GameProvider";
 import GamePreview from "./GamePreview";
-import image from "../../Assets/images/game/trpg_setting.png";
 import {UserContext} from "../../userContext";
+import GameSetting from "./GameSetting";
 
 
 
 const GameCenter = () => {
-    const {host, gameStep, setShowSettingModal} = useGameContext()
+    const {host, gameStep} = useGameContext()
     const currentUser = useContext(UserContext)
 
     useEffect(() => {
@@ -28,15 +28,12 @@ const GameCenter = () => {
                 <>
                     {host === currentUser.username ? (
                         <>
-                            <div className={style.gameSettingContainer} onClick={() => setShowSettingModal(true)}>
-                                <img src={image} alt="trpg setting"/>
-                                <h3>클릭하여 게임의 세계관을 생성하세요!</h3>
-                            </div>
+                            <GameSetting/>
                         </>
                     ) : (
                         <>
-                            <div>
-                                <h3>방장의 방 생성을 기다리세요...</h3>
+                            <div className={style.waitForCreate}>
+                                <h3>방장이 방을 생성중입니다...</h3>
                             </div>
                         </>
                     )}
@@ -48,9 +45,7 @@ const GameCenter = () => {
                 </div>
             )}
             {gameStep === 'game_start' && (
-                <div>
-                    <GameScript/>
-                </div>
+                <GameScript/>
             )}
 
         </div>

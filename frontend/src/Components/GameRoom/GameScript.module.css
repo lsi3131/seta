@@ -1,12 +1,18 @@
+.containerWrapper {
+    height: 100%;
+}
+
 .container {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
 }
 
 .userList {
+    width: 200px;
+}
 
+.textSlider {
+    /*width: 50%;*/
 }
 
 .sliderContainer {
@@ -21,7 +27,7 @@
 
 .message > pre {
     padding: 20px;
-    font-size: 13pt;
+    font-size: 14pt;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
