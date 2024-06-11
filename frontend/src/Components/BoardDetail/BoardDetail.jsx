@@ -68,7 +68,7 @@ const BoardContent = ({post, username, onSetLike}) => {
     return (
         <div className={style.board_content_container}>
             <div>
-                <div className="view ql-editor" dangerouslySetInnerHTML={{__html: Dompurify.sanitize(post.content)}}/>
+                <div style={{minHeight:"400px"}} className="view ql-editor" dangerouslySetInnerHTML={{__html: Dompurify.sanitize(post.content)}}/>
             </div>
 
             <div className={style.board_content_like_button}>
