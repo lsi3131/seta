@@ -645,13 +645,6 @@ class AccountMbtiVoteView(APIView):
             J_count=Count(Case(When(vote_value='J', then=1), output_field=IntegerField()))
         )
 
-        # serialized_data = {
-        #     {'I_count': mbti_vote_counts['I_count'], 'E_count': mbti_vote_counts[''],
-        #      'N_count': mbti_vote_counts[''], 'S_count': mbti_vote_counts[''],
-        #      'F_count': mbti_vote_counts[''], 'T_count': mbti_vote_counts[''],
-        #      'P_count': mbti_vote_counts[''], 'J_count': mbti_vote_counts['']}
-        # }
-
         print(mbti_vote_counts)
 
         return Response(mbti_vote_counts, status=status.HTTP_200_OK)

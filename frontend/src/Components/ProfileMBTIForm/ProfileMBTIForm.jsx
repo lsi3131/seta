@@ -2,7 +2,8 @@ import React, {useEffect, useState} from "react";
 import style from "./ProfileMBTIForm.module.css";
 import {ResponsiveBar} from '@nivo/bar'
 import apiClient from "../../services/apiClient";
-
+import voteOn from "../../Assets/images/profile/vote_on.png"
+import voteOff from "../../Assets/images/profile/vote_off.png"
 
 const ProfileChart = ({percentPJ = 50, percentFT = 50, percentNS = 50, percentIE = 50}) => {
     const [chartData, setChartData] = useState([
@@ -161,20 +162,22 @@ const VoteMbtiRatio = ({mbtiVote, onVote}) => {
     return (
         <div className={style.voteMbtiRatioContainer}>
             <div className={style.voteMbtiButtonList}>
-                <button onClick={()=>onVote('IE', 'E')}>업</button>
-                <button onClick={()=>onVote('NS', 'N')}>업</button>
-                <button onClick={()=>onVote('FT', 'T')}>업</button>
-                <button onClick={()=>onVote('TJ', 'J')}>업</button>
+                <button onClick={() => onVote('IE', 'E')}>
+                    <img src={voteOn} alt="Up"/>
+                </button>
+                <button onClick={() => onVote('NS', 'N')}><img src={voteOn} alt="Up"/></button>
+                <button onClick={() => onVote('FT', 'T')}><img src={voteOn} alt="Up"/></button>
+                <button onClick={() => onVote('TJ', 'J')}><img src={voteOn} alt="Up"/></button>
             </div>
             <div className={style.mbtiRatio}>
                 <ProfileChart percentPJ={mbtiVote.percentPJ} percentIE={mbtiVote.percentIE}
                               percentNS={mbtiVote.percentNS} percentFT={mbtiVote.percentFT}/>
             </div>
             <div className={style.voteMbtiButtonList}>
-                <button onClick={() => onVote('IE', 'I')}>업</button>
-                <button onClick={() => onVote('NS', 'S')}>업</button>
-                <button onClick={() => onVote('FT', 'F')}>업</button>
-                <button onClick={() => onVote('TJ', 'P')}>업</button>
+                <button onClick={() => onVote('IE', 'I')}><img src={voteOn} alt="Up"/></button>
+                <button onClick={() => onVote('NS', 'S')}><img src={voteOn} alt="Up"/></button>
+                <button onClick={() => onVote('FT', 'F')}><img src={voteOn} alt="Up"/></button>
+                <button onClick={() => onVote('TJ', 'P')}><img src={voteOn} alt="Up"/></button>
             </div>
         </div>
     )

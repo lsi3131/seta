@@ -91,9 +91,20 @@
 }
 
 .voteMbtiButtonList > button {
-    width: 50px;
+    width: 40px;
     height: 30px;
     margin: 16px;
+    background-color: transparent;
+    border: none;
+}
+
+.voteMbtiButtonList > button:hover {
+    cursor: pointer;
+}
+
+.voteMbtiButtonList > button > img{
+    width: 40px;
+    height: 30px;
 }
 
 .first, .second, .third {
