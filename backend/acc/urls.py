@@ -17,6 +17,8 @@ urlpatterns = [
     path('<str:email>/activate/',views.UserActivateAPIView.as_view()),
     path('<str:email>/findname/',views.FindNameAPIView.as_view()),
     path('<str:email>/<str:username>/findpassword/',views.FindPasswordAPIView.as_view()),
+
+    path('vote/<str:username>/', views.AccountMbtiVoteView.as_view()),
 ]
 
 urlpatterns += [
