@@ -153,8 +153,35 @@ const MbtiRatio = ({user}) => {
     )
 }
 
+const VoteMbtiRatio = ({mbtiVote, onVote}) => {
+    useEffect(() => {
+        console.log('mbti vote percent', mbtiVote)
+    }, [mbtiVote]);
+
+    return (
+        <div className={style.voteMbtiRatioContainer}>
+            <div className={style.voteMbtiButtonList}>
+                <button onClick={()=>onVote('IE', 'E')}>업</button>
+                <button onClick={()=>onVote('NS', 'N')}>업</button>
+                <button onClick={()=>onVote('FT', 'T')}>업</button>
+                <button onClick={()=>onVote('TJ', 'J')}>업</button>
+            </div>
+            <div className={style.mbtiRatio}>
+                <ProfileChart percentPJ={mbtiVote.percentPJ} percentIE={mbtiVote.percentIE}
+                              percentNS={mbtiVote.percentNS} percentFT={mbtiVote.percentFT}/>
+            </div>
+            <div className={style.voteMbtiButtonList}>
+                <button onClick={() => onVote('IE', 'I')}>업</button>
+                <button onClick={() => onVote('NS', 'S')}>업</button>
+                <button onClick={() => onVote('FT', 'F')}>업</button>
+                <button onClick={() => onVote('TJ', 'P')}>업</button>
+            </div>
+        </div>
+    )
+}
+
 const MbtiRanking = ({ranking}) => {
-        const getRankText = (ranks, rankNum /* 1~3*/) => {
+    const getRankText = (ranks, rankNum /* 1~3*/) => {
         /*
             ranks = [('ISFP', 3), ('ENFP', 2), ('ENTP, 5)]
          */
@@ -186,7 +213,17 @@ const MbtiRanking = ({ranking}) => {
 
 const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
     useEffect(() => {
+        handleGetMbtiVote()
     }, [user, followingRanks, followerRanks])
+
+    const [mbtiVote, setMbtiVote] = useState({
+        percentIE: 50,
+        percentFT: 50,
+        percentNS: 50,
+        percentPJ: 50,
+    })
+
+    const [isLoading, setIsLoading] = useState(true)
 
     const getRankText = (ranks, rankNum /* 1~3*/) => {
         /*
@@ -212,6 +249,59 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
         return user.mbti && user.mbti !== '';
     }
 
+    const calcPercent = (v1, v2) => {
+        if (v1 + v2 === 0) {
+            return 50
+        }
+
+        return (v1 / (v1 + v2) * 100)
+    }
+
+    const handleGetMbtiVote = () => {
+        let url = `/api/accounts/vote/${user.username}/`
+        apiClient
+            .get(url)
+            .then((response) => {
+                const voteCount = response.data
+                console.log(voteCount)
+                const percentIE = calcPercent(voteCount['E_count'], voteCount['I_count']);
+                const percentNS = calcPercent(voteCount['N_count'], voteCount['S_count']);
+                const percentFT = calcPercent(voteCount['T_count'], voteCount['F_count']);
+                const percentPJ = calcPercent(voteCount['J_count'], voteCount['P_count']);
+
+                console.log(percentIE, percentNS, percentPJ, percentFT)
+
+                setMbtiVote({
+                    percentIE: percentIE,
+                    percentNS: percentNS,
+                    percentFT: percentFT,
+                    percentPJ: percentPJ,
+                })
+            })
+            .catch((error) => {
+                console.error('Error during get posts:', error)
+            })
+    }
+
+    const handlePostMbtiVote = (type, value) => {
+        let url = `/api/accounts/vote/${user.username}/`
+        console.log(type, value)
+        const postData = {
+            vote_type: type,
+            vote_value: value,
+        }
+
+        apiClient
+            .post(url, postData)
+            .then((response) => {
+                console.log('success to vote', response)
+                handleGetMbtiVote();
+            })
+            .catch((error) => {
+                console.error('Error during get posts:', error)
+            })
+
+    }
 
     return (
         <div style={{display: "flex", justifyContent: "space-around"}}>
@@ -230,12 +320,20 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
 
                 </div>
                 <div className={style.container}>
-                <h3 className={style.title}>내 mbti 성향</h3>
+                    <h3 className={style.title}>내 mbti 성향</h3>
                     {isMbtiExists(user) ? (
                         <MbtiRatio user={user}/>
                     ) : (
                         <NoMbtiRatio/>
                     )}
+
+                    <h3 className={style.title}> mbti 투표</h3>
+                    {isMbtiExists(user) ? (
+                        <VoteMbtiRatio mbtiVote={mbtiVote} onVote={handlePostMbtiVote}/>
+                    ) : (
+                        <NoMbtiRatio/>
+                    )}
+
                 </div>
             </div>
             <div>
