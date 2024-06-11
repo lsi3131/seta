@@ -36,7 +36,7 @@ const TextSlider = ({messages}) => {
     return (
         <div className={style.sliderContainer}>
             <Slider ref={sliderRef} {...settings}>
-                <>게임 시작</>
+                <></>
                 {messages.map((msg, index) => (
                     <div key={index} className={style.message}>
                         <pre>{getScript(msg.message)}</pre>

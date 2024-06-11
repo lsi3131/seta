@@ -92,7 +92,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     )
 
                 # 1,2,3 선택지 처리
-                elif int(message) in (1, 2, 3):
+                elif message in ('1', '2', '3'):
                     # 멤버별 투표 결과 저장
                     voted_user_choice[username] = int(message)
                     print(f'{username} vote to {message}')
