@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import style from "./GameCenter.module.css";
 import GameScript from "./GameScript";
 import {useGameContext} from "./GameProvider";
 import GamePreview from "./GamePreview";
 import image from "../../Assets/images/game/trpg_setting.png";
+import {UserContext} from "../../userContext";
 
 
 
 const GameCenter = () => {
-    const {gameStep, setShowSettingModal} = useGameContext()
+    const {host, gameStep, setShowSettingModal} = useGameContext()
+    const currentUser = useContext(UserContext)
 
     useEffect(() => {
     }, [gameStep]);
@@ -23,10 +25,22 @@ const GameCenter = () => {
     return (
         <div className={style.container}>
             {gameStep === 'wait_setting' && (
-                <div className={style.gameSettingContainer} onClick={() => setShowSettingModal(true)}>
-                    <img src={image} alt="trpg setting"/>
-                    <h3>클릭하여 게임의 세계관을 생성하세요!</h3>
-                </div>
+                <>
+                    {host === currentUser.username ? (
+                        <>
+                            <div className={style.gameSettingContainer} onClick={() => setShowSettingModal(true)}>
+                                <img src={image} alt="trpg setting"/>
+                                <h3>클릭하여 게임의 세계관을 생성하세요!</h3>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                <h3>방장의 방 생성을 기다리세요...</h3>
+                            </div>
+                        </>
+                    )}
+                </>
             )}
             {gameStep === 'wait_start' && (
                 <div>

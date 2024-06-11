@@ -8,13 +8,10 @@ from .bot import AIChatBot
 
 User = get_user_model()
 room_messages = defaultdict(list)
+room_ai_chat_bots = {}
 
 
 class GameConsumer(AsyncWebsocketConsumer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.ai_chat_bot = None
-
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
@@ -24,6 +21,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+
+        if self.room_name not in room_ai_chat_bots:
+            room_ai_chat_bots[self.room_name] = None
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -53,17 +53,30 @@ class GameConsumer(AsyncWebsocketConsumer):
             if len(room_messages[self.room_name]) >= 10:
                 await self.save_messages(self.room_name)
 
-            # '!'로 시작할 시  AI 처리
+            # '!'로 시작할 시 AI 처리
             if message[0] == '!':
                 message = message[1:]
-                if self.ai_chat_bot is None:
+                ai_chat_bot = room_ai_chat_bots[self.room_name]
+                if ai_chat_bot is None:
                     print('챗봇이 설정되지 않았습니다.')
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'chat_message',
+                            'message': '챗봇이 설정되지 않았습니다.',
+                            'username': 'AI',
+                            'message_type': 'ai_message_error',
+                        }
+                    )
                     return
 
                 if message in ('게임시작', '다시시작'):
-                    ai_message = await self.ai_chat_bot.response(message)
+                    ai_message = await ai_chat_bot.response(message)
                     print(f'send message={message}, ai response message={ai_message}')
+                    ai_message = ai_message.replace('\n', '\\n')
+                    print(f'replace message={ai_message}')
                     json_data = json.loads(ai_message)
+                    print(f'parsed json_data={json_data}')
 
                     await self.channel_layer.group_send(
                         self.room_group_name,
@@ -75,7 +88,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                         }
                     )
                 elif int(message) in range(1, 4):
-                    ai_message = await self.ai_chat_bot.response(message)
+                    ai_message = await ai_chat_bot.response(message)
                     print(f'send message={message}, ai response message={ai_message}')
                     json_data = json.loads(ai_message)
 
@@ -101,11 +114,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                     )
 
         if message_type == 'setting':
-            print(data)
+            print(f'setting data={data}')
             title = data['title']
             instruction = data['instruction']
             member_count = data['member_count']
-            self.ai_chat_bot = AIChatBot(title, instruction, member_count)
+            ai_chat_bot = AIChatBot(title, instruction, member_count)
+            room_ai_chat_bots[self.room_name] = ai_chat_bot
 
         elif message_type == 'enter':
             await self.channel_layer.group_send(
@@ -119,7 +133,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
 
         elif message_type == 'leave':
-
             await self.save_messages(self.room_name)
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -186,39 +199,3 @@ class GameConsumer(AsyncWebsocketConsumer):
     def get_room_members(self, roomid):
         room = ChatRoom.objects.get(id=int(roomid))
         return list(room.members.values_list('username', flat=True))
-
-
-'''
-DrawConsumer
-- 드로잉을 위한 Consumer
-'''
-
-
-class DrawConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f'game_{self.room_name}'
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        pass
-
-    async def receive(self, text_data):
-        data = json.loads(text_data)
-        # Broadcast drawing data to all clients
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "draw_message",
-                "data": data,
-            }
-        )
-
-    async def draw_message(self, event):
-        data = event["data"]
-        await self.send(text_data=json.dumps(data))

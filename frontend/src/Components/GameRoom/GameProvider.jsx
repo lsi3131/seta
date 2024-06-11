@@ -87,11 +87,13 @@ export const GameProvider = ({children, roomId, initPassword}) => {
                     setAiMessages([message])
                     setAiParty(message['message']['party'])
                     setIsAISubmit(false)
+                    setGameStepGameStart()
                 }
                 else if (message.message_type === 'ai_message') {
                     setAiMessages((prevMessages) => [...prevMessages, message])
                     setAiParty(message['message']['party'])
                     setIsAISubmit(false)
+                    setGameStepGameStart()
                 } else if (message.message_type === 'ai_message_error') {
                     setIsAISubmit(false)
                 }
