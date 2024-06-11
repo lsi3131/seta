@@ -1,4 +1,25 @@
+.containerWrapper {
+    height: 100%;
+}
+
 .container {
+    display: flex;
+    flex-direction: row;
+}
+
+.userList {
+    width: 200px;
+}
+
+.textSlider {
+    /*width: 50%;*/
+}
+
+.sliderContainer {
+    width: 800px;
+    height: 80vh;
+    margin: 0 auto;
+    overflow: auto; /* Enable scrolling when content exceeds height */
 }
 
 .message {
@@ -6,7 +27,22 @@
 
 .message > pre {
     padding: 20px;
-    font-size: 13pt;
+    font-size: 14pt;
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5); /* 투명한 배경 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px; /* 원하는 크기로 설정 */
+    height: 100px; /* 원하는 크기로 설정 */
+    z-index: 999; /* 다른 요소들 위에 표시 */
+    border-radius: 10px; /* 둥근 모서리 추가 */
 }

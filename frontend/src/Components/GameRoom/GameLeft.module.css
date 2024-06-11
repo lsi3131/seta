@@ -22,13 +22,8 @@
     overflow-y: scroll;
 }
 
-.Room_center {
-    flex: 2;
-    margin: 0 10px;
-}
-
 .Room_right {
-    flex: 0.5;
+    flex: 2;
     margin: 0 10px;
     display: flex;
     flex-direction: column;
@@ -132,25 +127,6 @@
     cursor: pointer;
 }
 
-.Room_bottom_check_button_ai {
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 30px;
-    background-color: #000000;
-    padding-top: 3px;
-    margin: 5px 10px;
-    font-size: 20px;
-}
-
-.Room_bottom_check_button_ai:hover {
-    cursor: pointer;
-}
-
-.Room_bottom_check_button_ai:checked {
-    /* 체크된 상태의 스타일 */
-    background-color: #cccccc;
-}
 
 .messages {
     display: flex;
@@ -160,14 +136,12 @@
     width: 80%;
     align-items: center;
 }
-
 .message {
     background-color: rgba(186, 186, 186, 0.129);
     border-radius: 20px;
     padding: 10px 20px;
     align-self: normal;
 }
-
 .my_message {
     background-color: rgba(186, 202, 255, 0.278);
     border-radius: 20px;
@@ -187,7 +161,6 @@
     align-self: normal;
     margin-bottom: 5px;
 }
-
 .message_time {
     font-size: 10px;
     align-self: flex-end;
@@ -202,7 +175,6 @@
     border-radius: 20px;
     padding: 5px 20px;
 }
-
 .leave_message {
     background-color: rgba(255, 186, 186, 0.278);
     font-size: 10px;
@@ -211,7 +183,23 @@
     border-radius: 20px;
     padding: 5px 20px;
 }
-
+.info_message {
+    background-color: rgba(179, 179, 179, 0.278);
+    font-size: 10px;
+    width: 50%;
+    text-align: center;
+    border-radius: 20px;
+    padding: 5px 20px;
+}
+.expel_message {
+    background-color: rgba(0, 0, 0, 0.487);
+    color: white;
+    font-size: 10px;
+    width: 50%;
+    text-align: center;
+    border-radius: 20px;
+    padding: 5px 20px;
+}
 .messages p {
     margin-top: 5px;
 }
@@ -237,8 +225,55 @@
     flex-direction: column;
     align-items: center;
 }
-
 .Room_left_container {
     text-align: center;
     overflow-y: auto;
+}
+
+.member_modal {
+    display: relative;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    overflow: auto;
+    /* background-color: rgba(0, 0, 0, 0.4); */
+}
+
+.member_modal_content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 200px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+
+.member_modal_menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.member_modal_menu_item {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.member_modal_menu_item:hover {
+    background-color: #ddd;
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
 }

@@ -1,0 +1,45 @@
+.userListContainer {
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+}
+
+.userListTitle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.name {
+
+}
+
+.stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.name > h3 {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.stats > p {
+    margin: 5px;
+    font-size: 18px;
+}
+
+.stats > img {
+    width: 3vh;
+    height: 3vh;
+}

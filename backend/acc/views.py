@@ -477,12 +477,15 @@ def social_callback(request):
         )
         user_info = user_info_req.json()
         username = user_info.get("login")
+        print(username)
         user_id = str(user_info.get("id"))
+        print(user_id)
         email = user_info.get('email')
         provider = "github"
 
+
     try:
-        user = User.objects.get(username=(f'{username}#{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
         social_user = SocialAccount.objects.get(user=user)
 
         if not social_user.provider:
@@ -502,11 +505,9 @@ def social_callback(request):
     except User.DoesNotExist:
 
         if email:
-            user, created = User.objects.get_or_create(
-                email=email, defaults={'username': (f'{username}#{user_id[:4]}')})
-        else:
-            user, created = User.objects.get_or_create(
-                defaults={'username': (f'{username}#{user_id[:4]}')})
+            user, created = User.objects.get_or_create(defaults={'username': (f'{username}{user_id[:4]}')},email=email)
+        else: 
+            user, created = User.objects.get_or_create(email=username, defaults={'username': (f'{username}{user_id[:4]}')})
         if created:
             user.set_unusable_password()
             user.save()
@@ -524,8 +525,8 @@ def social_callback(request):
         redirect_url = "http://localhost:3000/"
         respons = HttpResponseRedirect(redirect_url)
 
-        respons.set_cookie('access', str(access), max_age=5)
-        respons.set_cookie('refresh', str(refresh), max_age=5)
+        respons.set_cookie('access', str(access), max_age=20)
+        respons.set_cookie('refresh', str(refresh), max_age=20)
 
         return respons
 
@@ -567,7 +568,7 @@ def kakao_callback(request):
     user_id = str(profile_json.get("id"))
 
     try:
-        user = User.objects.get(username=(f'{username}#{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
@@ -596,8 +597,8 @@ def kakao_callback(request):
 
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
-        user, created = User.objects.get_or_create(
-            defaults={'username': (f'{username}#{user_id[:4]}')})
+        user, created = User.objects.get_or_create(email=username,
+            defaults={'username': (f'{username}{user_id[:4]}')})
         if created:
             user.set_unusable_password()
             user.save()

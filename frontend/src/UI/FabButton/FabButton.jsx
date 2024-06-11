@@ -10,6 +10,11 @@ const FabButton = () => {
     setIsOpen(!isOpen);
   };
 
+  const MoveToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+
   const menuAnimation = useSpring({
     opacity: isOpen ? 1 : 0,
     transform: isOpen ? 'translateY(0)' : 'translateY(20px)',
@@ -23,7 +28,11 @@ const FabButton = () => {
           <BoardCardList />
         </animated.div>
       )}
-      <button className={style.fab} onClick={toggleMenu}>+</button>
+      <div className={style.button}>
+        <button onClick={MoveToTop} 
+        className={style.moveButton}>&#9652;</button>
+        <button className={style.fab} onClick={toggleMenu}>+</button>
+      </div>
     </div>
   );
 };

@@ -67,6 +67,10 @@ class ChatRoomAPIView(APIView):
         cate = request.GET.get('category', 'chat')
         roomCate = ChatRoomCategory.objects.get(name=cate)
         chatrooms = ChatRoom.objects.filter(room_category=roomCate)
+
+        # 게임일 경우 시작한 방은 가져오지 않는다.
+        if cate == 'game':
+            chatrooms = chatrooms.exclude(game_status='s')
         data = [serialize_chatroom(chatroom) for chatroom in chatrooms]
         return Response(data, status=status.HTTP_200_OK)
 

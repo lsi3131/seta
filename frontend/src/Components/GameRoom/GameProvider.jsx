@@ -18,13 +18,16 @@ export const GameProvider = ({children, roomId, initPassword}) => {
     const currentUser = useContext(UserContext)
     const [host, setHost] = useState('')
 
+
     const [gameSetting, setGameSetting] = useState({
         title: '',
         description: '',
     });
-    const [showSettingModal, setShowSettingModal] = useState(false)
     const [gameStep, setGameStep] = useState(GAME_STEP_LIST[0])
 
+    const [aiMessages, setAiMessages] = useState([])
+    const [aiParty, setAiParty] = useState([])
+    const [isAISubmit, setIsAISubmit] = useState(false)
 
     useEffect(() => {
         const refreshList = async () => {
@@ -71,6 +74,30 @@ export const GameProvider = ({children, roomId, initPassword}) => {
                 setMembers(message.members)
                 fetchHost()
             }
+
+            if (
+                message.message_type === 'ai_message_start' ||
+                message.message_type === 'ai_message' ||
+                message.message_type === 'ai_message_error'
+            ) {
+                console.log('ai', message)
+
+                if (message.message_type === 'ai_message_start') {
+                    setAiMessages([message])
+                    setAiParty(message['message']['party'])
+                    setIsAISubmit(false)
+                    setGameStepGameStart()
+                }
+                else if (message.message_type === 'ai_message') {
+                    setAiMessages((prevMessages) => [...prevMessages, message])
+                    setAiParty(message['message']['party'])
+                    setIsAISubmit(false)
+                    setGameStepGameStart()
+                } else if (message.message_type === 'ai_message_error') {
+                    setIsAISubmit(false)
+                }
+            }
+
         }
 
         const handleBeforeUnload = (event) => {
@@ -151,9 +178,9 @@ export const GameProvider = ({children, roomId, initPassword}) => {
     }
 
     const setAndSendGameSetting = (setting) => {
-        setGameStep(GAME_STEP_LIST[1])
         setGameSetting(setting)
         sendSetting(setting)
+        setGameStepWaitStart()
     }
 
     const sendSetting = (setting) => {
@@ -174,17 +201,17 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             message: text,
             username: currentUser.username,
         }
+
+        if(text[0] === '!') {
+            setIsAISubmit(true)
+        }
+
         socket.send(JSON.stringify(sendData))
     }
 
     const startGame = () => {
         setGameStepGameStart();
-        const sendData = {
-            message_type: 'message',
-            message: '!게임시작',
-            username: currentUser.username,
-        }
-        socket.send(JSON.stringify(sendData))
+        sendMessage('!게임시작')
     }
 
     return (
@@ -193,8 +220,6 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             members,
             socket,
             host,
-            showSettingModal,
-            setShowSettingModal,
             gameSetting,
             gameStep,
             setGameStepSetting,
@@ -203,6 +228,9 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             setAndSendGameSetting,
             startGame,
             sendMessage,
+            aiMessages,
+            aiParty,
+            isAISubmit,
         }}>
             {children}
         </GameContext.Provider>
