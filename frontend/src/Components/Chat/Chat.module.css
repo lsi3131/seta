@@ -91,13 +91,12 @@
     text-decoration: none;
 }
 
-.chat_card a:hover {
-    color: #007bff;
-}
+
 
 .chat_card:hover {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
     background-color: #e0e0e047;
+    cursor: pointer;
 }
 .membersFull:hover {
     cursor: not-allowed;
