@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat/chatbot &#10;* 게임내 모든 인원이 ai_chat_bot인스턴스를 공유하도록 수정">
-      <change afterPath="$PROJECT_DIR$/backend/chat/temp.py" afterDir="false" />
+    <list default="true" id="fd820aa8-eb95-43f6-b651-422048629f77" name="Changes" comment="feat/chatbot &#10;* 투표 결과 취합 및 가장 많이 투표된 선택지로 적용됨">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/chat/game_consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/chat/game_consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameRoom.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/GameRoom/GameScript.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -244,7 +245,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718070640785</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="feat/chatbot &#10;* 투표 결과 취합 및 가장 많이 투표된 선택지로 적용됨">
+      <option name="closed" value="true" />
+      <created>1718072355741</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1718072355741</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,7 +273,8 @@
     <MESSAGE value="feat/chatbot &#10;* AI 스크립트 json 변환하여 반환&#10;* 사용자 스탯이 나타나도록 기능 적용" />
     <MESSAGE value="feat/chatbot &#10;* GameProvider에 기능 이관&#10;* AI에 내용 전달 시 프론트에서 대기 화면 뜨도록 수정" />
     <MESSAGE value="feat/chatbot &#10;* 게임내 모든 인원이 ai_chat_bot인스턴스를 공유하도록 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat/chatbot &#10;* 게임내 모든 인원이 ai_chat_bot인스턴스를 공유하도록 수정" />
+    <MESSAGE value="feat/chatbot &#10;* 투표 결과 취합 및 가장 많이 투표된 선택지로 적용됨" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat/chatbot &#10;* 투표 결과 취합 및 가장 많이 투표된 선택지로 적용됨" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/seta$temp.coverage" NAME="temp Coverage Results" MODIFIED="1718072002012" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/chat" />

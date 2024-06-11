@@ -4,6 +4,7 @@ import style from "./GameScript.module.css";
 import {UserContext} from "../../userContext";
 import {useGameContext} from "./GameProvider";
 import TRPGGameUser from "./TRPGGameUser";
+import ReactLoading from "react-loading";
 
 const TextSlider = ({messages}) => {
     const settings = {
@@ -47,7 +48,7 @@ const TextSlider = ({messages}) => {
 };
 
 const GameScript = () => {
-    const {aiMessages, aiParty} = useGameContext()
+    const {aiMessages, aiParty, isAISubmit} = useGameContext()
     const messagesEndRef = useRef(null)
 
     useEffect(() => {
@@ -55,15 +56,22 @@ const GameScript = () => {
     }, [aiMessages]);
 
     return (
-        <div className={style.container} ref={messagesEndRef}>
-            <div className={style.userList}>
-                {aiParty.map((user, index) => (
-                    <div key={index}>
-                        <TRPGGameUser user={user}/>
-                    </div>
-                ))}
+        <div>
+            {isAISubmit && (
+                <div className={style.loadingContainer}>
+                    <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>
+                </div>
+                )}
+            <div className={style.container} ref={messagesEndRef}>
+                <div className={style.userList}>
+                    {aiParty.map((user, index) => (
+                        <div key={index}>
+                            <TRPGGameUser user={user}/>
+                        </div>
+                    ))}
+                </div>
+                <TextSlider messages={aiMessages}/>
             </div>
-            <TextSlider messages={aiMessages}/>
         </div>
     );
 };
