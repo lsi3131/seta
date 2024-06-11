@@ -1,33 +1,38 @@
 import React, {useEffect} from "react";
 import style from "./GamePreview.module.css";
 import {useGameContext} from "./GameProvider";
-
+import image from "../../Assets/images/game/trpg_setting.png";
 
 const GamePreview = () => {
     const {gameSetting} = useGameContext()
 
-    const {setShowSettingModal, startGame} = useGameContext()
+    const {setGameStepSetting, startGame} = useGameContext()
 
     useEffect(() => {
     }, []);
 
     const handleGameStart = () => {
-        startGame()
+        const result = window.confirm("게임을 시작하시겠습니까?");
+        if (result) {
+            startGame()
+        }
     }
 
     const handleSetting = () => {
-        setShowSettingModal(true)
+        setGameStepSetting()
     }
 
     return (
         <div className={style.container}>
             <div className={style.previewContainer}>
-                <div className={style.title}>
-                    <h2>{gameSetting['title']}</h2>
-                </div>
+                <h3>세계관</h3>
                 <div className={style.instruction}>
                     <pre>{gameSetting['instruction']}</pre>
                 </div>
+                {/*<div className={style.gameSettingContainer}}>*/}
+                {/*    <img src={image} alt="trpg setting"/>*/}
+                {/*    <h3>클릭하여 게임의 세계관을 생성하세요!</h3>*/}
+                {/*</div>*/}
             </div>
 
             <div className={style.button_container}>

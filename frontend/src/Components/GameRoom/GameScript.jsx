@@ -55,7 +55,7 @@ const GameScript = () => {
     }, [aiMessages]);
 
     return (
-        <div>
+        <div className={style.containerWrapper}>
             {isAISubmit && (
                 <div className={style.loadingContainer}>
                     <ReactLoading type="spin" color="#0000ff" height={50} width={50}/>

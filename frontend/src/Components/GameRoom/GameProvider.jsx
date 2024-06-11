@@ -23,7 +23,6 @@ export const GameProvider = ({children, roomId, initPassword}) => {
         title: '',
         description: '',
     });
-    const [showSettingModal, setShowSettingModal] = useState(false)
     const [gameStep, setGameStep] = useState(GAME_STEP_LIST[0])
 
     const [aiMessages, setAiMessages] = useState([])
@@ -179,9 +178,9 @@ export const GameProvider = ({children, roomId, initPassword}) => {
     }
 
     const setAndSendGameSetting = (setting) => {
-        setGameStep(GAME_STEP_LIST[1])
         setGameSetting(setting)
         sendSetting(setting)
+        setGameStepWaitStart()
     }
 
     const sendSetting = (setting) => {
@@ -221,8 +220,6 @@ export const GameProvider = ({children, roomId, initPassword}) => {
             members,
             socket,
             host,
-            showSettingModal,
-            setShowSettingModal,
             gameSetting,
             gameStep,
             setGameStepSetting,

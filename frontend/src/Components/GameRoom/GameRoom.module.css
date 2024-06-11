@@ -25,9 +25,6 @@
 .Room_center {
     flex: 2;
     margin: 0 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
 }
 
 .Room_right {
