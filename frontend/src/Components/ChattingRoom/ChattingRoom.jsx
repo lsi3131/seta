@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import style from './ChattingRoom.module.css'
-import ChatRightbottom from './ChatRightbottom'
+import ChatRightBottom from './ChatRightBottom'
 import ChatLeft from './ChatLeft'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
-
-const wsBaseURL = process.env.REACT_APP_WS_BASE_URL;
 
 const ChatRoom = () => {
     const location = useLocation()
@@ -43,7 +41,7 @@ const ChatRoom = () => {
         if (!currentUser) return
 
         // WebSocket 연결
-        const url = `${wsBaseURL}/ws/chat/${roomId}/`
+        const url = `ws://127.0.0.1:8000/ws/chat/${roomId}/`
         const socket = new WebSocket(url)
 
         socket.onopen = () => {
@@ -185,7 +183,7 @@ const ChatRoom = () => {
                     />
                 </div>
                 <div className={style.Room_right}>
-                    <ChatRightbottom members={members} socket={socket} />
+                    <ChatRightBottom members={members} socket={socket} />
                 </div>
             </div>
         </div>

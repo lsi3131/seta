@@ -11,16 +11,6 @@ const ChatList = ({ posts }) => {
     const currentUser = useContext(UserContext)
     const navigate = useNavigate()
 
-    const navigateToRoom = ({category, roomId, password}) => {
-        let roomType = 'chatroom'
-        if(category === 'game') {
-            roomType = 'gameroom'
-        } else if(category === 'chat') {
-            roomType = 'chatroom'
-        }
-        navigate(`/${roomType}/${roomId}`, { state: { password: password } })
-    }
-
     const handleLinkClick = (e, post) => {
         e.preventDefault()
 
@@ -40,6 +30,11 @@ const ChatList = ({ posts }) => {
             return
         }
 
+        if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
+            alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
+            return
+        }
+
         if (post['is_secret']) {
             // 비밀번호 인증 모달창 띄우기
             setRoomId(post.id)
@@ -47,12 +42,12 @@ const ChatList = ({ posts }) => {
         } else {
             // 채팅방으로 이동
             const password = ''
-            navigateToRoom({category: post.room_category, roomId: post.id, password: password})
+            navigate(`/chatroom/${post.id}`, { state: { password: password } })
         }
     }
 
-    const handleEnterRoom = (roomId, password, category) => {
-        navigateToRoom({category: category, roomId, password: password})
+    const handleEnterRoom = (roomId, password) => {
+        navigate(`/chatroom/${roomId}`, { state: { password: password } })
     }
 
     const handleCloseRoom = () => {
