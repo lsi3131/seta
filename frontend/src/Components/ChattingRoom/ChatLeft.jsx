@@ -76,44 +76,46 @@ const ChatLeft = ({ host, members, handleHostChange, handleExpel }) => {
     }
 
     return (
-        <div className={style.Room_left_container}>
-            <h2>참여자 목록</h2>
-            <div className={style.chatMemberList}>
-                {members &&
-                    members.map((member, index) => (
-                        <div
-                            style={{ position: 'relative' }}
-                            key={index}
-                            ref={(el) => (memberRefs.current[index] = el)}
-                        >
-                            {member === host && (
-                                <sup style={{ position: 'absolute', fontSize: 20, top: 0, right: 0 }}>👑</sup>
-                            )}
+        <>
+            <div className={style.Room_left_container}>
+                <h2>참여자 목록</h2>
+                <div className={style.chatMemberList}>
+                    {members &&
+                        members.map((member, index) => (
+                            <div
+                                style={{ position: 'relative' }}
+                                key={index}
+                                ref={(el) => (memberRefs.current[index] = el)}
+                            >
+                                {member === host && (
+                                    <sup style={{ position: 'absolute', fontSize: 20, top: 0, right: 0 }}>👑</sup>
+                                )}
 
-                            {member === currentUser.username ? (
-                                <div className={style.chatMembers}>{member}</div>
-                            ) : (
-                                <a
-                                    className={style.chatMembers}
-                                    onClick={() => handleMemberClick(member, index)}
-                                    rel="noopener noreferrer"
-                                >
-                                    {member}
-                                </a>
-                            )}
+                                {member === currentUser.username ? (
+                                    <div className={style.chatMembers}>{member}</div>
+                                ) : (
+                                    <a
+                                        className={style.chatMembers}
+                                        onClick={() => handleMemberClick(member, index)}
+                                        rel="noopener noreferrer"
+                                    >
+                                        {member}
+                                    </a>
+                                )}
 
-                            {activeMember === member && member !== currentUser.username && (
-                                <MemberModal
-                                    member={member}
-                                    host={host}
-                                    onClose={handleCloseModal}
-                                    position={modalPosition}
-                                />
-                            )}
-                        </div>
-                    ))}
+                                {activeMember === member && member !== currentUser.username && (
+                                    <MemberModal
+                                        member={member}
+                                        host={host}
+                                        onClose={handleCloseModal}
+                                        position={modalPosition}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

@@ -142,16 +142,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def leave_room(self, roomid, username):
-        user = User.objects.get(username=username)
-        room = ChatRoom.objects.get(id=int(roomid))
+        try:
+            user = User.objects.get(username=username)
+            room = ChatRoom.objects.get(id=int(roomid))
 
-        room.members.remove(user)
+            room.members.remove(user)
 
-        if room.members.count() > 0:
-            if user == room.host_user:
-                room.host_user = room.members.first()
-                room.save()
-            return list(room.members.values_list('username', flat=True))
+            if room.members.count() > 0:
+                if user == room.host_user:
+                    room.host_user = room.members.first()
+                    room.save()
+                return list(room.members.values_list('username', flat=True))
+            else:
+                room.delete()
+                room_messages.pop(roomid)
+                return []
+        except:
+            return []
         
     
     @database_sync_to_async

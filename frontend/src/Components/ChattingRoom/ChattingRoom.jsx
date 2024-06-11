@@ -111,6 +111,19 @@ const ChatRoom = () => {
         )
     }
 
+    const handleLeaveRoom = () => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(
+                JSON.stringify({
+                    message_type: 'leave',
+                    username: currentUser.username,
+                    message: '',
+                }),
+            )
+        }
+        window.location.href = '/chat'
+    }
+
     const fetchHost = async () => {
         try {
             const response = await apiClient.get(`api/chats/${roomId}/`)
@@ -174,13 +187,20 @@ const ChatRoom = () => {
     return (
         <div className={style.Room_vertical}>
             <div className={style.Room_container}>
-                <div className={style.Room_left}>
-                    <ChatLeft
-                        members={members}
-                        host={host}
-                        handleHostChange={handleHostChange}
-                        handleExpel={handleExpel}
-                    />
+                <div>
+                    <div className={style.Room_left}>
+                        <ChatLeft
+                            members={members}
+                            host={host}
+                            handleHostChange={handleHostChange}
+                            handleExpel={handleExpel}
+                        />
+                    </div>
+                    <div className={style.leaveButtonContainer}>
+                        <button className={style.leaveButton} onClick={handleLeaveRoom}>
+                            채팅방 나가기
+                        </button>
+                    </div>
                 </div>
                 <div className={style.Room_right}>
                     <ChatRightBottom members={members} socket={socket} />
