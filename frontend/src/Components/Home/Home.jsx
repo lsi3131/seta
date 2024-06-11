@@ -8,10 +8,11 @@ import { Cookies } from 'react-cookie';
 
 const Home = () => {
     const slides = [
-        { url: require('../../Assets/images/slide_image_mbti_test.png'), title: 'mbti_test' },
-        { url: 'http://via.placeholder.com/1200x502', title: 'image2' },
-        { url: 'http://via.placeholder.com/1200x503', title: 'image3' },
-        { url: 'http://via.placeholder.com/1200x504', title: 'image4' },
+        { url: require('../../Assets/images/slider_image_mbti_regist.png'), title: 'mbti_regist' },
+        { url: require('../../Assets/images/slider_image_my_board.png'), title: 'my_board' },
+        { url: require('../../Assets/images/slider_image_hot_post.png'), title: 'hot_post' },
+        { url: require('../../Assets/images/slider_image_chat.png'), title: 'chat' },
+        
     ]
 
     const containerStyles = {
