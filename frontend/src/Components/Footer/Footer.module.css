@@ -27,6 +27,10 @@
     padding: 10px;
 }
 
+.footer_botton span {
+    color: #FFA800;
+}
+
 .home, 
 .button button
 {

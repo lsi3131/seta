@@ -8,7 +8,6 @@ import useDebounce from "../MessageManage/useDebounce"
 
 const Footer = () => {
     
-
     const [isModalOpen, setModalOpen] = useState(false)
 
     const isModalOppen = () =>{
@@ -46,6 +45,8 @@ const Footer = () => {
             setModalOpen(false)
         }
     }
+    if (window.location.pathname === '/login') 
+    return null;
 
     return (
         <div className={style.vertical}>
@@ -60,7 +61,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className={style.footer_botton}>
-                <span>2024 주소</span>
+                <p>2024 <span>세</span>상의 모든 <span>타</span>입</p>
             </div>
             {isModalOpen &&(<Modal ModalStyles={{width: "400px", height: "400px"}}>
                 <div className={style.top_title}>
