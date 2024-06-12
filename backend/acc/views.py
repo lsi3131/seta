@@ -153,6 +153,7 @@ class AccountPasswordAPIView(APIView):
 
 
 class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
         user_mbti = user.mbti
@@ -191,6 +192,7 @@ def validate_email(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def mbtiRank(request, username):
     user = get_object_or_404(User, username=username)
     follower_mbti_ranking = {}
