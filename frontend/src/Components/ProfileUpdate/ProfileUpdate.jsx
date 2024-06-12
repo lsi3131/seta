@@ -12,14 +12,16 @@ const ProfileUpdate = () => {
     const currentUser = useContext(UserContext)
     const [choice, setChoice] = useState(1)
     const [userInfos, setUserInfos] = useState(null)
+    const [userProvider, setUserProvider] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
-
     useEffect(() => {
         const fetchUserInfos = async () => {
             try {
                 setIsLoading(true)
                 const response = await apiClient.get(`/api/accounts/${currentUser.username}/`)
+                const provider = await apiClient.get(`/api/accounts/social/profile/${currentUser.username}/`)
                 setUserInfos(response.data)
+                setUserProvider(provider.data.provider)
             } catch (error) {
                 console.error('Error during fetch user infos:', error)
             }
@@ -59,22 +61,27 @@ const ProfileUpdate = () => {
                         >
                             자기소개
                         </Components.MenuContainer>
-                        <Components.MenuContainer
-                            onClick={() => {
-                                setChoice(3)
-                            }}
-                            isActive={choice === 3}
-                        >
-                            패스워드
-                        </Components.MenuContainer>
-                        <Components.MenuContainer
-                            onClick={() => {
-                                setChoice(4)
-                            }}
-                            isActive={choice === 4}
-                        >
-                            계정탈퇴
-                        </Components.MenuContainer>
+                        {userProvider === 'local' ? (
+                            <>
+                                <Components.MenuContainer
+                                    onClick={() => {
+                                        setChoice(3)
+                                    }}
+                                    isActive={choice === 3}
+                                >
+                                    패스워드
+                                </Components.MenuContainer>
+                                <Components.MenuContainer
+                                    onClick={() => {
+                                        setChoice(4)
+                                    }}
+                                    isActive={choice === 4}
+                                >
+                                    계정탈퇴
+                                </Components.MenuContainer>
+                            </>
+                        ) : (<></>)}
+                        
                     </Components.LeftMenuContainer>
                     <Components.RightContainer>
                         {choice === 1 && <MbtiContainer userInfos={userInfos}></MbtiContainer>}

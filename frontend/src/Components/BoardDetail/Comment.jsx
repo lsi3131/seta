@@ -192,6 +192,7 @@ const Comment = ({
                                     </p>
                                     <p>{getUpdateTime(comment.created_at)}</p>
                                 </div>
+
                                 <div className={style.comment_ment}>
                                     {comment.content.split('\n').map((line, index) => (
                                         <span key={index}>
@@ -523,7 +524,11 @@ const CommentInput = ({ post, onAddComment, parentCommentId }) => {
             )}
 
             <div className={style.comment_input_buttons_container}>
-                <button onClick={handleAddComment} style={{ width: '100px' }} disabled={isDisabled()}>
+                <button
+                    onClick={handleAddComment}
+                    style={{ width: '100px' }}
+                    disabled={isDisabled() && currentUser['username'] !== post.author}
+                >
                     댓글 등록
                 </button>
             </div>
@@ -559,10 +564,13 @@ const CommentBox = ({
                 onDeleteComment={onDeleteComment}
                 onAddLikeComment={onAddLikeComment}
             />
-            <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
 
+            <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={onPageChange} />
+            <div style={{ height: '30px' }}></div>
             <hr />
+            <div style={{ height: '20px' }}></div>
             <CommentInput post={post} onAddComment={onAddComment} />
+            <div style={{ height: '20px' }}></div>
         </div>
     )
 }

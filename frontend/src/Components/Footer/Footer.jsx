@@ -45,7 +45,6 @@ const Footer = () => {
             setModalOpen(false)
         }
     }
-    if (window.location.pathname === '/login') return null
 
     return (
         <div className={style.vertical}>

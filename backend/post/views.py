@@ -387,13 +387,19 @@ class PostCommentsAPIView(APIView):
                                author=request.user, comment_mbti=request.user.mbti,
                                parent=parent_comment)
 
+
+        if not parent_comment_id:
+            position_comment_id = new_comment.id
+            # Calculate the page number
+        else:
+            position_comment_id = parent_comment_id
+
         comments = post.comments.order_by('created_at')
 
         # Find the position of the new comment
         comment_ids = list(comments.values_list('id', flat=True))
-        new_comment_position = comment_ids.index(new_comment.id) + 1  # +1 to make it 1-based index
+        new_comment_position = comment_ids.index(position_comment_id) + 1  # +1 to make it 1-based index
 
-        # Calculate the page number
         per_page = 20
         page_number = (new_comment_position - 1) // per_page + 1
 
