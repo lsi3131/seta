@@ -11,6 +11,9 @@ from .validate import *
 from datetime import datetime
 from rest_framework.decorators import api_view, permission_classes
 
+import hashlib
+from django.core.cache import cache
+
 def serialize_post(post):
     like_usernames = [user.username for user in post.likes.all()]
     return {
@@ -226,6 +229,16 @@ class CreatePostAPIView(APIView):
 
     def post(self, request):
         data = request.data.copy()
+        # 요청의 본문을 해시하여 고유한 키 생성
+        request_hash = hashlib.md5(str(data).encode('utf-8')).hexdigest()
+        cache_key = f'post_request_{request_hash}'
+        
+        # 캐시에서 요청 해시를 검색
+        if cache.get(cache_key):
+            return Response({"error": "Duplicate request"}, status=400)
+        
+        # 캐시에 요청 해시 저장 (예: 10초 동안)
+        cache.set(cache_key, True, timeout=10)
         message = validate_post_data(data)
         if message:
             return Response(message, status=status.HTTP_400_BAD_REQUEST)

@@ -9,6 +9,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+import hashlib
+from django.core.cache import cache
+
+
 
 class MessageAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -50,8 +54,21 @@ class MessageAPIView(APIView):
         
         try:
             data = request.data
+            #요청 본문을 해싱하여 고유한 키 생성
+            request_hash = hashlib.md5(str(data).encode('utf-8')).hexdigest()
+            cache_key = f'post_request_{request_hash}'
+            
+            # 캐시에서 요청 해시를 검색
+            if cache.get(cache_key):
+                # 중복 요청이므로 아무 작업도 하지 않고 성공 응답을 반환
+                return Response({"message": "Duplicate request ignored"}, status=status.HTTP_200_OK)
+            
+            # 캐시에 요청 해시 저장 (예: 10초 동안)
+            cache.set(cache_key, True, timeout=10)
+            
             if data['sender'] != request.user.username:
                 return Response({'error': '보내는 사람은 본인만 가능합니다'}, status=status.HTTP_400_BAD_REQUEST)
+            
             recipient = get_user_model().objects.get(username=data['recipient'])
             subject = data['subject']
             body = data['body']
