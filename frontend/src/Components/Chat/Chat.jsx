@@ -58,8 +58,30 @@ const Chat = () => {
         return <div>Loading...</div>
     }
 
+
     const handleLinkClick = (e, post) => {
         e.preventDefault()
+
+        if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
+            alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
+            return
+        }
+
+        if (post.members_count >= post.max_members) {
+            alert('채팅방 정원이 초과되었습니다.')
+            return
+        }
+
+        // 이미 채팅방 멤버인 경우 바로 채팅방으로 이동
+        if (post.members.includes(currentUser.username)) {
+            alert('이미 채팅방에 참여하고 있습니다.')
+            return
+        }
+
+        if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
+            alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
+            return
+        }
 
         if (post['is_secret']) {
             // 비밀번호 인증 모달창 띄우기
@@ -68,7 +90,7 @@ const Chat = () => {
         } else {
             // 채팅방으로 이동
             const password = ''
-            navigateToRoom({category: post.category, roomId: roomId, password: password})
+            navigate(`/chatroom/${post.id}`, { state: { password: password } })
         }
     }
 

@@ -6,67 +6,18 @@ import ChatRoomPasswordModal from './ChatRoomPasswordModal'
 import { UserContext } from '../../userContext'
 import Pagination from "../Pagenation/Pagination";
 
-const ChatList = ({ posts }) => {
-    const [showCheckPassword, setShowCheckPassword] = useState(false)
-    const [roomId, setRoomId] = useState(0)
+const ChatList = ({ posts, onChatClick }) => {
     const currentUser = useContext(UserContext)
-    const navigate = useNavigate()
-
-    const handleLinkClick = (e, post) => {
-        e.preventDefault()
-
-        if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
-            alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
-            return
-        }
-
-        if (post.members_count >= post.max_members) {
-            alert('채팅방 정원이 초과되었습니다.')
-            return
-        }
-
-        // 이미 채팅방 멤버인 경우 바로 채팅방으로 이동
-        if (post.members.includes(currentUser.username)) {
-            alert('이미 채팅방에 참여하고 있습니다.')
-            return
-        }
-
-        if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
-            alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
-            return
-        }
-
-        if (post['is_secret']) {
-            // 비밀번호 인증 모달창 띄우기
-            setRoomId(post.id)
-            setShowCheckPassword(true)
-        } else {
-            // 채팅방으로 이동
-            const password = ''
-            navigate(`/chatroom/${post.id}`, { state: { password: password } })
-        }
-    }
-
-    const handleEnterRoom = (roomId, password) => {
-        navigate(`/chatroom/${roomId}`, { state: { password: password } })
-    }
-
-    const handleCloseRoom = () => {
-        setShowCheckPassword(false)
-    }
 
     return (
         <div className={style.chat_list}>
-            {showCheckPassword && (
-                <ChatRoomPasswordModal onEnter={handleEnterRoom} onClose={handleCloseRoom} roomId={roomId} />
-            )}
             <div className={style.chat_cards}>
                 {posts.map((post) => (
                     <div
                         key={post.id}
                         className={style.chat_card}
                         style={{ cursor: post.members_count >= post.max_members ? 'not-allowed' : '' }}
-                        onClick={(e) => {!currentUser.username ? window.location.href = '/login' : handleLinkClick(e, post)}}
+                        onClick={(e) => {!currentUser.username ? window.location.href = '/login' : onChatClick(e, post)}}
                     >
                         <h2 className={style.chat_card_title}>
                             <Link to="" >
