@@ -30,6 +30,7 @@ function App() {
             <UserProvider>
                 <Cursor />
                 <NavBar />
+                <div style={{flex: "1"}}>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
@@ -45,12 +46,12 @@ function App() {
                     <Route path="/search" element={<SearchResult />} />
                     <Route path="/finduser" element={<FindUser />} />
                     <Route path="/chat" element={<Chat />} />
-
                     <Route path="/chatroom/:roomId" element={<ChatRoom />} />
                     <Route path="/gameroom/:roomId" element={<GameRoom />} />
 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
+                </div>
                 <FabButton />
                 <Footer />
             </UserProvider>
