@@ -1,9 +1,10 @@
-import { react, useEffect, useState, useContext } from 'react'
+import React, { react, useEffect, useState, useContext } from 'react'
 import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
 import { Link, useNavigate } from 'react-router-dom'
 import ChatRoomPasswordModal from './ChatRoomPasswordModal'
 import { UserContext } from '../../userContext'
+import Pagination from "../Pagenation/Pagination";
 
 const ChatList = ({ posts }) => {
     const [showCheckPassword, setShowCheckPassword] = useState(false)
@@ -83,6 +84,7 @@ const ChatList = ({ posts }) => {
                         <p className={style.chat_card_date}>{post.created_at}</p>
                     </div>
                 ))}
+
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
@@ -13,6 +13,7 @@ const Chat = () => {
     const currentUser = useContext(UserContext)
     const [view, setView] = useState('chat')
     const [currentPage, setCurrentPage] = useState(1)
+    const [totalPage, setTotalPage] = useState(1)
     const [posts, setPosts] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [showCreateRoom, setShowCreateRoom] = useState(false)
@@ -21,20 +22,6 @@ const Chat = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const refreshList = async () => {
-            async function fetchData() {
-                try {
-                    const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
-                    setPosts(response.data)
-                    setIsLoading(false)
-                } catch (error) {
-                    console.error(error)
-                }
-            }
-
-            await fetchData()
-        }
-
         refreshList()
 
         const interval = setInterval(refreshList, 10000)
@@ -42,6 +29,22 @@ const Chat = () => {
         return () => clearInterval(interval)
     }, [view, currentPage])
 
+    const refreshList = async () => {
+        async function fetchData() {
+            try {
+                const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
+                console.log(response.data)
+                setPosts(response.data['results'])
+                setCurrentPage(response.data['cur_page'])
+                setTotalPage(response.data['total_page'])
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        await fetchData()
+    }
     const navigateToRoom = ({category, roomId, password}) => {
         let roomType = 'chatroom'
         if (category === 'game') {
@@ -123,10 +126,13 @@ const Chat = () => {
                 </button>
                 <hr />
                 {view === 'chat' ? (
-                    <ChatList posts={posts} user={currentUser} onChatClick={handleLinkClick} />
+                    <ChatList posts={posts} user={currentUser} onChatClick={handleLinkClick}/>
                 ) : (
                     <GameList posts={posts} user={currentUser} />
                 )}
+                <div>
+                    <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                </div>
             </div>
             <div className={style.chat_footer}></div>
         </div>

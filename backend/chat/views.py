@@ -6,6 +6,7 @@ from rest_framework import status
 from .models import *
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 from .models import ChatRoom, ChatMessage, ChatRoomCategory
 from .validate import validate_chatroom_data
 
@@ -71,8 +72,24 @@ class ChatRoomAPIView(APIView):
         # 게임일 경우 시작한 방은 가져오지 않는다.
         if cate == 'game':
             chatrooms = chatrooms.exclude(game_status='s')
+
+        # 12개씩 pagination
+        per_page = 12
+        paginator = Paginator(chatrooms, per_page)
+        page_number = request.GET.get("page")
+        if page_number:
+            chatrooms = paginator.get_page(page_number)
+        else:
+            chatrooms = paginator.get_page(1)
+
         data = [serialize_chatroom(chatroom) for chatroom in chatrooms]
-        return Response(data, status=status.HTTP_200_OK)
+        paginated_response_data = {
+            'total_page': paginator.num_pages,
+            'per_page': per_page,
+            'results': data,
+        }
+
+        return Response(paginated_response_data, status=status.HTTP_200_OK)
 
 
 class ChatRoomDetailAPIView(APIView):
