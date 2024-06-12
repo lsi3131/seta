@@ -20,7 +20,7 @@ const SocialLoginButton = () => {
 
   return (
     <div style = {{ display:'flex', justifyContent:'center'}}>
-        <div>
+        {/* <div> 
           <button
           onClick={() => handleGoogleLogin('google')}
           style={{ border: '0', backgroundColor: 'transparent', margin: '10px' }}>
@@ -30,7 +30,7 @@ const SocialLoginButton = () => {
             style={{ cursor: 'pointer', width: '50px' }}
           />
           </button>
-        </div>
+        </div> */}
         <div>
           <button
           onClick={kakaologin}

@@ -63,7 +63,7 @@ const Footer = () => {
                     2024 <span>세</span>상의 모든 <span>타</span>입
                 </p>
             </div>
-            {isModalOpen && (
+            {isModalOpen && currentUser.username && (
                 <Modal ModalStyles={{ width: '400px', height: '400px' }}>
                     <div className={style.top_title}>
                         <h2 className={style.title}>Q&A</h2>

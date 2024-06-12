@@ -413,10 +413,11 @@ def social_login(request):
         return redirect(redirect_url)
 
     if provider == 'github':
-        client_id = "Iv23ctbQsiHpb6Z1RA14"
+        client_id = getattr(settings, "GITHUB_CLIENT_ID")
         redirect_url = (
             f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
         return redirect(redirect_url)
+    
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

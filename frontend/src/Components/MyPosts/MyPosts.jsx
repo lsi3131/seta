@@ -89,11 +89,12 @@ const MyPost = () => {
     return (
         <div className={style.vertical}>
             <div className={style.board_category}>
+                {view !== "like_posts" &&
                 <input
                     type="checkbox"
                     onChange={handleSelectAll}
                     checked={isChecked}
-                />
+                />}
                 <button style={{ fontWeight: view === 'posts' ? 'bold' : '200' }}
                     onClick={() => handleViewChange('posts')}>내가 작성한 글</button>
                 <button
@@ -109,7 +110,7 @@ const MyPost = () => {
                     user={currentUser} onPostSelect={handlePostSelect}
                     selectedPosts={selectedPosts} allSelect={allSelect} />)
             }
-            {selectedPosts.length > 0 ? 
+            {selectedPosts.length > 0 && view !== "like_posts" ? 
             (<div className={style.delete_section}>
                 <button onClick={handleDelete} >
                     선택삭제
