@@ -404,19 +404,19 @@ SOCIAL_CALLBACK_URI = f"{BACK_BASE_URL}api/accounts/social/callback/"
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def social_login(request):
-    provider = request.GET.get('provider')
-    if provider == 'google':
-        scope = "https://www.googleapis.com/auth/userinfo.email"
-        client_id = getattr(settings, "GOOGLE_CLIENT_ID")
-        redirect_url = (
-            f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={SOCIAL_CALLBACK_URI}&scope={scope}")
-        return redirect(redirect_url)
+    # provider = request.GET.get('provider')
+    # if provider == 'google':
+    #     scope = "https://www.googleapis.com/auth/userinfo.email"
+    #     client_id = getattr(settings, "GOOGLE_CLIENT_ID")
+    #     redirect_url = (
+    #         f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={SOCIAL_CALLBACK_URI}&scope={scope}")
+    #     return redirect(redirect_url)
 
-    if provider == 'github':
-        client_id = getattr(settings, "GITHUB_CLIENT_ID")
-        redirect_url = (
-            f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
-        return redirect(redirect_url)
+    # if provider == 'github':
+    client_id = getattr(settings, "GITHUB_CLIENT_ID")
+    redirect_url = (
+        f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
+    return redirect(redirect_url)
     
 
 @api_view(['GET'])
@@ -437,67 +437,65 @@ def social(request, username) :
 @permission_classes([AllowAny])
 def social_callback(request):
     code = request.GET.get('code')
-    scope = request.GET.get('scope')  # google인 경우에만 존제
+    # scope = request.GET.get('scope')   google인 경우에만 존제
 
-    if scope:
-        client_id = getattr(settings, "GOOGLE_CLIENT_ID")
-        client_secret = getattr(settings, "GOOGLE_CLIENT_SECRET")
-        state = getattr(settings, 'STATE')
-        token_req = requests.post(
-            "https://oauth2.googleapis.com/token",
-            data={
-                "client_id": client_id,
-                "client_secret": client_secret,
-                "code": code,
-                "grant_type": "authorization_code",
-                "redirect_uri": SOCIAL_CALLBACK_URI,
-                "state": state,
+    # if scope:
+    #     client_id = getattr(settings, "GOOGLE_CLIENT_ID")
+    #     client_secret = getattr(settings, "GOOGLE_CLIENT_SECRET")
+    #     state = getattr(settings, 'STATE')
+    #     token_req = requests.post(
+    #         "https://oauth2.googleapis.com/token",
+    #         data={
+    #             "client_id": client_id,
+    #             "client_secret": client_secret,
+    #             "code": code,
+    #             "grant_type": "authorization_code",
+    #             "redirect_uri": SOCIAL_CALLBACK_URI,
+    #             "state": state,
 
-            },
-        )
+    #         },
+    #     )
 
-        token_req_json = token_req.json()
-        if not token_req_json:
-            return Response({"err_msg": "구글 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
+    #     token_req_json = token_req.json()
+    #     if not token_req_json:
+    #         return Response({"err_msg": "구글 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
 
-        access_token = token_req_json.get('access_token')
+    #     access_token = token_req_json.get('access_token')
 
-        user_info_req = requests.get(
-            f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
-        user_info = user_info_req.json()
-        user_id = user_info.get("user_id")
-        email = user_info.get('email')
-        username = email.split('@')[0]
-        provider = "google"
+    #     user_info_req = requests.get(
+    #         f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
+    #     user_info = user_info_req.json()
+    #     user_id = user_info.get("user_id")
+    #     email = user_info.get('email')
+    #     username = email.split('@')[0]
+    #     provider = "google"
 
-    if not scope:
-        client_id = getattr(settings, "GITHUB_CLIENT_ID")
-        client_secret = getattr(settings, "GITHUB_CLIENT_SECRET")
-        token_req = requests.post(
-            f'https://github.com/login/oauth/access_token',
-            data={
-                'client_id': client_id,
-                'client_secret': client_secret,
-                'code': code
-            },
-            headers={'Accept': 'application/json'}
-        )
-        token_req_json = token_req.json()
-        access_token = token_req_json.get('access_token')
-        user_info_req = requests.get(
-            'https://api.github.com/user',
-            headers={
-                'Authorization': f'token {access_token}',
-                'Accept': 'application/json'
-            }
-        )
-        user_info = user_info_req.json()
-        username = user_info.get("login")
-        print(username)
-        user_id = str(user_info.get("id"))
-        print(user_id)
-        email = ''
-        provider = "github"
+    # if not scope:
+    client_id = getattr(settings, "GITHUB_CLIENT_ID")
+    client_secret = getattr(settings, "GITHUB_CLIENT_SECRET")
+    token_req = requests.post(
+        f'https://github.com/login/oauth/access_token',
+        data={
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'code': code
+        },
+        headers={'Accept': 'application/json'}
+    )
+    token_req_json = token_req.json()
+    access_token = token_req_json.get('access_token')
+    user_info_req = requests.get(
+        'https://api.github.com/user',
+        headers={
+            'Authorization': f'token {access_token}',
+            'Accept': 'application/json'
+        }
+    )
+    user_info = user_info_req.json()
+    username = user_info.get("login")
+    user_id = str(user_info.get("id"))
+    email = ''
+    # provider = "github"
 
 
     try:
@@ -528,12 +526,12 @@ def social_callback(request):
             user.set_unusable_password()
             user.save()
 
-        if provider == 'google':
-            SocialAccount.objects.create(
-                user=user, provider="google", uid=user_id)
-        elif provider == 'github':
-            SocialAccount.objects.create(
-                user=user, provider="github", uid=user_id)
+        # if provider == 'google':
+        #     SocialAccount.objects.create(
+        #         user=user, provider="google", uid=user_id)
+        # elif provider == 'github':
+        SocialAccount.objects.create(
+            user=user, provider="github", uid=user_id)
 
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)

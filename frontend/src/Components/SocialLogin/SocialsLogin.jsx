@@ -5,7 +5,7 @@ const SocialLoginButton = () => {
   const BASE_URL = process.env.REACT_APP_API_BASE_URL
 
   const handleGoogleLogin = (provider) => {
-    window.location.href = `${BASE_URL}/api/accounts/social/login/?provider=${provider}`;
+    window.location.href = `${BASE_URL}/api/accounts/social/login/?`;
   };
 
   const kakaologin = () => {
@@ -44,7 +44,7 @@ const SocialLoginButton = () => {
         </div>
         <div>
           <button
-          onClick={() => handleGoogleLogin('github')}
+          onClick={() => handleGoogleLogin()}
           style={{ border: '0', backgroundColor: 'transparent', margin: '10px' }}>
           <img src="https://raw.githubusercontent.com/dheereshagrwal/colored-icons/1656f82b5b9a31968ab033db39768b4d0ffaf872/public/icons/github/github.svg"
           alt="Google"
