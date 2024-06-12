@@ -39,7 +39,7 @@ if FRONT_BASE_URL == '':
 if BACK_BASE_URL == '':
     BACK_BASE_URL = "http://127.0.0.1:8000/"
 
-print('=========', BACK_BASE_URL, FRONT_BASE_URL, DEBUG)
+print(BACK_BASE_URL, FRONT_BASE_URL, DEBUG)
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
