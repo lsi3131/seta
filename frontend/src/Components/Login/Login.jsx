@@ -10,7 +10,6 @@ import { UserContext } from '../../userContext'
 
 function Login() {
     const FRONT_BASE_URL = process.env.REACT_APP_FRONT_URL
-    console.log(FRONT_BASE_URL)
 
     const [signIn, toggle] = React.useState('true')
     const [usernameIn, setUsernameIn] = React.useState('')
@@ -99,7 +98,6 @@ function Login() {
             await checkPasswordCheck()
             await checkEmail()
         } catch (error) {}
-        console.log(formValidateChecker)
 
         if (
             formValidateChecker.username === false ||
@@ -167,7 +165,6 @@ function Login() {
 
         try {
             const response = await apiClient.post('/api/accounts/validate/password/', data)
-            console.log(response.data.message)
             setPasswordCheckMessage(response.data.message)
             setFormValidateChecker((prevState) => ({
                 ...prevState,

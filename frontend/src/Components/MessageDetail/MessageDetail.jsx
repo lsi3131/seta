@@ -8,7 +8,6 @@ import { UserContext } from 'userContext'
 const handleReply = async (data) => {
     try {
         await apiClient.post('/api/messages/', data)
-        console.log(data)
         alert('메시지가 전송되었습니다.')
         window.location.href = '/messages/'
     } catch (error) {

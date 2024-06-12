@@ -348,7 +348,6 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
             } else {
                 // Enter : 제출
                 e.preventDefault()
-                console.log('content', content, e)
                 handleAddComment(e)
             }
         }

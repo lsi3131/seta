@@ -24,7 +24,6 @@ const PopupFilter = ({initialMbtiList, onApplyPopup, onClosePopup}) => {
     ])
 
     useEffect(() => {
-        console.log(initialMbtiList)
         setMbtiChecks(mbtiChecks.map(item =>
             initialMbtiList.some(m => m.toUpperCase() === item.label) ? {...item, checked: true} : item
         ));

@@ -12,13 +12,11 @@ const ProfileTop = ({ user, onFollowUpdate }) => {
     const [isFollowing, setIsFollowing] = useState(false)
 
     useEffect(() => {
-        console.log(user)
         handleCheckFollow()
     }, [user])
 
     const isMyProfile = () => {
 
-        console.log(user.username)
         if (currentUser === null) {
             return false
         }
@@ -30,7 +28,6 @@ const ProfileTop = ({ user, onFollowUpdate }) => {
         apiClient
             .get(`/api/accounts/${user.username}/check_follow/`)
             .then((response) => {
-                console.log(response.data)
                 setIsFollowing(response.data['follow'] === 1)
             })
             .catch((error) => {

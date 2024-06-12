@@ -120,7 +120,6 @@ const Chat = () => {
         setView(view)
     }
 
-    console.log(currentUser)
 
     return (
         <div>

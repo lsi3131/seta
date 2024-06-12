@@ -99,9 +99,6 @@ const Board = () => {
         handleGetPostListPage,
     } = useBoardAPI(mbti, filter, order, page);
 
-//     console.log(
-//         handleGetPostListPage,
-// )
     useEffect(() => {
         document.body.classList.add(style.customBodyStyle);
 

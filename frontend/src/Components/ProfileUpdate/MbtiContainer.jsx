@@ -218,28 +218,24 @@ const MbtiContainer = (props) => {
         const per = event.target.value
         setIePercentage(per)
         setUserMbti({ ...userMbti, ie: per > 50 ? 'E' : per == 50 ? '-' : 'I' })
-        console.log(userMbti)
     }
 
     const handleNsChange = (event) => {
         const per = event.target.value
         setNsPercentage(per)
         setUserMbti({ ...userMbti, ns: per > 50 ? 'N' : per == 50 ? '-' : 'S' })
-        console.log(userMbti)
     }
 
     const handleTfChange = (event) => {
         const per = event.target.value
         setTfPercentage(per)
         setUserMbti({ ...userMbti, tf: per > 50 ? 'T' : per == 50 ? '-' : 'F' })
-        console.log(userMbti)
     }
 
     const handlePjChange = (event) => {
         const per = event.target.value
         setPjPercentage(per)
         setUserMbti({ ...userMbti, pj: per > 50 ? 'J' : per == 50 ? '-' : 'P' })
-        console.log(userMbti)
     }
 
     return (
