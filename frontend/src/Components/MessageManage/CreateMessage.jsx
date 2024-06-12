@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from 'react'
+import {useState, useEffect, useContext} from 'react'
 import useDebounce from './useDebounce'
 import style from './MessageManage.module.css'
 import apiClient from 'services/apiClient'
-import { UserContext } from 'userContext'
+import {UserContext} from 'userContext'
 
 const CreateMessage = () => {
     const currentUser = useContext(UserContext)
@@ -38,6 +38,7 @@ const CreateMessage = () => {
                     }
                 }
             }
+
             fetchData()
         }
     }, [recipient, debouncedRecipient])
@@ -64,21 +65,47 @@ const CreateMessage = () => {
                     className={style.input_subject}
                     placeholder="제목"
                     value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
+                    onChange={(e) => {
+                        if (e.target.value.length <= 50) {
+                            setSubject(e.target.value)
+                            setRecipientMessage('')
+                        } else {
+                            setRecipientMessage('제목은 50자 이내로 작성해주세요.')
+                        }
+                    }}
                 />
                 <input
                     type="text"
                     className={style.input_recipient}
                     placeholder="받는 사람"
                     value={recipient}
-                    onChange={(e) => setRecipient(e.target.value)}
+                    onChange={(e) => {
+                        if (e.target.value.length <= 50) {
+                            setRecipient(e.target.value)
+                            setRecipientMessage('')
+                        } else {
+                            setRecipientMessage('50자 이내로 작성해주세요.')
+                        }
+                    }}
                 />
                 <div className={style.recipientMessage}>{recipientMessage}</div>
                 <textarea
                     placeholder="내용"
                     className={style.input_content}
                     value={body}
-                    onChange={(e) => setBody(e.target.value)}
+                    onChange={(e) => {
+                        if (e.target.value.length <= 400) {
+                            if (e.target.scrollHeight > 270) {
+                                e.target.style.height = '270px'
+                                setRecipientMessage('내용은 10줄 이내로 작성해주세요.')
+                            } else {
+                                setBody(e.target.value)
+                                setRecipientMessage('')
+                            }
+                        } else {
+                            setRecipientMessage('내용은 400자 이내로 작성해주세요.')
+                        }
+                    }}
                 />
                 <button className={style.createButton} onClick={handleSend}>
                     보내기
