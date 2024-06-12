@@ -66,6 +66,10 @@ class ChatRoomAPIView(APIView):
 
     def get(self, request):
         cate = request.GET.get('category', 'chat')
+        roomCate = ChatRoomCategory.objects.filter(name=cate).first()
+        if not roomCate:
+            return Response({'error': '존재하지 않는 카테고리입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
         roomCate = ChatRoomCategory.objects.get(name=cate)
         chatrooms = ChatRoom.objects.filter(room_category=roomCate)
 
