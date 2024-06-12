@@ -1,15 +1,16 @@
 import React from 'react';
 
-const baseURL = process.env.REACT_APP_API_BASE_URL;
 
-const GoogleLoginButton = () => {
+const SocialLoginButton = () => {
+
   const handleGoogleLogin = (provider) => {
     window.location.href = `${baseURL}/api/accounts/social/login/?provider=${provider}`;
   };
 
   const kakaologin = () => {
     const KAKAO_REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY
-    const KAKAO_REDIRECT_URI = "http://localhost:8000/api/accounts/kakao/callback/"
+    const BASE_URL = process.env.REACT_APP_API_BASE_URL
+    const KAKAO_REDIRECT_URI = `${BASE_URL}/api/accounts/kakao/callback/`
     window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code&scope=profile_nickname`
 };
 
@@ -18,7 +19,7 @@ const GoogleLoginButton = () => {
   }
 
   return (
-    <div style = {{ display:'flex'}}>
+    <div style = {{ display:'flex', justifyContent:'center'}}>
         <div>
           <button
           onClick={() => handleGoogleLogin('google')}
@@ -54,4 +55,4 @@ const GoogleLoginButton = () => {
   );
 };
 
-export default GoogleLoginButton;
+export default SocialLoginButton;
