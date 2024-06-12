@@ -566,7 +566,7 @@ def kakao_callback(request):
     user_id = str(profile_json.get("id"))
 
     try:
-        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[-4:]}'))
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
@@ -595,7 +595,7 @@ def kakao_callback(request):
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         user, created = User.objects.get_or_create(email=username,
-            defaults={'username': (f'{username}{user_id[:4]}')})
+            defaults={'username': (f'{username}{user_id[-4:]}')})
         if created:
             user.set_unusable_password()
             user.save()
