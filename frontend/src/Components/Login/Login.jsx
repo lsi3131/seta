@@ -4,9 +4,12 @@ import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
 import { useLocation, Link } from 'react-router-dom'
-import GoogleLoginButton from 'Components/SocialLogin/SocialsLogin'
+import SocialLoginButton from 'Components/SocialLogin/SocialsLogin'
 
 function Login() {
+    const FRONT_BASE_URL = process.env.REACT_APP_FRONT_URL
+    console.log(FRONT_BASE_URL)
+
     const [signIn, toggle] = React.useState('true')
     const [usernameIn, setUsernameIn] = React.useState('')
     const [passwordIn, setPasswordIn] = React.useState('')
@@ -318,12 +321,10 @@ function Login() {
                                 value={passwordIn}
                             />
                             <Components.Span className="error-message">{errorMessage}</Components.Span>
-                            <Components.Anchor href="http://localhost:3000/finduser/">아아디/패스워드찾기</Components.Anchor>
+                            <Components.Anchor href={`${FRONT_BASE_URL}/finduser/`}>아아디/패스워드찾기</Components.Anchor>
                             <Components.Button>로그인</Components.Button>
-                            <div>
-                              <GoogleLoginButton />
-                            </div>
                         </Components.Form>
+                        <SocialLoginButton />
                     </Components.SignInContainer>
 
                     <Components.OverlayContainer signin={signIn}>

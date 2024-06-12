@@ -535,11 +535,10 @@ def social_callback(request):
 
 
 # 카카오 로그인
-BASE_URL = "http://localhost:3000"
-
-KAKAO_CALLBACK_URI = "http://localhost:8000/api/accounts/kakao/callback/"  # 프론트 로그인 URI 입력
-
-
+BACK_BASE_URL = settings.BACK_BASE_URL
+FRONT_BASE_URL = settings.FRONT_BASE_URL
+KAKAO_CALLBACK_URI = f"{BACK_BASE_URL}/api/accounts/kakao/callback/"  # 프론트 로그인 URI 입력
+print(KAKAO_CALLBACK_URI)
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def kakao_callback(request):
@@ -587,8 +586,7 @@ def kakao_callback(request):
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
 
-        redirect_url = "http://localhost:3000/"
-        respons = HttpResponseRedirect(redirect_url)
+        respons = HttpResponseRedirect(FRONT_BASE_URL)
 
         respons.set_cookie('access', str(access), max_age=5)
         respons.set_cookie('refresh', str(refresh), max_age=5)
@@ -606,8 +604,7 @@ def kakao_callback(request):
         SocialAccount.objects.create(user=user, provider="kakao", uid=user_id)
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
-        redirect_url = "http://localhost:3000/"
-        respons = HttpResponseRedirect(redirect_url)
+        respons = HttpResponseRedirect(FRONT_BASE_URL)
 
         respons.set_cookie('access', str(access), max_age=5)
         respons.set_cookie('refresh', str(refresh), max_age=5)
