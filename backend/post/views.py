@@ -434,6 +434,8 @@ class PostCommentDetailAPIView(APIView):
 
 
 class MypostsAPIView(APIView):
+   permission_classes = [IsAuthenticatedOrReadOnly]
+   
    def delete(self, request):
         ids = request.data.get('ids', [])
         print(ids)
