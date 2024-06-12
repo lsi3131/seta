@@ -10,6 +10,9 @@ import Pagination from '../Pagenation/Pagination'
 const MyLikePosts = (e) => {
     const posts = e.posts.results
     const user = e.user
+    const selectedPosts = e.selectedPosts
+    const onPostSelect = e.onPostSelect
+    const allSelect = e.allSelect
 
     console.log(posts)
     return (
@@ -19,6 +22,9 @@ const MyLikePosts = (e) => {
                 <>
                     <div key={post.id} className={style.board_post}>
                         <div className={style.board_post_left}>
+                        <input className={style.board_post_left_checkbox} type="checkbox"
+                            checked={allSelect || selectedPosts.includes(post.id)}
+                            onChange={() => {onPostSelect(post.id)}}/>
                             <div className={style.board_post_category}>
                                 <p style={{ color: getFontColor(post.post_mbti) }}>{post.category}</p>
                             </div>
