@@ -398,12 +398,11 @@ class FindPasswordAPIView(APIView):
 
 
 # social login
-SOCIAL_CALLBACK_URI = f"{BACK_BASE_URL}/api/accounts/social/callback/"
+SOCIAL_CALLBACK_URI = f"{BACK_BASE_URL}api/accounts/social/callback/"
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def social_login(request):
     provider = request.GET.get('provider')
-
     if provider == 'google':
         scope = "https://www.googleapis.com/auth/userinfo.email"
         client_id = getattr(settings, "GOOGLE_CLIENT_ID")
@@ -612,7 +611,7 @@ def kakao_callback(request):
 
 
 class AccountMbtiVoteView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes=[IsAuthenticated]
 
     def post(self, request, username):
         owner = get_object_or_404(User, username=username)

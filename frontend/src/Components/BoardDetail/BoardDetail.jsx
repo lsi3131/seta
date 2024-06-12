@@ -20,9 +20,11 @@ import comment from "./Comment";
 import queryString from "query-string";
 
 
+
 const BoardTitle = ({mbti, post, commentCount}) => {
     useEffect(() => {
     }, [post, commentCount])
+    const currentUser = useContext(UserContext);
 
     return (
         <div className={style.board_title_container}>
@@ -35,9 +37,9 @@ const BoardTitle = ({mbti, post, commentCount}) => {
             <div className={style.board_title_bottom}>
                 <div className={style.board_title_bottom_left}>
                     <p>
-                        <Link to={`/profile/${post.author}/`}>{post.author}
-                            <sup style={{backgroundColor: getButtonColor(mbti)}}>{mbti.toUpperCase()}</sup>
-                        </Link>
+                    <Link to={currentUser.username ? (`/profile/${post.author}/`) : "/login"}>{post.author}
+                        <sup style={{backgroundColor: getButtonColor(mbti)}}>{mbti.toUpperCase()}</sup>
+                    </Link> 
                     </p>
 
                     <p>{formatDate(post.created_at)}</p>
