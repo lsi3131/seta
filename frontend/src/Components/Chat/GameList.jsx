@@ -3,6 +3,7 @@ import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
 import { Link, useNavigate } from 'react-router-dom'
 import ChatRoomPasswordModal from './ChatRoomPasswordModal'
+import image from "../../Assets/images/game/trpg_setting.png";
 
 const GameList = ({ posts }) => {
     const [showCheckPassword, setShowCheckPassword] = useState(false)
@@ -35,6 +36,13 @@ const GameList = ({ posts }) => {
     const handleCloseRoom = () => {
         setShowCheckPassword(false)
     }
+
+    return (
+        <div className={style.gameRoomImage}>
+            <img src={image} alt=""></img>
+            <h1>준비 중입니다... </h1>
+        </div>
+    )
 
     return (
         <div className={style.chat_list}>

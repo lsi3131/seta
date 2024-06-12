@@ -101,3 +101,16 @@
 .membersFull:hover {
     cursor: not-allowed;
 }
+
+.gameRoomImage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+}
+
+.gameRoomImage > img {
+    width: 70%;
+    margin: 20px;
+}

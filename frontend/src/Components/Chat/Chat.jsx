@@ -158,7 +158,10 @@ const Chat = () => {
                     <div>
                     </div>
                 </div>
-                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                {(view === 'chat') && (
+                    <>
+                        <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                    </>)}
                 <div className={style.chat_footer}></div>
             </div>
         </div>
