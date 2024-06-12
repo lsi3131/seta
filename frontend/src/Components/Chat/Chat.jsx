@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
-import { UserContext } from '../../userContext'
+import {UserContext} from '../../userContext'
 import ChatList from './ChatList'
 import GameList from './GameList'
 import Pagination from '../Pagenation/Pagination'
 import ChatRoomCreateModal from './ChatRoomCreateModal'
 import ChatRoomPasswordModal from './ChatRoomPasswordModal'
-import { useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 const Chat = () => {
     const currentUser = useContext(UserContext)
@@ -31,14 +31,16 @@ const Chat = () => {
 
     const refreshList = async () => {
         async function fetchData() {
-            try {
-                const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
-                setPosts(response.data['results'])
-                setCurrentPage(currentPage)
-                setTotalPage(response.data['total_page'])
-                setIsLoading(false)
-            } catch (error) {
-                console.error(error)
+            if (view !== 'game') {
+                try {
+                    const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
+                    setPosts(response.data['results'])
+                    setCurrentPage(currentPage)
+                    setTotalPage(response.data['total_page'])
+                    setIsLoading(false)
+                } catch (error) {
+                    console.error(error)
+                }
             }
         }
 
@@ -90,7 +92,7 @@ const Chat = () => {
         } else {
             // 채팅방으로 이동
             const password = ''
-            navigate(`/chatroom/${post.id}`, { state: { password: password } })
+            navigate(`/chatroom/${post.id}`, {state: {password: password}})
         }
     }
 
