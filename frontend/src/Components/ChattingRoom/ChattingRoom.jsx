@@ -28,6 +28,19 @@ const ChatRoom = () => {
                         password: password,
                     }
                     await apiClient.post('api/chats/check_room_password/', data)
+
+                } catch (error) {
+                    console.error('잘못된 경로로 채팅방에 입장했습니다.', error)
+                    navigate('/chat')
+                }
+
+                try {
+                    const response = await apiClient.get(`api/chats/${roomId}/`)
+                    const data = response.data
+                    if(data.members_count > data.max_members) {
+                        console.error('정원이 초과되었습니다.')
+                        navigate('/chat')
+                    }
                     setIsLoading(false)
                 } catch (error) {
                     console.error('잘못된 경로로 채팅방에 입장했습니다.', error)
