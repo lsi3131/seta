@@ -141,6 +141,7 @@
     display: flex;
     width: 200px;
     margin-top: 10px;
+    justify-content: flex-end;
 }
 
 .comment_right_button > button {
