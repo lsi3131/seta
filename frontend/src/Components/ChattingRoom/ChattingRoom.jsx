@@ -6,7 +6,7 @@ import ChatLeft from './ChatLeft'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
 
-const baseURL = process.env.REACT_APP_WS_BASE_URL;
+const baseURL = process.env.REACT_APP_WS_BASE_URL
 
 const ChatRoom = () => {
     const location = useLocation()
@@ -90,18 +90,12 @@ const ChatRoom = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload)
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(
-                    JSON.stringify({
-                        message_type: 'leave',
-                        username: currentUser.username,
-                        message: '',
-                    }),
-                )
-
-                socket.close()
+                // 페이지 이탈 시 종료 코드를 설정하여 WebSocket을 닫음
+                const closeCode = navigate('/chat', { replace: true }) ? 1000 : 1001
+                socket.close(closeCode)
             }
         }
-    }, [currentUser, roomId])
+    }, [currentUser, roomId, navigate])
 
     const handleExpel = (member) => {
         socket.send(
@@ -123,7 +117,7 @@ const ChatRoom = () => {
                 }),
             )
         }
-        window.location.href = '/chat'
+        navigate('/chat')
     }
 
     const fetchHost = async () => {
@@ -170,7 +164,9 @@ const ChatRoom = () => {
                         }),
                     )
 
-                    socket.close()
+                    // 페이지 이탈 시 종료 코드를 설정하여 WebSocket을 닫음
+                    const closeCode = action === 'PUSH' ? 1000 : 1001
+                    socket.close(closeCode)
                 }
             }
         })
@@ -205,7 +201,7 @@ const ChatRoom = () => {
                     </div>
                 </div>
                 <div className={style.Room_right}>
-                    <ChatRightBottom members={members} socket={socket} />
+                    <ChatRightBottom members={members} roomId={roomId} socket={socket} />
                 </div>
             </div>
         </div>

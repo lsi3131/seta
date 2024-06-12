@@ -1,14 +1,31 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import style from './ChattingRoom.module.css'
 import { UserContext } from '../../userContext'
+import apiClient from '../../services/apiClient'
 
-const ChatRightBottom = ({ members, socket }) => {
+const ChatRightBottom = ({ members, socket, roomId }) => {
     const [text, setText] = useState('')
     const textareaRef = useRef(null)
     const [rows, setRows] = useState(1)
     const [messages, setMessages] = useState([])
+    const [agomessages, setAgomessages] = useState([])
     const currentUser = useContext(UserContext)
     const messagesEndRef = useRef(null)
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            try {
+                const { data } = await apiClient.get(`/api/chats/${roomId}/message/`)
+                setAgomessages(data)
+                setIsLoading(false)
+            } catch (err) {
+                console.error(err)
+                setIsLoading(false)
+            }
+        }
+        fetchMessages()
+    }, [roomId])
 
     useEffect(() => {
         if (!currentUser || !socket) return
@@ -31,13 +48,15 @@ const ChatRightBottom = ({ members, socket }) => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
         }
-    }, [messages])
+    }, [messages, agomessages])
 
     useEffect(() => {
         const adjustTextareaHeight = () => {
             const textarea = textareaRef.current
-            textarea.style.height = 'auto'
-            textarea.style.height = `${textarea.scrollHeight}px`
+            if (textarea) {
+                textarea.style.height = 'auto'
+                textarea.style.height = `${textarea.scrollHeight}px`
+            }
         }
 
         adjustTextareaHeight()
@@ -83,10 +102,34 @@ const ChatRightBottom = ({ members, socket }) => {
         }
     }
 
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+    const formatMessageTime = (timeString) => {
+        const date = new Date(timeString)
+        return date.toLocaleTimeString('ko-KR')
+    }
+
     return (
         <>
             <div className={style.Room_right_bottom}>
                 <div className={style.Room_bottom_content} ref={messagesEndRef}>
+                    {agomessages.map((agoMsg, index) => (
+                        <div key={index} className={style.messages}>
+                            <div
+                                className={
+                                    agoMsg.sender === currentUser.username ? style.my_message : style.other_message
+                                }
+                            >
+                                <div>
+                                    <span className={style.message_username}>{agoMsg.sender}</span>
+
+                                    <span className={style.message_time}>{formatMessageTime(agoMsg.created_at)}</span>
+                                </div>
+                                <p>{agoMsg.content}</p>
+                            </div>
+                        </div>
+                    ))}
                     {messages.map((msg, index) => (
                         <div key={index} className={style.messages}>
                             {msg.message_type === 'message' ? (

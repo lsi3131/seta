@@ -19,6 +19,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
+        print(close_code)
+        # 새로고침이랑 다른 곳으로 이동하는것을 구분 close_code가 1001이면 새로고침
+        # close_code가 1000이면 다른 곳으로 이동
+        if close_code == 1001:
+            return
         await self.save_messages(self.room_name)
         await self.delete_room(self.room_name)
         await self.channel_layer.group_discard(
@@ -45,8 +50,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'message_type':message_type,
                 }
             )
-            if len(room_messages[self.room_name]) >= 10:
-                await self.save_messages(self.room_name)
+            
+            await self.save_messages(self.room_name)
 
         elif message_type == 'enter':
             await self.channel_layer.group_send(
