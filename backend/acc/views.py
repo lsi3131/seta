@@ -413,14 +413,11 @@ def social_login(request):
         return redirect(redirect_url)
 
     if provider == 'github':
-        client_id = "Iv23ctbQsiHpb6Z1RA14"
+        client_id = getattr(settings, "GITHUB_CLIENT_ID")
         redirect_url = (
             f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
         return redirect(redirect_url)
     
-    if provider == 'naver':
-        client_id = "WMyrib7QYEZoEoIrQUAH"
-        return redirect(f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=WMyrib7QYEZoEoIrQUAH&state=STATE_STRING&redirect_uri=http://127.0.0.1:3000/api/accounts/social/callback/")
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
