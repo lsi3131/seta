@@ -241,13 +241,13 @@ const MbtiContainer = (props) => {
         <Container>
             <MbtiDiv>
                 <LabelWrapper>
-                    <LeftDiv>I</LeftDiv>
-                    <RightDiv>E</RightDiv>
+                    <LeftDiv>E</LeftDiv>
+                    <RightDiv>I</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{100 - iePercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={iePercentage} onChange={handleIeChange} />
                     <PercentageDisplay>{iePercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={iePercentage} onChange={handleIeChange} />
+                    <PercentageDisplay>{100 - iePercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
             <MbtiDiv>
@@ -256,9 +256,9 @@ const MbtiContainer = (props) => {
                     <RightDiv>S</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{100 - nsPercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={nsPercentage} onChange={handleNsChange} />
                     <PercentageDisplay>{nsPercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={nsPercentage} onChange={handleNsChange} />
+                    <PercentageDisplay>{100 - nsPercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
             <MbtiDiv>
@@ -267,20 +267,20 @@ const MbtiContainer = (props) => {
                     <RightDiv>F</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{100 - tfPercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={tfPercentage} onChange={handleTfChange} />
                     <PercentageDisplay>{tfPercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={tfPercentage} onChange={handleTfChange} />
+                    <PercentageDisplay>{100 - tfPercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
             <MbtiDiv>
                 <LabelWrapper>
-                    <LeftDiv>P</LeftDiv>
-                    <RightDiv>J</RightDiv>
+                    <LeftDiv>J</LeftDiv>
+                    <RightDiv>P</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{100 - pjPercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={pjPercentage} onChange={handlePjChange} />
                     <PercentageDisplay>{pjPercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={pjPercentage} onChange={handlePjChange} />
+                    <PercentageDisplay>{100 - pjPercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
 
