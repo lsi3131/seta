@@ -114,6 +114,7 @@ const Comment = ({
 
     useEffect(() => {
         setInputModeType('')
+        console.log('====',currentUser.username)
     }, [comment]);
 
     const shouldLogin = () => {
@@ -206,8 +207,10 @@ const Comment = ({
                                             <button onClick={handleDeleteComment}>삭제</button>
                                         </>
                                     }
-                                    <Report author={comment.author}
-                                            mbti={currentUser.mbti_type}/>
+                                    {currentUser['username'] !== comment.author && (
+                                        <Report author={comment.author}
+                                                mbti={currentUser.mbti_type}/>
+                                    )}
                                 </div>
                             </div>
                         </div>
