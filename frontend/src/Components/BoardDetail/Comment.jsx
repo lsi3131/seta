@@ -101,6 +101,7 @@ const CommentSubInput = ({
 
 const Comment = ({
                      comment,
+                     post,
                      postMbtiList,
                      onAddComment,
                      onUpdateComment,
@@ -167,7 +168,7 @@ const Comment = ({
     return (
         <div>
             <div key={comment.id}>
-                {isMbtiInPostMbtiList(comment) ? (
+                {isMbtiInPostMbtiList(comment) || comment.author === post.author ? (
                         <div className={style.comment}>
                             <div className={style.comment_left_1}>
                                 {isChild && <img src={reply} alt=""/>}
@@ -231,6 +232,7 @@ const Comment = ({
                     <hr/>
                     <Comment
                         key={child.id}
+                        post={post}
                         postMbtiList={postMbtiList}
                         onAddComment={onAddComment}
                         onDeleteComment={onDeleteComment}
@@ -248,6 +250,7 @@ const Comment = ({
 
 const CommentList = ({
                          comments,
+                         post,
                          postMbtiList,
                          commentCount,
                          onAddComment,
@@ -303,7 +306,9 @@ const CommentList = ({
                     {isMbtiInFilter(comment) && (
                         <>
                             <hr/>
-                            <Comment key={index} comment={comment}
+                            <Comment key={index}
+                                     comment={comment}
+                                     post={post}
                                      postMbtiList={postMbtiList}
                                      onAddComment={onAddComment}
                                      onUpdateComment={onUpdateComment}
@@ -407,32 +412,54 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
     return (
         <div className={style.comment_input_container}>
             <div className={style.comment_input_user}>
-                {canRegisterComment() && (
+                {(canRegisterComment() || currentUser['username'] === post.author) && (
                     <p>{currentUser.username}
                         <sup
                             style={{backgroundColor: getButtonColor(currentUser['mbti_type'])}}>{currentUser['mbti_type'].toUpperCase()}</sup>
                     </p>
                 )}
             </div>
-            {shouldLogin() && (
-                <textarea
-                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
-                    placeholder={"댓글을 등록하시려면 로그인 해주세요. 로그인 하시겠습니까?"}
-                    onClick={navigateToLogin}
-                    rows={rows}
-                    disabled={true}
-                ></textarea>
-            )}
-            {shouldRegisterMbti() && (
-                <textarea
-                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
-                    placeholder={"댓글을 등록하시려면 MBTI를 등록해주세요. MBTI를 등록 하시겠습니까?"}
-                    onClick={navigateToProfile}
-                    rows={rows}
-                    disabled={true}
-                ></textarea>
-            )}
-            {canRegisterComment() && (
+            {currentUser['username'] !== post.author ? (
+                <>
+                    {shouldLogin() && (
+                        <textarea
+                            style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                            placeholder={"댓글을 등록하시려면 로그인 해주세요. 로그인 하시겠습니까?"}
+                            onClick={navigateToLogin}
+                            rows={rows}
+                            disabled={true}
+                        ></textarea>
+                    )}
+                    {shouldRegisterMbti() && (
+                        <textarea
+                            style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                            placeholder={"댓글을 등록하시려면 MBTI를 등록해주세요. MBTI를 등록 하시겠습니까?"}
+                            onClick={navigateToProfile}
+                            rows={rows}
+                            disabled={true}
+                        ></textarea>
+                    )}
+                    {canRegisterComment() && (
+                        <textarea
+                            placeholder={"댓글을 입력하세요"}
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            rows={rows}
+                            onKeyDown={handleKeyDown}
+                            onCompositionStart={handleCompositionStart}
+                            onCompositionEnd={handleCompositionEnd}
+                        ></textarea>
+                    )}
+                    {notIncludedInMbtiList() && (
+                        <textarea
+                            style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
+                            placeholder={"댓글을 쓸 수 없는 타입입니다"}
+                            rows={rows}
+                            disabled={true}
+                        ></textarea>
+                    )}
+                </>
+            ) : (
                 <textarea
                     placeholder={"댓글을 입력하세요"}
                     value={content}
@@ -441,14 +468,6 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
                     onKeyDown={handleKeyDown}
                     onCompositionStart={handleCompositionStart}
                     onCompositionEnd={handleCompositionEnd}
-                ></textarea>
-            )}
-            {notIncludedInMbtiList() && (
-                <textarea
-                    style={{backgroundColor: "#e0e0e0", cursor: "pointer"}}
-                    placeholder={"댓글을 쓸 수 없는 타입입니다"}
-                    rows={rows}
-                    disabled={true}
                 ></textarea>
             )}
 
@@ -474,6 +493,7 @@ const CommentBox = ({
     return (
         <div className={style.comment_box}>
             <CommentList comments={comments}
+                         post={post}
                          postMbtiList={post.mbti}
                          commentCount={commentCount}
                          onAddComment={onAddComment}
