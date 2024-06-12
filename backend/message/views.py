@@ -50,6 +50,8 @@ class MessageAPIView(APIView):
         
         try:
             data = request.data
+            if data['sender'] != request.user.username:
+                return Response({'error': '보내는 사람은 본인만 가능합니다'}, status=status.HTTP_400_BAD_REQUEST)
             recipient = get_user_model().objects.get(username=data['recipient'])
             subject = data['subject']
             body = data['body']

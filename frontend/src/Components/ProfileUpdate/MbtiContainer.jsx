@@ -1,7 +1,7 @@
-import {useState, useEffect, useContext} from 'react'
+import { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import apiClient from 'services/apiClient'
-import {UpdateUserContext, UserContext} from "../../userContext";
+import { UpdateUserContext, UserContext } from '../../userContext'
 
 const Container = styled.div`
     width: 100%;
@@ -141,7 +141,7 @@ const MbtiContainer = (props) => {
     const [userMbti, setUserMbti] = useState({})
     const [mbtiMessage, setMbtiMessage] = useState('')
     const updateCurrentUser = useContext(UpdateUserContext)
-    const currentUser = useContext(UserContext);
+    const currentUser = useContext(UserContext)
 
     const handleUpdate = () => {
         if (!mbtiCheck) {
@@ -164,7 +164,7 @@ const MbtiContainer = (props) => {
                 localStorage.setItem('accessToken', access)
                 localStorage.setItem('refreshToken', refresh)
 
-                updateCurrentUser();
+                updateCurrentUser()
                 setMbtiMessage('MBTI 가 수정되었습니다!')
             })
             .catch((error) => {
@@ -204,8 +204,7 @@ const MbtiContainer = (props) => {
         if (currentUser && currentUser.mbti_type) {
             setMbtiCheck(false)
             setMbtiMessage('MBTI가 이미 설정되어있습니다.')
-        }
-        else if (userMbti.ie === '-' || userMbti.ns === '-' || userMbti.tf === '-' || userMbti.pj === '-') {
+        } else if (userMbti.ie === '-' || userMbti.ns === '-' || userMbti.tf === '-' || userMbti.pj === '-') {
             setMbtiCheck(false)
             setMbtiMessage('MBTI 는 중간값으로 설정할 수 없습니다!')
         } else {
@@ -218,41 +217,37 @@ const MbtiContainer = (props) => {
         const per = event.target.value
         setIePercentage(per)
         setUserMbti({ ...userMbti, ie: per > 50 ? 'E' : per == 50 ? '-' : 'I' })
-        console.log(userMbti)
     }
 
     const handleNsChange = (event) => {
         const per = event.target.value
         setNsPercentage(per)
-        setUserMbti({ ...userMbti, ns: per > 50 ? 'N' : per == 50 ? '-' : 'S' })
-        console.log(userMbti)
+        setUserMbti({ ...userMbti, ns: per > 50 ? 'S' : per == 50 ? '-' : 'N' })
     }
 
     const handleTfChange = (event) => {
         const per = event.target.value
         setTfPercentage(per)
-        setUserMbti({ ...userMbti, tf: per > 50 ? 'T' : per == 50 ? '-' : 'F' })
-        console.log(userMbti)
+        setUserMbti({ ...userMbti, tf: per > 50 ? 'F' : per == 50 ? '-' : 'T' })
     }
 
     const handlePjChange = (event) => {
         const per = event.target.value
         setPjPercentage(per)
         setUserMbti({ ...userMbti, pj: per > 50 ? 'J' : per == 50 ? '-' : 'P' })
-        console.log(userMbti)
     }
 
     return (
         <Container>
             <MbtiDiv>
                 <LabelWrapper>
-                    <LeftDiv>E</LeftDiv>
-                    <RightDiv>I</RightDiv>
+                    <LeftDiv>I</LeftDiv>
+                    <RightDiv>E</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{iePercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={iePercentage} onChange={handleIeChange} />
                     <PercentageDisplay>{100 - iePercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={iePercentage} onChange={handleIeChange} />
+                    <PercentageDisplay>{iePercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
             <MbtiDiv>
@@ -261,9 +256,9 @@ const MbtiContainer = (props) => {
                     <RightDiv>S</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{nsPercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={nsPercentage} onChange={handleNsChange} />
                     <PercentageDisplay>{100 - nsPercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={nsPercentage} onChange={handleNsChange} />
+                    <PercentageDisplay>{nsPercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
             <MbtiDiv>
@@ -272,20 +267,20 @@ const MbtiContainer = (props) => {
                     <RightDiv>F</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{tfPercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={tfPercentage} onChange={handleTfChange} />
                     <PercentageDisplay>{100 - tfPercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={tfPercentage} onChange={handleTfChange} />
+                    <PercentageDisplay>{tfPercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
             <MbtiDiv>
                 <LabelWrapper>
-                    <LeftDiv>J</LeftDiv>
-                    <RightDiv>P</RightDiv>
+                    <LeftDiv>P</LeftDiv>
+                    <RightDiv>J</RightDiv>
                 </LabelWrapper>
                 <SliderWrapper>
-                    <PercentageDisplay>{pjPercentage}%</PercentageDisplay>
-                    <MbtiRange type="range" min="0" max="100" step="5" value={pjPercentage} onChange={handlePjChange} />
                     <PercentageDisplay>{100 - pjPercentage}%</PercentageDisplay>
+                    <MbtiRange type="range" min="0" max="100" step="5" value={pjPercentage} onChange={handlePjChange} />
+                    <PercentageDisplay>{pjPercentage}%</PercentageDisplay>
                 </SliderWrapper>
             </MbtiDiv>
 

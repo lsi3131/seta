@@ -1,8 +1,7 @@
-.vertical{
-    margin: 0 auto ;
+.vertical {
+    margin: 0 auto;
     margin-top: 100px;
 }
-
 
 .footer,
 .footer_botton {
@@ -11,29 +10,28 @@
     margin-left: calc(-50vw + 50%);
 }
 
-.footer{
+.footer {
     height: 150px;
-    background-color: #F7F7F7;
+    background-color: #f7f7f7;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.footer_botton{
+.footer_botton {
     height: 30px;
-    background-color: #E8E8E8;
+    background-color: #e8e8e8;
     display: flex;
     justify-content: center;
     padding: 10px;
 }
 
 .footer_botton span {
-    color: #FFA800;
+    color: #ffa800;
 }
 
-.home, 
-.button button
-{
+.home,
+.button button {
     font-size: 16px;
     color: gray;
     font-weight: 500;
@@ -48,8 +46,6 @@
     margin: 0 10px;
 }
 
-
-
 .button::before {
     content: '';
     position: absolute;
@@ -61,12 +57,11 @@
     transition: 0.3s;
 }
 
-.button:hover::before{
+.button:hover::before {
     width: 100%;
 }
 
-
-.top_title{
+.top_title {
     display: flex;
     justify-content: center;
     margin: 10px auto;
@@ -89,7 +84,7 @@
 .input_content {
     width: 100%;
     height: 200px;
-    font-size: 20px;
+    font-size: 15px;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ddd;
@@ -117,12 +112,10 @@
     color: red;
 }
 
-
-.button_container{
+.button_container {
     display: flex;
     justify-content: space-around;
 }
-
 
 .Button {
     cursor: pointer;

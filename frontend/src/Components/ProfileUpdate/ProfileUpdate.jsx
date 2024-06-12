@@ -43,7 +43,7 @@ const ProfileUpdate = () => {
         <>
             <Components.BodyContainer>
                 <Components.Containers>
-                    <Components.Title>프로필 수정</Components.Title>
+                    <Components.Title>{currentUser.username} 님 프로필 수정</Components.Title>
                     <Components.LeftMenuContainer>
                         <Components.MenuContainer
                             onClick={() => {
