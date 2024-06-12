@@ -45,8 +45,19 @@
 
 .board_post_left {
   display: flex;
+}
+
+.board_post_left_checkbox{
+  margin-right: 20px;
+}
+.board_post_left_checkbox:hover{
+  cursor: pointer;
+}
+
+.board_post_left_content {
+  display: flex;
   flex-direction: column;
-  width: 60%;
+  /* width: 60%; */
 }
 
 .board_post_title{
@@ -102,4 +113,24 @@
   transform: translateY(-0.1rem);
   box-shadow: 0.2rem 0.2rem 0.2rem #bbbbbb;
   cursor: pointer;
+}
+
+
+.delete_section {
+  display: flex;
+  justify-content: flex-start;
+  margin: 10px;
+}
+
+.delete_section > button {
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  background-color: #ff4141ac;
+  color: white;
+  border: none;
+}
+.delete_section > button:hover {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }

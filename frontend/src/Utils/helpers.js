@@ -1,15 +1,19 @@
 export const formatDateDayBefore = (dateString) => {
-    const currentDate = new Date()
-    const createdDate = new Date(dateString)
-    const timeDiff = Math.abs(currentDate.getTime() - createdDate.getTime())
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
-    if ((createdDate.getHours() - currentDate.getHours()) < 1 ){
-        return `${currentDate.getMinutes() - createdDate.getMinutes()}분 전`
-    } else if (daysDiff === 1){
-        return `${currentDate.getHours() - createdDate.getHours()}시간 전`
+    const currentDate = new Date();
+    const createdDate = new Date(dateString);
+    const timeDiff = currentDate.getTime() - createdDate.getTime(); // Time difference in milliseconds
+    const minutesDiff = Math.floor(timeDiff / (1000 * 60)); // Convert milliseconds to minutes
+    const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
+    const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24)); 
+
+    if (daysDiff >= 1) {
+        return `${daysDiff}일 전`;
+    } else if (hoursDiff >= 1) {
+        return `${hoursDiff}시간 전`;
+    } else {
+        return `${minutesDiff}분 전`;
     }
-    return `${daysDiff}일전`
-}
+};
 
 export const formatDate = (dateString) => {
     const date = new Date(dateString)

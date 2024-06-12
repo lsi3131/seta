@@ -210,6 +210,13 @@ AWS_SECRET_ACCESS_KEY = json.load(open(BASE_DIR / "secrets.json"))["AWS_SECRET_A
 AWS_STORAGE_BUCKET_NAME = 'picturebucket9856'
 AWS_QUERYSTRING_AUTH = False
 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer', # 또는 Redis를 사용할 수 있습니다.
+    },
+}
+
 # CHANNEL_LAYERS = {
 #     'default': {
 #         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -218,13 +225,6 @@ AWS_QUERYSTRING_AUTH = False
 #         },
 #     },
 # }
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer', # 또는 Redis를 사용할 수 있습니다.
-    },
-}
-
 # Redis를 사용하기 위해 필요
 # CACHES = {
 #     'default': {
@@ -268,5 +268,3 @@ ACCOUNT_LOGOUT_ON_GET = True
 FRONT_BASE_URL = os.getenv('FRONT_BASE_URL')
 BACK_BASE_URL = os.getenv('BACK_BASE_URL')
 
-print(f'front url: {FRONT_BASE_URL}')
-print(f'back url: {BACK_BASE_URL}')

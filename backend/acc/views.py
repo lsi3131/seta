@@ -37,6 +37,8 @@ from django.db.models import Count, Case, When, IntegerField
 validator = AccountValidator()
 User = get_user_model()
 
+BACK_BASE_URL = settings.BACK_BASE_URL
+FRONT_BASE_URL = settings.FRONT_BASE_URL
 
 class AccountAPIView(APIView):
     permission_classes = [AccountVIEWPermission]
@@ -53,7 +55,6 @@ class AccountAPIView(APIView):
             'password': password,
             'email': email,
         }
-
         for v_type, value in validate_type_values.items():
             request_data = {'data': value}
             if not validator.validate(v_type, request_data):
@@ -63,13 +64,14 @@ class AccountAPIView(APIView):
             username=username, password=password, email=email, introduce=introduce, is_active=False)
 
         subject = ''' '세타' 이메일 인증'''
-        message = render_to_string('account/activate_email.html', {'username': username,
-                                                                   "email": email})
+
+        message = render_to_string('acc/activate_email.html', {'username': username,
+                                                                   "email": email, "BACK_BASE_URL": BACK_BASE_URL})
 
         is_active_email = EmailMessage(
             subject,
             message,
-            to=[email]
+            to=[email],
         )
         is_active_email.content_subtype = "html"
         is_active_email.send()
@@ -338,11 +340,11 @@ class UserActivateAPIView(APIView):
         user = get_object_or_404(User, email=email)
 
         if user.is_active:
-            return redirect("http://localhost:3000/login")
+            return redirect(f"{FRONT_BASE_URL}/login")
         else:
             user.is_active = True
             user.save()
-            return redirect("http://localhost:3000/login")
+            return redirect(f"{FRONT_BASE_URL}/login")
 
 
 # 아이디 찾기
@@ -351,8 +353,9 @@ class FindNameAPIView(APIView):
         username = get_object_or_404(User, email=email)
 
         subject = ''' '세타' 아이디 찾기'''
-        message = render_to_string('account/find_username.html', {'username': username,
-                                                                  "email": email})
+        message = render_to_string('acc/find_username.html', {'username': username,
+                                                                  "email": email,
+                                                                  "FRONT_BASE_URL": FRONT_BASE_URL})
 
         find_uaername_email = EmailMessage(
             subject,
@@ -378,9 +381,10 @@ class FindPasswordAPIView(APIView):
         user.save()
 
         subject = ''' '세타' 임시 비밀번호'''
-        message = render_to_string('account/find_password.html', {'username': username,
+        message = render_to_string('acc/find_password.html', {'username': username,
                                                                   "email": email,
-                                                                  "password": random_password})
+                                                                  "password": random_password,
+                                                                  "FRONT_BASE_URL": FRONT_BASE_URL})
 
         find_password_email = EmailMessage(
             subject,
@@ -394,10 +398,7 @@ class FindPasswordAPIView(APIView):
 
 
 # social login
-BASE_URL = 'http://localhost:3000/'
-SOCIAL_CALLBACK_URI = "http://localhost:8000/api/accounts/social/callback/"
-
-
+SOCIAL_CALLBACK_URI = f"{BACK_BASE_URL}/api/accounts/social/callback/"
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def social_login(request):
@@ -480,7 +481,7 @@ def social_callback(request):
         print(username)
         user_id = str(user_info.get("id"))
         print(user_id)
-        email = user_info.get('email')
+        email = ''
         provider = "github"
 
 
@@ -494,7 +495,7 @@ def social_callback(request):
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
 
-        redirect_url = "http://localhost:3000/"
+        redirect_url = FRONT_BASE_URL
         respons = HttpResponseRedirect(redirect_url)
 
         respons.set_cookie('access', str(access), max_age=5)
@@ -522,7 +523,7 @@ def social_callback(request):
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
 
-        redirect_url = "http://localhost:3000/"
+        redirect_url = FRONT_BASE_URL
         respons = HttpResponseRedirect(redirect_url)
 
         respons.set_cookie('access', str(access), max_age=20)
@@ -535,8 +536,6 @@ def social_callback(request):
 
 
 # 카카오 로그인
-BACK_BASE_URL = settings.BACK_BASE_URL
-FRONT_BASE_URL = settings.FRONT_BASE_URL
 KAKAO_CALLBACK_URI = f"{BACK_BASE_URL}/api/accounts/kakao/callback/"  # 프론트 로그인 URI 입력
 print(KAKAO_CALLBACK_URI)
 @api_view(["GET"])
