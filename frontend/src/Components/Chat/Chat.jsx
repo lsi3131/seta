@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import style from './Chat.module.css'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
@@ -13,6 +13,7 @@ const Chat = () => {
     const currentUser = useContext(UserContext)
     const [view, setView] = useState('chat')
     const [currentPage, setCurrentPage] = useState(1)
+    const [totalPage, setTotalPage] = useState(1)
     const [posts, setPosts] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [showCreateRoom, setShowCreateRoom] = useState(false)
@@ -21,27 +22,28 @@ const Chat = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const refreshList = async () => {
-            async function fetchData() {
-                try {
-                    const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
-                    setPosts(response.data)
-                    setIsLoading(false)
-                } catch (error) {
-                    console.error(error)
-                }
-            }
-
-            await fetchData()
-        }
-
         refreshList()
 
         const interval = setInterval(refreshList, 10000)
 
         return () => clearInterval(interval)
-    }, [view, currentPage])
+    }, [view, currentPage, totalPage])
 
+    const refreshList = async () => {
+        async function fetchData() {
+            try {
+                const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
+                setPosts(response.data['results'])
+                setCurrentPage(currentPage)
+                setTotalPage(response.data['total_page'])
+                setIsLoading(false)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        await fetchData()
+    }
     const navigateToRoom = ({category, roomId, password}) => {
         let roomType = 'chatroom'
         if (category === 'game') {
@@ -97,38 +99,46 @@ const Chat = () => {
     console.log(currentUser)
 
     return (
-        <div className={style.chat_container}>
-            {showCheckPassword && (
-                <ChatRoomPasswordModal onEnter={handleEnterRoom} onClose={handleClosePassword} roomId={roomId} />
-            )}
-            {showCreateRoom && <ChatRoomCreateModal onCreate={handleCreateRoom} onClose={handleCloseCreateRoom} />}
-
-            <div className={style.chat_header}>
-                <button onClick={() => window.location.reload()}>새로고침</button>
-                <button onClick={() => {!currentUser.username ? window.location.href = '/login' : setShowCreateRoom(true) }}>방만들기</button>
-            </div>
-
-            <div className={style.chat_category}>
-                <button
-                    style={{ fontWeight: view === 'chat' ? 'bold' : '200' }}
-                    onClick={() => handleViewChange('chat')}
-                >
-                    채팅
-                </button>
-                <button
-                    style={{ fontWeight: view === 'game' ? 'bold' : '200' }}
-                    onClick={() => handleViewChange('game')}
-                >
-                    게임
-                </button>
-                <hr />
-                {view === 'chat' ? (
-                    <ChatList posts={posts} user={currentUser} onChatClick={handleLinkClick} />
-                ) : (
-                    <GameList posts={posts} user={currentUser} />
+        <div>
+            <div className={style.chat_container}>
+                {showCheckPassword && (
+                    <ChatRoomPasswordModal onEnter={handleEnterRoom} onClose={handleClosePassword} roomId={roomId}/>
                 )}
+                {showCreateRoom && <ChatRoomCreateModal onCreate={handleCreateRoom} onClose={handleCloseCreateRoom}/>}
+
+                <div className={style.chat_header}>
+                    <button onClick={() => window.location.reload()}>새로고침</button>
+                    <button onClick={() => {
+                        !currentUser.username ? window.location.href = '/login' : setShowCreateRoom(true)
+                    }}>방만들기
+                    </button>
+                </div>
+
+                <div className={style.chat_category}>
+                    <button
+                        style={{fontWeight: view === 'chat' ? 'bold' : '200'}}
+                        onClick={() => handleViewChange('chat')}
+                    >
+                        채팅
+                    </button>
+                    <button
+                        style={{fontWeight: view === 'game' ? 'bold' : '200'}}
+                        onClick={() => handleViewChange('game')}
+                    >
+                        게임
+                    </button>
+                    <hr/>
+                    {view === 'chat' ? (
+                        <ChatList posts={posts} user={currentUser} onChatClick={handleLinkClick}/>
+                    ) : (
+                        <GameList posts={posts} user={currentUser}/>
+                    )}
+                    <div>
+                    </div>
+                </div>
+                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                <div className={style.chat_footer}></div>
             </div>
-            <div className={style.chat_footer}></div>
         </div>
     )
 }

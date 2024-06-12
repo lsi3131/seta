@@ -6,12 +6,11 @@ import unlike from "../../Assets/images/comment/unlike.png"
 import filterOn from "../../Assets/images/comment/filter_on.png"
 import filterOff from "../../Assets/images/comment/filter_off.png"
 import reply from "../../Assets/images/comment/reply.png"
-import apiClient from "../../services/apiClient";
 import {UserContext} from "../../userContext";
 import {Link} from "react-router-dom";
 import PopupFilter from "./PopupFilter";
 import Report from '../Report/Report';
-import useCommentAPI from "../../api/Hooks/useCommentAPI";
+import Pagination from "../Pagenation/Pagination";
 
 const CommentSubInput = ({
                              mode,
@@ -114,7 +113,6 @@ const Comment = ({
 
     useEffect(() => {
         setInputModeType('')
-        console.log('====',currentUser.username)
     }, [comment]);
 
     const shouldLogin = () => {
@@ -207,7 +205,8 @@ const Comment = ({
                                             <button onClick={handleDeleteComment}>삭제</button>
                                         </>
                                     }
-                                    {currentUser['username'] !== comment.author && (
+
+                                    {currentUser.username !== post.author && (
                                         <Report author={comment.author}
                                                 mbti={currentUser.mbti_type}/>
                                     )}
@@ -475,7 +474,8 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
             )}
 
             <div className={style.comment_input_buttons_container}>
-                <button onClick={handleAddComment} style={{width: '100px'}} disabled={isDisabled()}>댓글 등록</button>
+                <button onClick={handleAddComment} style={{width: '100px'}}
+                        disabled={isDisabled() && currentUser['username'] !== post.author}>댓글 등록</button>
             </div>
         </div>
     );
@@ -483,14 +483,19 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
 
 const CommentBox = ({
                         post, comments, commentCount,
+                        currentPage, totalPage,
                         onAddComment,
                         onUpdateComment,
                         onDeleteComment,
                         onAddLikeComment,
+                        onPageChange
                     }) => {
 
     useEffect(() => {
     }, [post]);
+
+    useEffect(() => {
+    }, [currentPage, totalPage])
 
 
     return (
@@ -504,6 +509,9 @@ const CommentBox = ({
                          onDeleteComment={onDeleteComment}
                          onAddLikeComment={onAddLikeComment}
             />
+            <Pagination currentPage={currentPage} totalPages={totalPage}
+                        onPageChange={onPageChange}/>
+
             <hr/>
             <CommentInput post={post} onAddComment={onAddComment}/>
         </div>

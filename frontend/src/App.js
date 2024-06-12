@@ -1,6 +1,6 @@
 import './App.css'
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import {BrowserRouter as Router, Routes, Route, useNavigate, Navigate} from 'react-router-dom'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Cursor from './Components/Cursor/Cursor'
@@ -48,6 +48,8 @@ function App() {
 
                     <Route path="/chatroom/:roomId" element={<ChatRoom />} />
                     <Route path="/gameroom/:roomId" element={<GameRoom />} />
+
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
                 <FabButton />
                 <Footer />

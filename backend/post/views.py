@@ -314,6 +314,8 @@ class PostDetailAPIView(APIView):
 
     def delete(self, request, post_pk):
         post = get_object_or_404(Post, id=post_pk)
+        
+
         if post.author != request.user:
             return Response(
                 {"error": "작성자만 삭제할 수 있습니다."},
@@ -324,6 +326,10 @@ class PostDetailAPIView(APIView):
             {"message": "게시글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+    
+ 
+
+        
 
 
 @api_view(['PUT'])
@@ -342,11 +348,14 @@ class PostCommentsAPIView(APIView):
         post = get_object_or_404(Post, id=post_pk)
         comments = post.comments.all()
 
-        per_page = 50
+        # 20개씩 pagination
+        per_page = 20
         paginator = Paginator(comments, per_page)
         page_number = request.GET.get("page")
         if page_number:
             comments = paginator.get_page(page_number)
+        else:
+            comments = paginator.get_page(1)
 
         serialized_comments = []
         for comment in comments:
@@ -356,7 +365,7 @@ class PostCommentsAPIView(APIView):
         paginated_response_data = {
             'total_page': paginator.num_pages,
             'per_page': per_page,
-            'count': comments.count(),
+            'count': paginator.count,
             'results': serialized_comments,
         }
 
@@ -374,11 +383,32 @@ class PostCommentsAPIView(APIView):
         if parent_comment_id:
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
         post = get_object_or_404(Post, id=post_pk)
-        Comment.objects.create(content=content, post=post,
+        new_comment = Comment.objects.create(content=content, post=post,
                                author=request.user, comment_mbti=request.user.mbti,
                                parent=parent_comment)
+
+
+        if not parent_comment_id:
+            position_comment_id = new_comment.id
+            # Calculate the page number
+        else:
+            position_comment_id = parent_comment_id
+
+        comments = post.comments.order_by('created_at')
+
+        # Find the position of the new comment
+        comment_ids = list(comments.values_list('id', flat=True))
+        new_comment_position = comment_ids.index(position_comment_id) + 1  # +1 to make it 1-based index
+
+        per_page = 20
+        page_number = (new_comment_position - 1) // per_page + 1
+
         return Response(
-            {"message": "댓글이 작성되었습니다."},
+            {
+                "message": "댓글이 작성되었습니다.",
+                "new_comment_id": new_comment.id,
+                "new_comment_page": page_number,
+            },
             status=status.HTTP_201_CREATED
         )
 
@@ -425,6 +455,27 @@ class PostCommentDetailAPIView(APIView):
             {"message": "댓글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+class MypostsAPIView(APIView):
+   permission_classes = [IsAuthenticatedOrReadOnly]
+   
+   def delete(self, request):
+        ids = request.data.get('ids', [])
+        print(ids)
+        if not ids:
+            return Response({'detail': '삭제할 메세지가 선택되어 있지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        posts = Post.objects.filter(id__in=ids)
+        if not posts.exists():
+            return Response({'detail': '존재하지 않는 메세지가 존재합니다.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        deleted_count = 0    
+        for post in posts:
+            post.delete()
+            deleted_count += 1
+
+        return Response({'message': f'{deleted_count} 건의 메세지가 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['POST'])

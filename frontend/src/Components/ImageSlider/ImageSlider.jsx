@@ -1,17 +1,14 @@
 import Cursor from "Components/Cursor/Cursor";
 import style from './ImageSlider.module.css'
-import { useState,useContext } from "react";
-import { UserContext } from '../../userContext'
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
-const ImageSlider = ({ slides }) => {
+const ImageSlider = ({ slides, user }) => {
     const [slide, setSlide] = useState(0);
     const navigate = useNavigate()
-    const currentUser = useContext(UserContext);
     const nextSlide = () => {
         setSlide(slide === slides.length -1 ? 0 : slide + 1);
     }
-    console.log(currentUser)
     const prevSlide = () => {
         setSlide(slide === 0 ? slides.length-1 : slide - 1);
     }
@@ -19,16 +16,16 @@ const ImageSlider = ({ slides }) => {
         if (title === 'hot_post') {
             navigate(`/board/hot`)
         }
-        else if (currentUser.username == '') {
+        else if (user.username == '') {
             navigate(`/login`)
         }
         else {
             switch (title) {
                 case 'mbti_regist':
-                    navigate(`/profile/update/${currentUser.username}`)
+                    navigate(`/profile/update/${user.username}`)
                     break;
                 case 'my_board':
-                    navigate(`/board/${currentUser.mbti_type}`)
+                    navigate(`/board/${user.mbti_type}`)
                     break;
                 case 'chat':
                     navigate(`/chat`)
