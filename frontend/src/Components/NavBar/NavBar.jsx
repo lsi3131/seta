@@ -78,7 +78,7 @@ const AuthenticatedNavbar = ({ currentUser }) => {
                                 메세지 관리
                             </Link>
                             <Link to={`/myposts/${currentUser.username}/`} className={style.dropdownItem}>
-                                작성한 글 관리
+                                게시글 관리
                             </Link>
                             <hr></hr>
                             <a onClick={handleLogout} className={style.dropdownItem}>
