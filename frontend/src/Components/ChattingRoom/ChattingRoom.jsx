@@ -6,7 +6,7 @@ import ChatLeft from './ChatLeft'
 import apiClient from '../../services/apiClient'
 import { UserContext } from '../../userContext'
 
-const baseURL = process.env.REACT_APP_WS_BASE_URL;
+const baseURL = process.env.REACT_APP_WS_BASE_URL
 
 const ChatRoom = () => {
     const location = useLocation()
@@ -28,6 +28,19 @@ const ChatRoom = () => {
                         password: password,
                     }
                     await apiClient.post('api/chats/check_room_password/', data)
+
+                } catch (error) {
+                    console.error('잘못된 경로로 채팅방에 입장했습니다.', error)
+                    navigate('/chat')
+                }
+
+                try {
+                    const response = await apiClient.get(`api/chats/${roomId}/`)
+                    const data = response.data
+                    if(data.members_count > data.max_members) {
+                        console.error('정원이 초과되었습니다.')
+                        navigate('/chat')
+                    }
                     setIsLoading(false)
                 } catch (error) {
                     console.error('잘못된 경로로 채팅방에 입장했습니다.', error)
@@ -90,18 +103,12 @@ const ChatRoom = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload)
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(
-                    JSON.stringify({
-                        message_type: 'leave',
-                        username: currentUser.username,
-                        message: '',
-                    }),
-                )
-
-                socket.close()
+                // 페이지 이탈 시 종료 코드를 설정하여 WebSocket을 닫음
+                const closeCode = navigate('/chat', { replace: true }) ? 3000 : 3001
+                socket.close(closeCode)
             }
         }
-    }, [currentUser, roomId])
+    }, [currentUser, roomId, navigate])
 
     const handleExpel = (member) => {
         socket.send(
@@ -123,7 +130,7 @@ const ChatRoom = () => {
                 }),
             )
         }
-        window.location.href = '/chat'
+        navigate('/chat')
     }
 
     const fetchHost = async () => {
@@ -170,7 +177,9 @@ const ChatRoom = () => {
                         }),
                     )
 
-                    socket.close()
+                    // 페이지 이탈 시 종료 코드를 설정하여 WebSocket을 닫음
+                    const closeCode = action === 'PUSH' ? 3000 : 3001
+                    socket.close(closeCode)
                 }
             }
         })
@@ -205,7 +214,7 @@ const ChatRoom = () => {
                     </div>
                 </div>
                 <div className={style.Room_right}>
-                    <ChatRightBottom members={members} socket={socket} />
+                    <ChatRightBottom members={members} roomId={roomId} socket={socket} />
                 </div>
             </div>
         </div>

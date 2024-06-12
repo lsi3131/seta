@@ -19,7 +19,7 @@ const ChatList = ({ posts }) => {
             return
         }
 
-        if (post.members_count >= post.max_members) {
+        if (!post.members.includes(currentUser.username) && post.members_count >= post.max_members) {
             alert('채팅방 정원이 초과되었습니다.')
             return
         }

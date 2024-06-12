@@ -13,8 +13,7 @@ from .validate import validate_chatroom_data
 
 def serialize_chat_message(post):
     return {
-        "id": post.id,
-        "sender": post.sender.name,
+        "sender": post.sender.username,
         "content": post.content,
         "created_at": post.created_at,
     }
@@ -120,7 +119,7 @@ class ChatMessageAPIView(APIView):
         queryset = ChatMessage.objects.filter(room=chatroom_pk)
         if not queryset.exists():
             return Response({'error': '존재하지 않는 채팅방입니다.'}, status=status.HTTP_400_BAD_REQUEST)
-        serialize = serialize_chat_message(queryset)
+        serialize = [serialize_chat_message(post) for post in queryset]
         return Response(serialize, status=status.HTTP_200_OK)
 
 

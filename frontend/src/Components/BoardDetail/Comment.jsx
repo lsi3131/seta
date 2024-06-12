@@ -17,7 +17,7 @@ const CommentSubInput = ({ mode, parentId, commentId, initialContent, onAddComme
     const [isComposing, setIsComposing] = useState(false)
     const [rows, setRows] = useState(1)
 
-    useEffect(() => {}, [])
+    useEffect(() => { }, [])
 
     useEffect(() => {
         const lineCount = content.split('\n').length
@@ -220,7 +220,8 @@ const Comment = ({
                                         <button onClick={handleDeleteComment}>삭제</button>
                                     </>
                                 )}
-                                <Report author={comment.author} mbti={currentUser.mbti_type} />
+                                {(currentUser.username !== comment.author && currentUser.username !== '') &&
+                                    (<Report author={comment.author} mbti={currentUser.mbti_type} />)}
                             </div>
                         </div>
                     </div>
@@ -279,7 +280,7 @@ const CommentList = ({
 }) => {
     const [filterMbtiList, setFilterMbtiList] = useState([])
 
-    useEffect(() => {}, [comments, commentCount])
+    useEffect(() => { }, [comments, commentCount])
 
     const [showPopup, setShowPopup] = useState(false)
 
@@ -356,7 +357,7 @@ const CommentInput = ({ post, onAddComment, parentCommentId }) => {
     const [isComposing, setIsComposing] = useState(false)
     const [rows, setRows] = useState(1)
 
-    useEffect(() => {}, [])
+    useEffect(() => { }, [])
 
     useEffect(() => {
         const lineCount = content.split('\n').length
@@ -548,9 +549,9 @@ const CommentBox = ({
     onAddLikeComment,
     onPageChange,
 }) => {
-    useEffect(() => {}, [post])
+    useEffect(() => { }, [post])
 
-    useEffect(() => {}, [currentPage, totalPage])
+    useEffect(() => { }, [currentPage, totalPage])
 
     return (
         <div className={style.comment_box}>
