@@ -24,12 +24,6 @@ const ChatList = ({ posts }) => {
             return
         }
 
-        // 이미 채팅방 멤버인 경우 바로 채팅방으로 이동
-        if (post.members.includes(currentUser.username)) {
-            alert('이미 채팅방에 참여하고 있습니다.')
-            return
-        }
-
         if (post.blacklist_users && post.blacklist_users.includes(currentUser.username)) {
             alert('강퇴된 사용자입니다. 접근할 수 없습니다.')
             return
@@ -65,12 +59,12 @@ const ChatList = ({ posts }) => {
                         key={post.id}
                         className={style.chat_card}
                         style={{ cursor: post.members_count >= post.max_members ? 'not-allowed' : '' }}
-                        onClick={(e) => {!currentUser.username ? window.location.href = '/login' : handleLinkClick(e, post)}}
+                        onClick={(e) => {
+                            !currentUser.username ? (window.location.href = '/login') : handleLinkClick(e, post)
+                        }}
                     >
                         <h2 className={style.chat_card_title}>
-                            <Link to="" >
-                                {post.name.length > 20 ? post.name.slice(0, 20) + '...' : post.name}
-                            </Link>
+                            <Link to="">{post.name.length > 20 ? post.name.slice(0, 20) + '...' : post.name}</Link>
                             {post.is_secret ? <span className={style.secret}>🔒</span> : null}
                         </h2>
                         <p className={style.chat_card_author}>{post.host_user}</p>
