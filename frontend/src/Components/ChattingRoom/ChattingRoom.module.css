@@ -22,6 +22,10 @@
     overflow-y: scroll;
 }
 
+.Room_left::-webkit-scrollbar {
+    display: none;
+}
+
 .Room_right {
     flex: 2;
     margin: 0 10px;
