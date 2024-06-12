@@ -205,8 +205,11 @@ const Comment = ({
                                             <button onClick={handleDeleteComment}>삭제</button>
                                         </>
                                     }
-                                    <Report author={comment.author}
-                                            mbti={currentUser.mbti_type}/>
+
+                                    {currentUser.username !== post.author && (
+                                        <Report author={comment.author}
+                                                mbti={currentUser.mbti_type}/>
+                                    )}
                                 </div>
                             </div>
                         </div>
