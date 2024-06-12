@@ -1,7 +1,7 @@
 import {useState, useEffect, useContext} from 'react'
 import styled from 'styled-components'
 import apiClient from 'services/apiClient'
-import {UpdateUserContext} from "../../userContext";
+import {UpdateUserContext, UserContext} from "../../userContext";
 
 const Container = styled.div`
     width: 100%;
@@ -141,6 +141,7 @@ const MbtiContainer = (props) => {
     const [userMbti, setUserMbti] = useState({})
     const [mbtiMessage, setMbtiMessage] = useState('')
     const updateCurrentUser = useContext(UpdateUserContext)
+    const currentUser = useContext(UserContext);
 
     const handleUpdate = () => {
         if (!mbtiCheck) {
@@ -200,7 +201,11 @@ const MbtiContainer = (props) => {
     }, [props.userInfos])
 
     useEffect(() => {
-        if (userMbti.ie === '-' || userMbti.ns === '-' || userMbti.tf === '-' || userMbti.pj === '-') {
+        if (currentUser && currentUser.mbti_type) {
+            setMbtiCheck(false)
+            setMbtiMessage('MBTI가 이미 설정되어있습니다.')
+        }
+        else if (userMbti.ie === '-' || userMbti.ns === '-' || userMbti.tf === '-' || userMbti.pj === '-') {
             setMbtiCheck(false)
             setMbtiMessage('MBTI 는 중간값으로 설정할 수 없습니다!')
         } else {
