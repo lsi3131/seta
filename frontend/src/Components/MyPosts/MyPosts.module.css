@@ -6,6 +6,9 @@
 .board_category+hr{
   border: 2px solid black;
 }
+.board_category {
+  margin: 0 15px;
+}
 
 .board_category button{
   width: 200px;
