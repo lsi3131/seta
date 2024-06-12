@@ -22,6 +22,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path('social/profile/<str:username>/', views.social),
     path('social/login/', views.social_login),
     path('social/callback/', views.social_callback),
     path("kakao/callback/", views.kakao_callback, name="kakao_callback"),

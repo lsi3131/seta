@@ -419,6 +419,19 @@ def social_login(request):
             f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
         return redirect(redirect_url)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def social(request, username) :
+    try:
+        user = User.objects.get(username=username)
+        social_user = SocialAccount.objects.get(user=user)
+        return Response({
+            "provider": social_user.provider,
+        }, status=status.HTTP_200_OK)
+    except SocialAccount.DoesNotExist:
+        return Response({
+            "provider": "local",
+        }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
