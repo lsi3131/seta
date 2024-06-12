@@ -155,10 +155,6 @@ const MbtiRatio = ({user}) => {
 }
 
 const VoteMbtiRatio = ({mbtiVote, onVote}) => {
-    useEffect(() => {
-        console.log('mbti vote percent', mbtiVote)
-    }, [mbtiVote]);
-
     return (
         <div className={style.voteMbtiRatioContainer}>
             <div className={style.voteMbtiButtonList}>
@@ -266,13 +262,10 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
             .get(url)
             .then((response) => {
                 const voteCount = response.data
-                console.log(voteCount)
                 const percentIE = calcPercent(voteCount['E_count'], voteCount['I_count']);
                 const percentNS = calcPercent(voteCount['N_count'], voteCount['S_count']);
                 const percentFT = calcPercent(voteCount['T_count'], voteCount['F_count']);
                 const percentPJ = calcPercent(voteCount['J_count'], voteCount['P_count']);
-
-                console.log(percentIE, percentNS, percentPJ, percentFT)
 
                 setMbtiVote({
                     percentIE: percentIE,
@@ -288,7 +281,6 @@ const ProfileMBTIForm = ({user, followingRanks, followerRanks}) => {
 
     const handlePostMbtiVote = (type, value) => {
         let url = `/api/accounts/vote/${user.username}/`
-        console.log(type, value)
         const postData = {
             vote_type: type,
             vote_value: value,

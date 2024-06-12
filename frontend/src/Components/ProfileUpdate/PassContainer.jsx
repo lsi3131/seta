@@ -146,8 +146,6 @@ const PassContainer = () => {
                 old_password: password,
                 new_password: newPassword,
             })
-            console.log(response.data.message)
-            console.log(password, newPassword)
             setSuccess(response.data.message)
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')

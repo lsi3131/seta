@@ -135,7 +135,7 @@ const Write = () => {
                         'Content-Type': 'multipart/form-data',
                     },
                 })
-                console.log(result)
+
                 const url = 'https://picturebucket9856.s3.amazonaws.com/media/' + renamedFile.name
                 editor.deleteText(range.index, 1)
                 editor.insertEmbed(range.index, 'image', `${url}`)
@@ -177,7 +177,6 @@ const Write = () => {
                         'Content-Type': 'multipart/form-data',
                     },
                 })
-                console.log(result)
                 const url = 'https://picturebucket9856.s3.amazonaws.com/media/' + file.name
                 const editor = quillRef.current.getEditor()
                 const range = editor.getSelection()

@@ -99,9 +99,6 @@ const BoardPostList = ({boardMbti, posts, currentPostId, filterOption}) => {
 }
 
 const BoardPostBox = ({boardMbti, posts, currentPostId, filterOption}) => {
-    useEffect(() => {
-        console.log('filter open',filterOption)
-    }, [filterOption]);
     return (
         <>
             <BoardPostList boardMbti={boardMbti} posts={posts} currentPostId={currentPostId} filterOption={filterOption}/>

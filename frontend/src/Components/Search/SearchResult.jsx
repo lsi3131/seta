@@ -65,8 +65,6 @@ const SearchResult = () => {
             url += `&order=${order}`
         }
 
-        console.log(url)
-
         apiClient
             .get(url)
             .then((response) => {

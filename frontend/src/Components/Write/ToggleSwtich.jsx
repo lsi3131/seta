@@ -8,7 +8,6 @@ const ToggleSwitch = ({mbti_checks, onSelectAll}) => {
 
   const handleToggle = () => {
       const toggle_value = !isSelectAllMode()
-      console.log('toggle', toggle_value)
       onSelectAll(toggle_value)
   };
 

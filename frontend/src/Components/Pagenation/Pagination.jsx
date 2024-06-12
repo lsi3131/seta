@@ -2,7 +2,6 @@ import React, {useEffect} from 'react'
 import style from "./Pagination.module.css"
 
 const Pagination = ({currentPage, totalPages, onPageChange}) => {
-    // console.log(currentPage, totalPages)
 
     useEffect(() => {
     }, [currentPage, totalPages]);

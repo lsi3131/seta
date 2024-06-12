@@ -86,7 +86,6 @@ const MyPost = () => {
     if (!posts) {
         return <div></div>
     }
-    console.log(selectedPosts)
     return (
         <div className={style.vertical}>
             <div className={style.board_category}>
