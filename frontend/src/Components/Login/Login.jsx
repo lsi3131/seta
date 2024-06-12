@@ -1,12 +1,11 @@
 import React from 'react'
-import { useEffect,useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
 import { useLocation, Link } from 'react-router-dom'
 import SocialLoginButton from 'Components/SocialLogin/SocialsLogin'
 import { UserContext } from '../../userContext'
-
 
 function Login() {
     const FRONT_BASE_URL = process.env.REACT_APP_FRONT_URL
@@ -34,6 +33,7 @@ function Login() {
     const [passwordConfirmCheckMessage, setPasswordConfirmCheckMessage] = React.useState('')
 
     const [modalOpen, setModalOpen] = React.useState(false)
+    const [capslock, setCapslock] = React.useState(false)
 
     const [formValidateChecker, setFormValidateChecker] = React.useState({
         username: false,
@@ -166,6 +166,14 @@ function Login() {
         }
 
         try {
+            if (capslock) {
+                setPasswordCheckMessage('CapsLock이 켜져있습니다.')
+                setFormValidateChecker((prevState) => ({
+                    ...prevState,
+                    password: false,
+                }))
+                return
+            }
             const response = await apiClient.post('/api/accounts/validate/password/', data)
             console.log(response.data.message)
             setPasswordCheckMessage(response.data.message)
@@ -196,11 +204,15 @@ function Login() {
         }
 
         if (formValidateChecker.password === false) {
-            setPasswordConfirmCheckMessage('비밀번호를 먼저 확인해주세요.')
-            setFormValidateChecker((prevState) => ({
-                ...prevState,
-                passwordCheck: false,
-            }))
+            if (capslock) {
+                setPasswordConfirmCheckMessage('CapsLock이 켜져있습니다.')
+            } else {
+                setPasswordConfirmCheckMessage('비밀번호를 먼저 확인해주세요.')
+                setFormValidateChecker((prevState) => ({
+                    ...prevState,
+                    passwordCheck: false,
+                }))
+            }
             return
         }
 
@@ -285,6 +297,13 @@ function Login() {
                                 onChange={(e) => setPasswordUp(e.target.value)}
                                 type="password"
                                 placeholder="패스워드"
+                                onKeyUp={(e) => {
+                                    if (e.getModifierState('CapsLock')) {
+                                        setCapslock(true)
+                                    } else {
+                                        setCapslock(false)
+                                    }
+                                }}
                                 value={passwordUp}
                             />
                             <Components.Span
@@ -297,6 +316,13 @@ function Login() {
                                 onChange={(e) => setPasswordConfirmUp(e.target.value)}
                                 type="password"
                                 placeholder="패스워드확인"
+                                onKeyUp={(e) => {
+                                    if (e.getModifierState('CapsLock')) {
+                                        setCapslock(true)
+                                    } else {
+                                        setCapslock(false)
+                                    }
+                                }}
                                 value={passwordConfirmUp}
                             />
                             <Components.Span
@@ -318,13 +344,24 @@ function Login() {
                                 value={usernameIn}
                             />
                             <Components.Input
-                                onChange={(e) => setPasswordIn(e.target.value)}
+                                onChange={(e) => {
+                                    setPasswordIn(e.target.value)
+                                }}
+                                onKeyUp={(e) => {
+                                    if (e.getModifierState('CapsLock')) {
+                                        setCapslock(true)
+                                    } else {
+                                        setCapslock(false)
+                                    }
+                                }}
                                 type="password"
                                 placeholder="패스워드"
                                 value={passwordIn}
                             />
                             <Components.Span className="error-message">{errorMessage}</Components.Span>
-                            <Components.Anchor href={`${FRONT_BASE_URL}/finduser/`}>아아디/패스워드찾기</Components.Anchor>
+                            <Components.Anchor href={`${FRONT_BASE_URL}/finduser/`}>
+                                아아디/패스워드찾기
+                            </Components.Anchor>
                             <Components.Button>로그인</Components.Button>
                         </Components.Form>
                         <SocialLoginButton />
