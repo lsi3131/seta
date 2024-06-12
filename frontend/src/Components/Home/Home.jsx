@@ -1,18 +1,23 @@
 import style from './Home.module.css'
-import React, { useEffect } from 'react'
+import React, { useEffect,useContext } from 'react'
 import BoardCardList from '../BoardCard/BoardCard'
 import HotList from '../HotList/HotList'
 import ImageSlider from '../ImageSlider/ImageSlider'
+import { UserContext } from '../../userContext'
 import { Link } from 'react-router-dom'
 import { Cookies } from 'react-cookie';
 
 const Home = () => {
-    const slides = [
+    const currentUser = useContext(UserContext);
+    const slidesNoMbti = [
         { url: require('../../Assets/images/slider_image_mbti_regist.png'), title: 'mbti_regist' },
+        { url: require('../../Assets/images/slider_image_hot_post.png'), title: 'hot_post' },
+        { url: require('../../Assets/images/slider_image_chat.png'), title: 'chat' },
+    ]
+    const slides = [
         { url: require('../../Assets/images/slider_image_my_board.png'), title: 'my_board' },
         { url: require('../../Assets/images/slider_image_hot_post.png'), title: 'hot_post' },
         { url: require('../../Assets/images/slider_image_chat.png'), title: 'chat' },
-        
     ]
 
     const containerStyles = {
@@ -40,7 +45,11 @@ const Home = () => {
     return (
         <div>
             <div style={containerStyles}>
-                <ImageSlider slides={slides} />
+                {currentUser && currentUser.mbti_type ? (
+                    <ImageSlider slides={slides} user={currentUser}/>
+                ) : (
+                    <ImageSlider slides={slidesNoMbti} user={currentUser}/>
+                )}
             </div>
 
             <div className={style.mainContainer}>
