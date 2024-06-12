@@ -1,8 +1,11 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import style from "./Pagination.module.css"
 
 const Pagination = ({currentPage, totalPages, onPageChange}) => {
     // console.log(currentPage, totalPages)
+
+    useEffect(() => {
+    }, [currentPage, totalPages]);
     const getPageRange = () => {
         const maxPageCount = 5
         const startIndex = maxPageCount * Math.floor((currentPage - 1) / maxPageCount)

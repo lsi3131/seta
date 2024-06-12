@@ -27,15 +27,14 @@ const Chat = () => {
         const interval = setInterval(refreshList, 10000)
 
         return () => clearInterval(interval)
-    }, [view, currentPage])
+    }, [view, currentPage, totalPage])
 
     const refreshList = async () => {
         async function fetchData() {
             try {
                 const response = await apiClient.get(`api/chats/?category=${view}&page=${currentPage}`)
-                console.log(response.data)
                 setPosts(response.data['results'])
-                setCurrentPage(response.data['cur_page'])
+                setCurrentPage(currentPage)
                 setTotalPage(response.data['total_page'])
                 setIsLoading(false)
             } catch (error) {
@@ -100,41 +99,46 @@ const Chat = () => {
     console.log(currentUser)
 
     return (
-        <div className={style.chat_container}>
-            {showCheckPassword && (
-                <ChatRoomPasswordModal onEnter={handleEnterRoom} onClose={handleClosePassword} roomId={roomId} />
-            )}
-            {showCreateRoom && <ChatRoomCreateModal onCreate={handleCreateRoom} onClose={handleCloseCreateRoom} />}
-
-            <div className={style.chat_header}>
-                <button onClick={() => window.location.reload()}>새로고침</button>
-                <button onClick={() => {!currentUser.username ? window.location.href = '/login' : setShowCreateRoom(true) }}>방만들기</button>
-            </div>
-
-            <div className={style.chat_category}>
-                <button
-                    style={{ fontWeight: view === 'chat' ? 'bold' : '200' }}
-                    onClick={() => handleViewChange('chat')}
-                >
-                    채팅
-                </button>
-                <button
-                    style={{ fontWeight: view === 'game' ? 'bold' : '200' }}
-                    onClick={() => handleViewChange('game')}
-                >
-                    게임
-                </button>
-                <hr />
-                {view === 'chat' ? (
-                    <ChatList posts={posts} user={currentUser} onChatClick={handleLinkClick}/>
-                ) : (
-                    <GameList posts={posts} user={currentUser} />
+        <div>
+            <div className={style.chat_container}>
+                {showCheckPassword && (
+                    <ChatRoomPasswordModal onEnter={handleEnterRoom} onClose={handleClosePassword} roomId={roomId}/>
                 )}
-                <div>
-                    <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                {showCreateRoom && <ChatRoomCreateModal onCreate={handleCreateRoom} onClose={handleCloseCreateRoom}/>}
+
+                <div className={style.chat_header}>
+                    <button onClick={() => window.location.reload()}>새로고침</button>
+                    <button onClick={() => {
+                        !currentUser.username ? window.location.href = '/login' : setShowCreateRoom(true)
+                    }}>방만들기
+                    </button>
                 </div>
+
+                <div className={style.chat_category}>
+                    <button
+                        style={{fontWeight: view === 'chat' ? 'bold' : '200'}}
+                        onClick={() => handleViewChange('chat')}
+                    >
+                        채팅
+                    </button>
+                    <button
+                        style={{fontWeight: view === 'game' ? 'bold' : '200'}}
+                        onClick={() => handleViewChange('game')}
+                    >
+                        게임
+                    </button>
+                    <hr/>
+                    {view === 'chat' ? (
+                        <ChatList posts={posts} user={currentUser} onChatClick={handleLinkClick}/>
+                    ) : (
+                        <GameList posts={posts} user={currentUser}/>
+                    )}
+                    <div>
+                    </div>
+                </div>
+                <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={handlePageChange}/>
+                <div className={style.chat_footer}></div>
             </div>
-            <div className={style.chat_footer}></div>
         </div>
     )
 }
