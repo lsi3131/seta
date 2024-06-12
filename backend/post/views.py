@@ -348,11 +348,14 @@ class PostCommentsAPIView(APIView):
         post = get_object_or_404(Post, id=post_pk)
         comments = post.comments.all()
 
-        per_page = 50
+        # 20개씩 pagination
+        per_page = 20
         paginator = Paginator(comments, per_page)
         page_number = request.GET.get("page")
         if page_number:
             comments = paginator.get_page(page_number)
+        else:
+            comments = paginator.get_page(1)
 
         serialized_comments = []
         for comment in comments:
@@ -362,7 +365,7 @@ class PostCommentsAPIView(APIView):
         paginated_response_data = {
             'total_page': paginator.num_pages,
             'per_page': per_page,
-            'count': comments.count(),
+            'count': paginator.count,
             'results': serialized_comments,
         }
 
@@ -380,11 +383,26 @@ class PostCommentsAPIView(APIView):
         if parent_comment_id:
             parent_comment = get_object_or_404(Comment, id=parent_comment_id)
         post = get_object_or_404(Post, id=post_pk)
-        Comment.objects.create(content=content, post=post,
+        new_comment = Comment.objects.create(content=content, post=post,
                                author=request.user, comment_mbti=request.user.mbti,
                                parent=parent_comment)
+
+        comments = post.comments.order_by('created_at')
+
+        # Find the position of the new comment
+        comment_ids = list(comments.values_list('id', flat=True))
+        new_comment_position = comment_ids.index(new_comment.id) + 1  # +1 to make it 1-based index
+
+        # Calculate the page number
+        per_page = 20
+        page_number = (new_comment_position - 1) // per_page + 1
+
         return Response(
-            {"message": "댓글이 작성되었습니다."},
+            {
+                "message": "댓글이 작성되었습니다.",
+                "new_comment_id": new_comment.id,
+                "new_comment_page": page_number,
+            },
             status=status.HTTP_201_CREATED
         )
 
