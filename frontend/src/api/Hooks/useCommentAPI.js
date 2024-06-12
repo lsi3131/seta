@@ -6,12 +6,14 @@ const useCommentAPI = (commentPostId) => {
     const [comments, setComments] = useState(null);
     const [commentCount, setCommentCount] = useState(-1);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
     const [error, setError] = useState(null); // 로딩 상태 추가
 
 
     useEffect(() => {
         if(commentPostId) {
-            handleGetCommentList()
+            handleGetCommentListPage(currentPage)
         }
     }, [commentPostId])
 
@@ -23,11 +25,13 @@ const useCommentAPI = (commentPostId) => {
     }, [comments, commentCount])
 
 
-    const handleGetCommentList = () => {
-        apiClient.get(`/api/posts/${commentPostId}/comments/`)
+    const handleGetCommentListPage = (page, newCommentId = null) => {
+        apiClient.get(`/api/posts/${commentPostId}/comments/?page=${page}`)
             .then(response => {
                 console.log('get comments successful:', response.data);
                 setComments(response.data['results']);
+                setCurrentPage(page)
+                setTotalPage(response.data['total_page'])
                 setCommentCount(response.data['count']);
             })
             .catch(error => {
@@ -46,8 +50,9 @@ const useCommentAPI = (commentPostId) => {
             .then(response => {
                 console.log('post comments successful:', response.data);
 
-                /* comment 정보 업데이트 */
-                handleGetCommentList();
+                //새로운 댓글 페이지로 이동
+                const newPage = response.data['new_comment_page']
+                handleGetCommentListPage(newPage);
             })
             .catch(error => {
                 console.error('Error during add comments:', error.response.data.error);
@@ -63,7 +68,7 @@ const useCommentAPI = (commentPostId) => {
                 console.log('put comments successful:', response.data);
 
                 /* comment 정보 업데이트 */
-                handleGetCommentList();
+                handleGetCommentListPage(currentPage);
             })
             .catch(error => {
                 console.error('Error during put comments:', error.response.data.error);
@@ -76,7 +81,7 @@ const useCommentAPI = (commentPostId) => {
                 console.log('delete comments successful:', response.data);
 
                 /* comment 정보 업데이트 */
-                handleGetCommentList();
+                handleGetCommentListPage(currentPage);
             })
             .catch(error => {
                 console.error('Error during add comments:', error.response.data.error);
@@ -93,7 +98,7 @@ const useCommentAPI = (commentPostId) => {
                 console.log('post comments successful:', response.data);
 
                 /* comment 정보 업데이트 */
-                handleGetCommentList();
+                handleGetCommentListPage(currentPage);
             })
             .catch(error => {
                 console.error('Error during add comments:', error.response.data.error);
@@ -104,6 +109,9 @@ const useCommentAPI = (commentPostId) => {
         isLoading,
         comments,
         commentCount,
+        currentPage,
+        totalPage,
+        handleGetCommentListPage,
         handlePostComment,
         handlePutComment,
         handleDeleteComment,

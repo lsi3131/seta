@@ -12,10 +12,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -34,6 +37,8 @@ ALLOWED_HOSTS = [
     "3.34.22.183",
     "www.draftnews.shop",
     "draftnews.shop",
+    "www.seta-16.com",
+    "seta-16.com",
 ]
 
 
@@ -185,6 +190,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://3.34.22.183:3000",
     "http://www.draftnews.shop",
     "http://www.draftnews.shop:3000",
+    "http://www.seta-16.com",
+    "http://www.seta-16.com:3000",
 ]
 
 REST_FRAMEWORK = {
@@ -258,5 +265,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 
-FRONT_BASE_URL="http://127.0.0.1:3000"
-BACK_BASE_URL="http://127.0.0.1:8000"
+FRONT_BASE_URL = os.getenv('FRONT_BASE_URL')
+BACK_BASE_URL = os.getenv('BACK_BASE_URL')
+
+print(f'front url: {FRONT_BASE_URL}')
+print(f'back url: {BACK_BASE_URL}')
