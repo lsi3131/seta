@@ -42,6 +42,16 @@ const Chat = () => {
         return () => clearInterval(interval)
     }, [view, currentPage])
 
+    const navigateToRoom = ({category, roomId, password}) => {
+        let roomType = 'chatroom'
+        if (category === 'game') {
+            roomType = 'gameroom'
+        } else if (category === 'chat') {
+            roomType = 'chatroom'
+        }
+        navigate(`/${roomType}/${roomId}`, {state: {password: password}})
+    }
+
     if (isLoading) {
         return <div>Loading...</div>
     }
@@ -56,20 +66,20 @@ const Chat = () => {
         } else {
             // 채팅방으로 이동
             const password = ''
-            navigate(`/chatroom/${post.id}`, { state: { password: password } })
+            navigateToRoom({category: post.category, roomId: roomId, password: password})
         }
     }
 
-    const handleCreateRoom = async (roomId, password) => {
-        navigate(`/chatroom/${roomId}`, { state: { password: password } })
+    const handleCreateRoom = async (roomId, password, category) => {
+        navigateToRoom({category: category, roomId, password: password})
     }
 
     const handleCloseCreateRoom = async () => {
         setShowCreateRoom(false)
     }
 
-    const handleEnterRoom = (roomId, password) => {
-        navigate(`/chatroom/${roomId}`, { state: { password: password } })
+    const handleEnterRoom = (roomId, password, category) => {
+        navigateToRoom({category: category, roomId, password: password})
     }
 
     const handleClosePassword = () => {
@@ -84,6 +94,8 @@ const Chat = () => {
         setView(view)
     }
 
+    console.log(currentUser)
+
     return (
         <div className={style.chat_container}>
             {showCheckPassword && (
@@ -93,7 +105,7 @@ const Chat = () => {
 
             <div className={style.chat_header}>
                 <button onClick={() => window.location.reload()}>새로고침</button>
-                <button onClick={() => setShowCreateRoom(true)}>방만들기</button>
+                <button onClick={() => {!currentUser.username ? window.location.href = '/login' : setShowCreateRoom(true) }}>방만들기</button>
             </div>
 
             <div className={style.chat_category}>

@@ -65,7 +65,7 @@ const ChatList = ({ posts }) => {
                         key={post.id}
                         className={style.chat_card}
                         style={{ cursor: post.members_count >= post.max_members ? 'not-allowed' : '' }}
-                        onClick={(e) => handleLinkClick(e, post)}
+                        onClick={(e) => {!currentUser.username ? window.location.href = '/login' : handleLinkClick(e, post)}}
                     >
                         <h2 className={style.chat_card_title}>
                             <Link to="" >

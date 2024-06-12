@@ -30,3 +30,4 @@ venv/
 .env
 
 config.py
+.

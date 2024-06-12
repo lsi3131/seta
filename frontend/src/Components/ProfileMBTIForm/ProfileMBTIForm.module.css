@@ -78,6 +78,35 @@
     color: #5c5c5c;
 }
 
+.voteMbtiRatioContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.voteMbtiButtonList {
+       display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.voteMbtiButtonList > button {
+    width: 40px;
+    height: 30px;
+    margin: 16px;
+    background-color: transparent;
+    border: none;
+}
+
+.voteMbtiButtonList > button:hover {
+    cursor: pointer;
+}
+
+.voteMbtiButtonList > button > img{
+    width: 40px;
+    height: 30px;
+}
+
 .first, .second, .third {
     display: flex;
     justify-content: center;

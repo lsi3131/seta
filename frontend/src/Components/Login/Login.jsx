@@ -1,10 +1,11 @@
 import React from 'react'
-import { useEffect } from 'react'
+import { useEffect,useContext } from 'react'
 import * as Components from './Components'
 import apiClient from 'services/apiClient'
 import useDebounce from './useDebounce'
 import { useLocation, Link } from 'react-router-dom'
 import SocialLoginButton from 'Components/SocialLogin/SocialsLogin'
+
 
 function Login() {
     const FRONT_BASE_URL = process.env.REACT_APP_FRONT_URL
@@ -13,6 +14,7 @@ function Login() {
     const [signIn, toggle] = React.useState('true')
     const [usernameIn, setUsernameIn] = React.useState('')
     const [passwordIn, setPasswordIn] = React.useState('')
+    const currentUser = useContext(UserContext)
 
     const [usernameUp, setUsernameUp] = React.useState('')
     const [passwordUp, setPasswordUp] = React.useState('')

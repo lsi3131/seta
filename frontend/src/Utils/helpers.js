@@ -3,7 +3,11 @@ export const formatDateDayBefore = (dateString) => {
     const createdDate = new Date(dateString)
     const timeDiff = Math.abs(currentDate.getTime() - createdDate.getTime())
     const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
-
+    if ((createdDate.getHours() - currentDate.getHours()) < 1 ){
+        return `${currentDate.getMinutes() - createdDate.getMinutes()}분 전`
+    } else if (daysDiff === 1){
+        return `${currentDate.getHours() - createdDate.getHours()}시간 전`
+    }
     return `${daysDiff}일전`
 }
 
