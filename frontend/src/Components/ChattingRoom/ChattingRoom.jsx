@@ -18,9 +18,10 @@ const ChatRoom = () => {
     const [members, setMembers] = useState([])
     const currentUser = useContext(UserContext)
     const [host, setHost] = useState('')
+    const [isCheckFinish, setIsCheckFinish] = useState(false)
 
     useEffect(() => {
-        const refreshList = async () => {
+        const checkUserCanEnter = async () => {
             async function fetchData() {
                 try {
                     const data = {
@@ -37,7 +38,7 @@ const ChatRoom = () => {
                 try {
                     const response = await apiClient.get(`api/chats/${roomId}/`)
                     const data = response.data
-                    if(data.members_count > data.max_members) {
+                    if(data.members_count >= data.max_members) {
                         console.error('정원이 초과되었습니다.')
                         navigate('/chat')
                     }
@@ -48,12 +49,15 @@ const ChatRoom = () => {
                 }
             }
             await fetchData()
+            setIsCheckFinish(true)
         }
-        refreshList()
+        checkUserCanEnter()
     }, [password, navigate, roomId])
 
     useEffect(() => {
         if (!currentUser) return
+
+        if(!isCheckFinish) return
 
         // WebSocket 연결
         const url = `${baseURL}/ws/chat/${roomId}/`
@@ -108,7 +112,7 @@ const ChatRoom = () => {
                 socket.close(closeCode)
             }
         }
-    }, [currentUser, roomId, navigate])
+    }, [currentUser, roomId, navigate, isCheckFinish])
 
     const handleExpel = (member) => {
         socket.send(
