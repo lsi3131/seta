@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework import status
 from .models import *
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from .models import ChatRoom, ChatMessage, ChatRoomCategory
@@ -130,6 +130,7 @@ def get_category(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def check_room_password(request):
     room_id = request.data['id']
     password = request.data['password']
