@@ -113,6 +113,9 @@ const BoardDetail = () => {
         isLoading: isCommentLoading,
         comments,
         commentCount,
+        currentPage: commentCurrentPage,
+        totalPage: commentTotalPage,
+        handleGetCommentListPage,
         handlePostComment,
         handlePutComment,
         handleDeleteComment,
@@ -188,6 +191,8 @@ const BoardDetail = () => {
                     ) : null}
                     <BoardCommentBadgeList initializePost={post}/>
                     <CommentBox post={post} comments={comments} commentCount={commentCount}
+                                currentPage={commentCurrentPage} totalPage={commentTotalPage}
+                                onPageChange={handleGetCommentListPage}
                                 onAddComment={handlePostComment}
                                 onUpdateComment={handlePutComment}
                                 onDeleteComment={handleDeleteComment}
