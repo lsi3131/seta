@@ -511,9 +511,11 @@ const CommentBox = ({
             />
             <Pagination currentPage={currentPage} totalPages={totalPage}
                         onPageChange={onPageChange}/>
-
+            <div style={{height:"30px"}}></div>
             <hr/>
+            <div style={{height:"20px"}}></div>
             <CommentInput post={post} onAddComment={onAddComment}/>
+            <div style={{height:"20px"}}></div>
         </div>
     );
 }

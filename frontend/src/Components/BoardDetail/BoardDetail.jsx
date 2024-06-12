@@ -201,7 +201,7 @@ const BoardDetail = () => {
 
                 </div>
             </div>
-            <div className={style.elevated_component}>
+            <div className={style.elevated_component} style={{marginTop:"80px"}}>
                 <div className={style.board_list_container}>
                     <div className={style.board_list_bottom_container}>
                         <BoardPostBox boardMbti={boardMbti} posts={posts} currentPostId={postId} filterOption={{ filter : filter, order : order, page : page }}/>

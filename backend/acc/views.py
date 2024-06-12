@@ -153,6 +153,7 @@ class AccountPasswordAPIView(APIView):
 
 
 class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
         user_mbti = user.mbti
@@ -191,6 +192,7 @@ def validate_email(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def mbtiRank(request, username):
     user = get_object_or_404(User, username=username)
     follower_mbti_ranking = {}
@@ -417,6 +419,19 @@ def social_login(request):
             f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
         return redirect(redirect_url)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def social(request, username) :
+    try:
+        user = User.objects.get(username=username)
+        social_user = SocialAccount.objects.get(user=user)
+        return Response({
+            "provider": social_user.provider,
+        }, status=status.HTTP_200_OK)
+    except SocialAccount.DoesNotExist:
+        return Response({
+            "provider": "local",
+        }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -566,7 +581,7 @@ def kakao_callback(request):
     user_id = str(profile_json.get("id"))
 
     try:
-        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[-4:]}'))
         # 기존에 가입된 유저의 Provider가 kakao가 아니면 에러 발생, 맞으면 로그인
         # 다른 SNS로 가입된 유저
         social_user = SocialAccount.objects.get(user=user)
@@ -595,7 +610,7 @@ def kakao_callback(request):
     except User.DoesNotExist:
         # 기존에 가입된 유저가 없으면 새로 가입
         user, created = User.objects.get_or_create(email=username,
-            defaults={'username': (f'{username}{user_id[:4]}')})
+            defaults={'username': (f'{username}{user_id[-4:]}')})
         if created:
             user.set_unusable_password()
             user.save()
