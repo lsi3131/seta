@@ -64,12 +64,12 @@ class AccountAPIView(APIView):
 
         subject = ''' '세타' 이메일 인증'''
         message = render_to_string('account/activate_email.html', {'username': username,
-                                                                   "email": email})
+                                                                  "email": email})
 
         is_active_email = EmailMessage(
             subject,
             message,
-            to=[email]
+            to=[email],
         )
         is_active_email.content_subtype = "html"
         is_active_email.send()

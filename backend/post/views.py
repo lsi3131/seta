@@ -314,6 +314,8 @@ class PostDetailAPIView(APIView):
 
     def delete(self, request, post_pk):
         post = get_object_or_404(Post, id=post_pk)
+        
+
         if post.author != request.user:
             return Response(
                 {"error": "작성자만 삭제할 수 있습니다."},
@@ -324,6 +326,10 @@ class PostDetailAPIView(APIView):
             {"message": "게시글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+    
+ 
+
+        
 
 
 @api_view(['PUT'])
@@ -425,6 +431,25 @@ class PostCommentDetailAPIView(APIView):
             {"message": "댓글이 삭제되었습니다."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+class MypostsAPIView(APIView):
+   def delete(self, request):
+        ids = request.data.get('ids', [])
+        print(ids)
+        if not ids:
+            return Response({'detail': '삭제할 메세지가 선택되어 있지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        posts = Post.objects.filter(id__in=ids)
+        if not posts.exists():
+            return Response({'detail': '존재하지 않는 메세지가 존재합니다.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        deleted_count = 0    
+        for post in posts:
+            post.delete()
+            deleted_count += 1
+
+        return Response({'message': f'{deleted_count} 건의 메세지가 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['POST'])
