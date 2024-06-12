@@ -67,6 +67,15 @@ function Login() {
 
     const [isLogin, setIsLogin] = React.useState(false)
 
+    useEffect(() => {
+        if(passwordIn !== '' && capslock) {
+            setErrorMessage('CapsLock이 켜져있습니다.')
+        }else {
+            setErrorMessage('')
+        }
+    }, [capslock, passwordIn])
+
+
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
