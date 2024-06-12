@@ -91,7 +91,7 @@ const ChatRoom = () => {
             window.removeEventListener('beforeunload', handleBeforeUnload)
             if (socket.readyState === WebSocket.OPEN) {
                 // 페이지 이탈 시 종료 코드를 설정하여 WebSocket을 닫음
-                const closeCode = navigate('/chat', { replace: true }) ? 1000 : 1001
+                const closeCode = navigate('/chat', { replace: true }) ? 3000 : 3001
                 socket.close(closeCode)
             }
         }
@@ -165,7 +165,7 @@ const ChatRoom = () => {
                     )
 
                     // 페이지 이탈 시 종료 코드를 설정하여 WebSocket을 닫음
-                    const closeCode = action === 'PUSH' ? 1000 : 1001
+                    const closeCode = action === 'PUSH' ? 3000 : 3001
                     socket.close(closeCode)
                 }
             }
