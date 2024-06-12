@@ -37,7 +37,7 @@ ALLOWED_HOSTS = [
     "3.34.22.183",
     "www.draftnews.shop",
     "draftnews.shop",
-    "http://www.seta-16.com",
+    "www.seta-16.com",
     "seta-16.com",
 ]
 
