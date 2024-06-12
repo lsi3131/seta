@@ -29,7 +29,17 @@ import json
 SECRET_KEY = json.load(open(BASE_DIR / "secrets.json"))["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", True)
+FRONT_BASE_URL = os.getenv('FRONT_BASE_URL', '')
+BACK_BASE_URL = os.getenv('BACK_BASE_URL', '')
+
+if FRONT_BASE_URL == '':
+    FRONT_BASE_URL = "http://127.0.0.1:3000/"
+
+if BACK_BASE_URL == '':
+    BACK_BASE_URL = "http://127.0.0.1:8000/"
+
+print('=========', BACK_BASE_URL, FRONT_BASE_URL, DEBUG)
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -264,6 +274,3 @@ KAKAO_REST_API_KEY = json.load(open(BASE_DIR / "secrets.json"))["KAKAO_REST_API_
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
-
-FRONT_BASE_URL="http://127.0.0.1:3000/"
-BACK_BASE_URL="http://127.0.0.1:8000/"
