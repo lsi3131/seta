@@ -471,7 +471,8 @@ const CommentInput = ({post, onAddComment, parentCommentId}) => {
             )}
 
             <div className={style.comment_input_buttons_container}>
-                <button onClick={handleAddComment} style={{width: '100px'}} disabled={isDisabled()}>댓글 등록</button>
+                <button onClick={handleAddComment} style={{width: '100px'}}
+                        disabled={isDisabled() && currentUser['username'] !== post.author}>댓글 등록</button>
             </div>
         </div>
     );
