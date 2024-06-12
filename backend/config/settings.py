@@ -34,6 +34,8 @@ ALLOWED_HOSTS = [
     "3.34.22.183",
     "www.draftnews.shop",
     "draftnews.shop",
+    "www.seta-16.com",
+    "seta-16.com",
 ]
 
 
@@ -185,6 +187,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://3.34.22.183:3000",
     "http://www.draftnews.shop",
     "http://www.draftnews.shop:3000",
+    "http://www.seta-16.com",
+    "http://www.seta-16.com:3000",
 ]
 
 REST_FRAMEWORK = {
