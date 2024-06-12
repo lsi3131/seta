@@ -73,6 +73,8 @@ class ChatRoomAPIView(APIView):
         if cate == 'game':
             chatrooms = chatrooms.exclude(game_status='s')
 
+        chatrooms = chatrooms.order_by('-created_at')
+
         # 12개씩 pagination
         per_page = 12
         paginator = Paginator(chatrooms, per_page)
