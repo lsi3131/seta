@@ -61,6 +61,11 @@ class AccountValidator:
             self.response_data = Response({"error": "유저명은 5자 이상, 15자 이하입니다."}, status=status.HTTP_400_BAD_REQUEST)
             return False
 
+        # 한글 및 특수문자 제한
+        if re.search(r'[ㄱ-ㅎㅏ-ㅣ가-힣]|[^\w]', username):
+            self.response_data = Response({"error": "유저명에는 한글 및 특수문자를 사용할 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+            return False
+
         # 이미 가입한 유저명 제한
         if get_user_model().objects.filter(username=username).exists():
             self.response_data = Response({"error": "이미 가입된 유저명입니다."}, status=status.HTTP_400_BAD_REQUEST)

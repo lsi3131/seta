@@ -18,6 +18,9 @@ const handleReply = async (data) => {
 const Modal = ({ title, onClose, onSubmit }) => {
     const [data, setData] = useState({ subject: '', body: '' })
 
+    const [recipientMessage, setRecipientMessage] = useState('')
+
+
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
     }
@@ -34,9 +37,33 @@ const Modal = ({ title, onClose, onSubmit }) => {
 
                 <div className={style.modalBody}>
                     <label>제목</label>
-                    <input type="text" name="subject" value={data.subject} onChange={handleChange} />
+                    <input type="text" name="subject" value={data.subject} onChange={(e)=> {
+                        if (e.target.value.length <= 50) {
+                            handleChange(e)
+                            setRecipientMessage('')
+                        } else {
+                            setRecipientMessage('제목은 50자 이내로 작성해주세요.')
+                        }
+
+                    }}/>
                     <label>내용</label>
-                    <textarea name="body" value={data.body} onChange={handleChange} />
+                    <textarea name="body" rows={10} value={data.body} onChange={(e) => {
+                        if (e.target.value.length <= 400) {
+                            if (e.target.scrollHeight > 200) {
+                                e.target.style.height = '200px'
+                                setRecipientMessage('내용은 10줄 이내로 작성해주세요.')
+                            } else {
+                                handleChange(e)
+                                setRecipientMessage('')
+                            }
+                        } else {
+                            setRecipientMessage('내용은 400자 이내로 작성해주세요.')
+                        }
+
+                    }}/>
+                </div>
+                <div className={style.recipientMessage}>
+                    <p>{recipientMessage}</p>
                 </div>
 
                 <div className={style.modalFooter}>
@@ -53,7 +80,7 @@ const Modal = ({ title, onClose, onSubmit }) => {
 }
 
 const MessageDetail = () => {
-    const { messageId } = useParams()
+    const {messageId} = useParams()
     const [message, setMessage] = useState(null)
     const [error, setError] = useState(null)
     const currentUser = useContext(UserContext)
