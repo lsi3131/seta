@@ -42,7 +42,7 @@ const SocialLoginButton = () => {
           />
           </button>
         </div>
-        <div>
+        {/* <div>
           <button
           onClick={() => handleGoogleLogin()}
           style={{ border: '0', backgroundColor: 'transparent', margin: '10px' }}>
@@ -50,7 +50,7 @@ const SocialLoginButton = () => {
           alt="Google"
           style={{ cursor: 'pointer', width: '50px' }}/>
           </button>
-        </div>
+        </div> */}
     </div>
   );
 };
