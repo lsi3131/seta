@@ -494,7 +494,6 @@ def social_callback(request):
     user_info = user_info_req.json()
     username = user_info.get("login")
     user_id = str(user_info.get("id"))
-    email = ''
     # provider = "github"
 
 
@@ -518,10 +517,8 @@ def social_callback(request):
 
     except User.DoesNotExist:
 
-        if email:
-            user, created = User.objects.get_or_create(defaults={'username': (f'{username}{user_id[:4]}')},email=email)
-        else: 
-            user, created = User.objects.get_or_create(email=username, defaults={'username': (f'{username}{user_id[:4]}')})
+        
+        user, created = User.objects.get_or_create(email=(f'{username}{user_id[-4:]}'), defaults={'username': (f'{username}{user_id[-4:]}')})
         if created:
             user.set_unusable_password()
             user.save()
