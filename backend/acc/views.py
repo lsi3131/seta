@@ -398,27 +398,6 @@ class FindPasswordAPIView(APIView):
 
         return Response({"message": "이메일을 확인하세요"}, status=status.HTTP_200_OK)
 
-
-# social login
-SOCIAL_CALLBACK_URI = f"{BACK_BASE_URL}api/accounts/social/callback/"
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def social_login(request):
-    # provider = request.GET.get('provider')
-    # if provider == 'google':
-    #     scope = "https://www.googleapis.com/auth/userinfo.email"
-    #     client_id = getattr(settings, "GOOGLE_CLIENT_ID")
-    #     redirect_url = (
-    #         f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={SOCIAL_CALLBACK_URI}&scope={scope}")
-    #     return redirect(redirect_url)
-
-    # if provider == 'github':
-    client_id = getattr(settings, "GITHUB_CLIENT_ID")
-    redirect_url = (
-        f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={SOCIAL_CALLBACK_URI}")
-    return redirect(redirect_url)
-    
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def social(request, username) :
@@ -433,73 +412,99 @@ def social(request, username) :
             "provider": "local",
         }, status=status.HTTP_200_OK)
 
+# social login
+SOCIAL_CALLBACK_URI = f"{BACK_BASE_URL}/api/accounts/social/callback/"
 @api_view(['GET'])
+@permission_classes([AllowAny])
+def social_login(request):
+    providers = request.GET.get('providers')
+    if providers == 'google':
+        scope = "https://www.googleapis.com/auth/userinfo.email"
+        client_id = getattr(settings, "GOOGLE_CLIENT_ID")
+        redirect_url = (
+            f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={SOCIAL_CALLBACK_URI}&scope={scope}")
+        return redirect(redirect_url)
+
+    if providers == 'github':
+        client_id = getattr(settings, "GITHUB_CLIENT_ID")
+        redirect_url = (
+            f"https://github.com/login/oauth/authorize?client_id=Iv23ctbQsiHpb6Z1RA14&redirect_uri={SOCIAL_CALLBACK_URI}")
+        return redirect(redirect_url)
+    
+
+
+
+@api_view(['GET','POST'])
 @permission_classes([AllowAny])
 def social_callback(request):
     code = request.GET.get('code')
-    # scope = request.GET.get('scope')   google인 경우에만 존제
+    scope = request.GET.get('scope')
+    
+    if scope:
+        client_id = getattr(settings, "GOOGLE_CLIENT_ID")
+        client_secret = getattr(settings, "GOOGLE_CLIENT_SECRET")
+        state = getattr(settings, 'STATE')
+        token_req = requests.post(
+            "https://oauth2.googleapis.com/token",
+            data={
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "code": code,
+                "grant_type": "authorization_code",
+                "redirect_uri": SOCIAL_CALLBACK_URI,
+                "state": state,
+            },
+        )
 
-    # if scope:
-    #     client_id = getattr(settings, "GOOGLE_CLIENT_ID")
-    #     client_secret = getattr(settings, "GOOGLE_CLIENT_SECRET")
-    #     state = getattr(settings, 'STATE')
-    #     token_req = requests.post(
-    #         "https://oauth2.googleapis.com/token",
-    #         data={
-    #             "client_id": client_id,
-    #             "client_secret": client_secret,
-    #             "code": code,
-    #             "grant_type": "authorization_code",
-    #             "redirect_uri": SOCIAL_CALLBACK_URI,
-    #             "state": state,
+        token_req_json = token_req.json()
+        if not token_req_json:
+            return Response({"err_msg": "구글 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
 
-    #         },
-    #     )
+        access_token = token_req_json.get('access_token')
 
-    #     token_req_json = token_req.json()
-    #     if not token_req_json:
-    #         return Response({"err_msg": "구글 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
+        user_info_req = requests.get(
+            f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
+        user_info = user_info_req.json()
+        user_id = user_info.get("user_id")
+        email = user_info.get('email')
+        username = email.split('@')[0]
+        providers = "google"
 
-    #     access_token = token_req_json.get('access_token')
+    if not scope:
+        client_id = getattr(settings, "GITHUB_CLIENT_ID")
+        client_secret = getattr(settings, "GITHUB_CLIENT_SECRET")
+        token_req = requests.post(
+            f'https://github.com/login/oauth/access_token',
+            data={
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'code': code
+            },
+            headers={'Accept': 'application/json'}
+        )
+        token_req_json = token_req.json()
+        if not token_req_json:
+            return Response({"err_msg": "github 계정을 확인하세요"}, status=status.HTTP_400_BAD_REQUEST)
 
-    #     user_info_req = requests.get(
-    #         f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
-    #     user_info = user_info_req.json()
-    #     user_id = user_info.get("user_id")
-    #     email = user_info.get('email')
-    #     username = email.split('@')[0]
-    #     provider = "google"
-
-    # if not scope:
-    client_id = getattr(settings, "GITHUB_CLIENT_ID")
-    client_secret = getattr(settings, "GITHUB_CLIENT_SECRET")
-    token_req = requests.post(
-        f'https://github.com/login/oauth/access_token',
-        data={
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'code': code
-        },
-        headers={'Accept': 'application/json'}
-    )
-    token_req_json = token_req.json()
-    access_token = token_req_json.get('access_token')
-    user_info_req = requests.get(
-        'https://api.github.com/user',
-        headers={
-            'Authorization': f'token {access_token}',
-            'Accept': 'application/json'
-        }
-    )
-    user_info = user_info_req.json()
-    username = user_info.get("login")
-    user_id = str(user_info.get("id"))
-    # provider = "github"
+        access_token = token_req_json.get('access_token')
+        user_info_req = requests.get(
+            'https://api.github.com/user',
+            headers={
+                'Authorization': f'token {access_token}',
+                'Accept': 'application/json'
+            }
+        )
+        user_info = user_info_req.json()
+        username = user_info.get("login")
+        user_id = str(user_info.get("id"))
+        providers = "github"
 
 
     try:
-        user = User.objects.get(username=(f'{username}{user_id[:4]}'))
+        user = User.objects.get(username=(f'{username}{user_id[-4:]}'))
+
         social_user = SocialAccount.objects.get(user=user)
+
 
         if not social_user.provider:
             return Response({'err_msg': '소셜 로그인 타입이 다릅니다'}, status=status.HTTP_400_BAD_REQUEST)
@@ -507,13 +512,13 @@ def social_callback(request):
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
 
-        redirect_url = FRONT_BASE_URL
-        respons = HttpResponseRedirect(redirect_url)
+        respons = HttpResponseRedirect(FRONT_BASE_URL)
 
         respons.set_cookie('access', str(access), max_age=5)
         respons.set_cookie('refresh', str(refresh), max_age=5)
 
         return respons
+
 
     except User.DoesNotExist:
 
@@ -522,20 +527,14 @@ def social_callback(request):
         if created:
             user.set_unusable_password()
             user.save()
+        
 
-        # if provider == 'google':
-        #     SocialAccount.objects.create(
-        #         user=user, provider="google", uid=user_id)
-        # elif provider == 'github':
-        SocialAccount.objects.create(
-            user=user, provider="github", uid=user_id)
+        SocialAccount.objects.create(user=user, provider=providers, uid = f'{username}{user_id[-4:]}' )
 
         refresh = CustomTokenObtainPairSerializer.refresh_token(user)
         access = CustomTokenObtainPairSerializer.get_token(user)
 
-        redirect_url = FRONT_BASE_URL
-        respons = HttpResponseRedirect(redirect_url)
-
+        respons = HttpResponseRedirect(FRONT_BASE_URL)
         respons.set_cookie('access', str(access), max_age=20)
         respons.set_cookie('refresh', str(refresh), max_age=20)
 

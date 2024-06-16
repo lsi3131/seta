@@ -34,10 +34,10 @@ FRONT_BASE_URL = os.getenv('FRONT_BASE_URL', '')
 BACK_BASE_URL = os.getenv('BACK_BASE_URL', '')
 
 if FRONT_BASE_URL == '':
-    FRONT_BASE_URL = "http://127.0.0.1:3000/"
+    FRONT_BASE_URL = "http://127.0.0.1:3000"
 
 if BACK_BASE_URL == '':
-    BACK_BASE_URL = "http://127.0.0.1:8000/"
+    BACK_BASE_URL = "http://127.0.0.1:8000"
 
 print(BACK_BASE_URL, FRONT_BASE_URL, DEBUG)
 
