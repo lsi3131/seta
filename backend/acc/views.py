@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
+from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
@@ -371,7 +372,48 @@ class FindNameAPIView(APIView):
 
 
 # 비밀번호 찾기
+from django.core.cache import cache
 class FindPasswordAPIView(APIView):
+    def get(self, request, email, username):
+        user = get_object_or_404(User, email=email, username=username)
+        random_str = get_random_string(length=8)
+
+        cache_value = cache.get(user, None)
+        if cache_value:
+            #기존에 email 코드 삭제후 다시 발급
+            cache.delete(user)
+            cache.set(user, random_str, timeout=180)
+        else :
+            cache.set(user, random_str, timeout=180)
+
+
+        subject = ''' '세타' 이메일 인증번호'''
+        message = render_to_string('acc/email_code.html', {'username': username,
+                                                                    "email": email,
+                                                                    "code": random_str,})
+
+        email_code = EmailMessage(
+            subject,
+            message,
+            to=[email]
+        )
+        email_code.content_subtype = "html"
+        email_code.send()
+
+        return Response({'messge':'이메일 인증번호를 보냈습니다'},status=status.HTTP_200_OK)
+
+
+    def delete(self,request, email, username):
+        code = request.data.get('code')
+        user = get_object_or_404(User, email=email, username=username)
+        cache_code = cache.get(user, None)
+        if code != cache_code:
+            return Response({'message':'인증번호가 다릅니다'},status=status.HTTP_400_BAD_REQUEST)
+
+        cache.delete(user)
+        return Response({'message':'이메일 인증완료'},status=status.HTTP_200_OK)
+
+
     def put(self, request, email, username):
         user = get_object_or_404(User, email=email, username=username)
 

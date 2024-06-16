@@ -236,15 +236,17 @@ CHANNEL_LAYERS = {
 #     },
 # }
 # Redis를 사용하기 위해 필요
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': 'redis://127.0.0.1:6379/1',
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_LOCATION"],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD":json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_PASSWORD"],
+        }
+    }
+}
+
 
 APPEND_SLASH = False
 
