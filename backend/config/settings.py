@@ -248,6 +248,10 @@ CACHES = {
 }
 
 
+REDIS_LODATION = json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_LOCATION"]
+REDIS_PASSWORD = json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_PASSWORD"]
+
+
 APPEND_SLASH = False
 
 

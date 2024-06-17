@@ -12,6 +12,7 @@ from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from .permissions import AccountVIEWPermission
+from django.core.cache import cache
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -371,22 +372,30 @@ class FindNameAPIView(APIView):
         return Response({"message": "이메일을 확인하세요"}, status=status.HTTP_200_OK)
 
 
+import redis
+redis_client = redis.StrictRedis.from_url(settings.REDIS_LODATION, password=settings.REDIS_PASSWORD)
+
 # 비밀번호 찾기
-from django.core.cache import cache
 class FindPasswordAPIView(APIView):
     def get(self, request, email, username):
-        user = get_object_or_404(User, email=email, username=username)
-        random_str = get_random_string(length=8)
+        try:
+            user = get_object_or_404(User, email=email, username=username)
+        except :
+            return Response({"message": "user가 없습니다"}, status=status.HTTP_404_NOT_FOUND)
 
+        #따닥 방지 시간확인
+        ttl = redis_client.ttl(f":1:{user}")
+        if ttl >= 170:
+            return Response({"error": "Duplicate request"}, status=status.HTTP_400_BAD_REQUEST)
+
+        random_str = get_random_string(length=8)
         cache_value = cache.get(user, None)
         if cache_value:
             #기존에 email 코드 삭제후 다시 발급
             cache.delete(user)
-            cache.set(user, random_str, timeout=180)
-        else :
-            cache.set(user, random_str, timeout=180)
-
-
+        
+        cache.set(user, random_str, timeout=180)
+        
         subject = ''' '세타' 이메일 인증번호'''
         message = render_to_string('acc/email_code.html', {'username': username,
                                                                     "email": email,

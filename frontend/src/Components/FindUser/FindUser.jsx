@@ -107,7 +107,12 @@ const FindUser = () => {
             startTimer(180);
             const response = await apiClient.get(`/api/accounts/${password_email}/${username}/findpassword/`);
         } catch (error) {
-            setErrorModalOpen(true)
+            const statusCode = error.response.status;
+            if (statusCode === 404){
+                setErrorModalOpen(true);
+            } else if (statusCode === 400){
+                console.log(error.response.data.error)
+            }
         }
     };
 
@@ -122,6 +127,7 @@ const FindUser = () => {
         setEmailCodeError('')
         try {
             setCodeModalOpen(true);
+            setTimerActive(false)
             const response = await apiClient.delete(`/api/accounts/${password_email}/${username}/findpassword/`, {
                 data: { code: emailCode }
             });
