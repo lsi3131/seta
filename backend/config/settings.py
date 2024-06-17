@@ -34,10 +34,10 @@ FRONT_BASE_URL = os.getenv('FRONT_BASE_URL', '')
 BACK_BASE_URL = os.getenv('BACK_BASE_URL', '')
 
 if FRONT_BASE_URL == '':
-    FRONT_BASE_URL = "http://127.0.0.1:3000/"
+    FRONT_BASE_URL = "http://127.0.0.1:3000"
 
 if BACK_BASE_URL == '':
-    BACK_BASE_URL = "http://127.0.0.1:8000/"
+    BACK_BASE_URL = "http://127.0.0.1:8000"
 
 print(BACK_BASE_URL, FRONT_BASE_URL, DEBUG)
 
@@ -236,15 +236,21 @@ CHANNEL_LAYERS = {
 #     },
 # }
 # Redis를 사용하기 위해 필요
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': 'redis://127.0.0.1:6379/1',
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_LOCATION"],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD":json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_PASSWORD"],
+        }
+    }
+}
+
+
+REDIS_LODATION = json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_LOCATION"]
+REDIS_PASSWORD = json.load(open(BASE_DIR / "secrets.json"))["REDISE_ClOUD_PASSWORD"]
+
 
 APPEND_SLASH = False
 

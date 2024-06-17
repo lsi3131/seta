@@ -63,7 +63,7 @@
 
 .button {
     border-radius: 20px;
-    border: 1px solid black;
+    border: none;
     background-color: black;
     color: #ffffff;
     font-size: 16px;
@@ -80,6 +80,7 @@
 .button:hover {
     transform: scale(0.95);
     cursor: pointer;
+    background-color: gray;
 }
 
 
@@ -129,7 +130,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    border: 1px solid black;
+    border: none;
     background-color: black;
     color: #ffffff;
     width: 70px;
@@ -145,6 +146,7 @@
 .Modalbutton:hover {
     transform: scale(0.95);
     cursor: pointer;
+    background-color: gray;
 }
 
 .Modalbutton a {
@@ -168,4 +170,106 @@
     border-radius: 60px;
     color:#fff;
     font-size: 40px;
+}
+
+
+.input_code {
+    background-color: #eee;
+    border: none;
+    padding: 12px 18px;
+    margin: 4px 0;
+    width: 75%;
+    border-radius: 20px;
+}
+
+.Modalbutton_code {
+    border-radius: 20px;
+    border: none;
+    background-color: black;
+    color: #ffffff;
+    width: 20%;
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin: 5px ;
+    text-decoration: none;
+}
+
+
+.Modalbutton_code_none {
+    border-radius: 20px;
+    border: none;
+    background-color: #eee;
+    color: gray;
+    width: 20%;
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin: 5px ;
+    text-decoration: none;
+}
+
+.Modalbutton_password:hover,
+.Modalbutton_code:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+    background-color: gray;
+}
+
+.form_code{
+    width: 90%;
+}
+
+.span_code {
+    font-size: 12px;
+    height: 12px;
+    color: red;
+}
+
+.ModalVertical_code {
+    width: 300px;
+    height: 250px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    background-color: #fff;
+}
+
+.Modalbutton_password {
+    border-radius: 20px;
+    border: none;
+    background-color: black;
+    color: #ffffff;
+    width: 50%;
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin: 5px ;
+    text-decoration: none;
+}
+
+.Modalbutton_password_none {
+    border-radius: 20px;
+    border: none;
+    background-color: #eee;
+    color: gray;
+    width: 50%;
+    height: 35px;
+    font-size: 15px;
+    font-weight: normal;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin: 5px ;
+    text-decoration: none;
+}
+
+.EmailModal_code_button{
+    display: flex;
+    justify-content: center;
 }

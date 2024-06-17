@@ -4,8 +4,8 @@ import React from 'react';
 const SocialLoginButton = () => {
   const BASE_URL = process.env.REACT_APP_API_BASE_URL
 
-  const handleGoogleLogin = (provider) => {
-    window.location.href = `${BASE_URL}/api/accounts/social/login/?`;
+  const handleGoogleLogin = (providers) => {
+    window.location.href = `${BASE_URL}/api/accounts/social/login/?providers=${providers}`;
   };
 
   const kakaologin = () => {
@@ -20,7 +20,7 @@ const SocialLoginButton = () => {
 
   return (
     <div style = {{ display:'flex', justifyContent:'center'}}>
-        {/* <div> 
+        <div> 
           <button
           onClick={() => handleGoogleLogin('google')}
           style={{ border: '0', backgroundColor: 'transparent', margin: '10px' }}>
@@ -30,7 +30,7 @@ const SocialLoginButton = () => {
             style={{ cursor: 'pointer', width: '50px' }}
           />
           </button>
-        </div> */}
+        </div>
         <div>
           <button
           onClick={kakaologin}
@@ -42,15 +42,15 @@ const SocialLoginButton = () => {
           />
           </button>
         </div>
-        {/* <div>
+        <div>
           <button
-          onClick={() => handleGoogleLogin()}
+          onClick={() => handleGoogleLogin('github')}
           style={{ border: '0', backgroundColor: 'transparent', margin: '10px' }}>
           <img src="https://raw.githubusercontent.com/dheereshagrwal/colored-icons/1656f82b5b9a31968ab033db39768b4d0ffaf872/public/icons/github/github.svg"
-          alt="Google"
+          alt="Github"
           style={{ cursor: 'pointer', width: '50px' }}/>
           </button>
-        </div> */}
+        </div>
     </div>
   );
 };
