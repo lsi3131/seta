@@ -1,3 +1,5 @@
+<img width="1253" height="856" alt="스크린샷 2025-09-18 13 27 01" src="https://github.com/user-attachments/assets/04bb5e81-7055-4d59-8e2b-96d544b489f2" />
+
 # Θ (seta) 세상의 모든 타입
 
 목차 
